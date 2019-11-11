@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">Crown Properties</string>
+
+    <string name="agentText">Agent</string>
+    <string name="availabletext">Available</string>
+    <string name="phone_agent">Phone</string>
+    <string name="call_agent">Call Agent</string>
+    <string name="list_view">Open House List View</string>
+    <string name="your_profile">Your Profile</string>
+    <string name="tap_image">Tap Image To Upload Another</string>
+    <string name="type_5">Search Everything Else</string>
+    <string name="name">Name </string>
+    <string name="confirm">Confirm</string>
+    <string name="back">Back</string>
+    <string name="working">Working</string>
+    <string name="destination">Destination</string>
+    <string name="picked_customer">Picked customer</string>
+    <string name="car">Car</string>
+    <string name="balance">Balance</string>
+    <string name="powered_by">Powered By Justin Wozniak</string>
+    <string name="distance">Distance</string>
+    <string name="date">Date</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="log_in">Login</string>
+    <string name="register">Register</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
+    <string name="search">Search</string>
+    <string name="logout">Logout</string>
+    <string name="customer">Customer</string>
+    <string name="agent">Agent</string>
+    <string name="getting_agent">Getting Your Agent ....</string>
+    <string name="looking_agent">Looking For Your Agent…</string>
+    <string name="agent_here">Agent Here</string>
+    <string name="agent_found">Agent Found</string>
+    <string name="agent_complete">Agent Completed</string>
+    <string name="not_approved">Your Account Has Not Been Approved</string>
+    <string name="no_agent_near_you">No agents have been found near you</string>
+
+    <string name="title_activity_agent_map">Map</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array name="account_array">
+        <item>Customer</item>
+        <item>Driver</item>
+    </string-array>
+    <string name="title_activity_map">MapActivity</string>
+
+
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyABYxmjHLFxd6wGpl4_7whOrpCbVpIIVs8</string>
+
+
+    <string name="action_example">Example action</string>
+
+    <string name="waiting_for_location">Waiting for Location</string>
+
+
+</resources>
