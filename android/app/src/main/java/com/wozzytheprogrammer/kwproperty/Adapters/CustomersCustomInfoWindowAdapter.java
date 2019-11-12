@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +24,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
+
+import com.wozzytheprogrammer.kwproperty.Customer.CustomerMapActivity;
 
 public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -35,7 +39,10 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
 
 
 
+
     public CustomersCustomInfoWindowAdapter(Context context) {
+
+
         mContext = context;
         mWindow = LayoutInflater.from(context).inflate(R.layout.customers_custom_layout_window, null);
 
@@ -43,17 +50,25 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
     }
 
     private void renderWindowText(Marker marker, View view) {
-        getInfoWindowImage();
         String title = marker.getTitle();
         String snippet = marker.getSnippet();
+
         TextView tvTitle = view.findViewById(R.id.title);
+
         openHouseImage1 = view.findViewById(R.id.customersCustomWindowImage1);
         informationText = view.findViewById(R.id.customersOpenHouseInformation);
         openHouseAddress = view.findViewById(R.id.customersAddressOpenHouse);
         openHouseAddress.setText(title);
-        tvTitle.setText("Open House!");
-        informationText.setText(snippet);
-        getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
+
+        if(marker.getTitle() == "AGENT") {
+
+        }   else {
+            tvTitle.setText(marker.getTitle());
+            getInfoWindowImage();
+
+            informationText.setText(snippet);
+            getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
+        }
 
     }
 
@@ -73,21 +88,9 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
     }
 
     private void getJSON(final String urlWebService) {
-        /*
-         * As fetching the json string is a network operation
-         * And we cannot perform a network operation in main thread
-         * so we need an AsyncTask
-         * The constrains defined here are
-         * Void -> We are not passing anything
-         * Void -> Nothing at progress update as well
-         * String -> After completion it should return a string and it will be the json string
-         * */
+
         class GetJSON extends AsyncTask<Void, Void, String> {
 
-            //this method will be called before execution
-            //you can display a progress bar or something
-            //so that user can understand that he should wait
-            //as network operation may take some time
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();

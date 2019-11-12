@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/black"
     android:orientation="horizontal"
     android:padding="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout"
+
         android:layout_width="wrap_content"
         android:layout_height="172dp"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/title"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="147dp"
@@ -35,7 +34,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/customersCustomWindowImage1"
+
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_marginStart="16dp"
@@ -50,7 +49,7 @@
             app:srcCompat="@drawable/logo" />
 
         <TextView
-            android:id="@+id/customersOpenHouseInformation"
+
             android:layout_width="250dp"
             android:layout_height="100dp"
             android:layout_marginStart="12dp"
@@ -66,14 +65,13 @@
             app:layout_constraintTop_toBottomOf="@+id/customersAddressOpenHouse" />
 
         <TextView
-            android:id="@+id/customersAddressOpenHouse"
+
             android:layout_width="361dp"
             android:layout_height="25dp"
             android:layout_marginStart="21dp"
             android:layout_marginEnd="19dp"
             android:layout_marginBottom="7dp"
             android:gravity="center"
-            android:visibility="gone"
             android:text="The address will go here"
             android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/agentsCustomWindowImage1"

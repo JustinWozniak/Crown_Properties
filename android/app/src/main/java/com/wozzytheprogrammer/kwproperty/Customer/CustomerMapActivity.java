@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,43 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-
-import androidx.annotation.NonNull;
-
-import com.akexorcist.googledirection.DirectionCallback;
-import com.akexorcist.googledirection.GoogleDirection;
-import com.akexorcist.googledirection.constant.TransportMode;
-import com.akexorcist.googledirection.model.Direction;
-import com.akexorcist.googledirection.model.Route;
-import com.akexorcist.googledirection.util.DirectionConverter;
-import com.directions.route.RouteException;
-import com.directions.route.Routing;
-import com.directions.route.RoutingListener;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
-
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -57,8 +23,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.TransportMode;
+import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Route;
+import com.akexorcist.googledirection.util.DirectionConverter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -69,6 +55,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -76,10 +63,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -87,26 +79,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.Adapters.CustomersCustomInfoWindowAdapter;
-import com.wozzytheprogrammer.kwproperty.Objects.CustomerObject;
-import com.wozzytheprogrammer.kwproperty.Objects.AgentObject;
 import com.wozzytheprogrammer.kwproperty.History.HistoryActivity;
-import com.wozzytheprogrammer.kwproperty.Objects.LocationObject;
 import com.wozzytheprogrammer.kwproperty.Login.LauncherActivity;
-import com.wozzytheprogrammer.kwproperty.R;
+import com.wozzytheprogrammer.kwproperty.Objects.AgentObject;
+import com.wozzytheprogrammer.kwproperty.Objects.CustomerObject;
+import com.wozzytheprogrammer.kwproperty.Objects.LocationObject;
 import com.wozzytheprogrammer.kwproperty.Objects.RideObject;
+import com.wozzytheprogrammer.kwproperty.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -900,7 +890,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
 
     boolean getAgentsAroundStarted = false;
-    List<Marker> markerList = new ArrayList<Marker>();
+    public static List<Marker> listOfAgentMarkers = new ArrayList<Marker>();
     /**
      * Displays agents around the user's current
      * location and updates them in real time.
@@ -916,7 +906,7 @@ public class CustomerMapActivity extends AppCompatActivity
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                for(Marker markerIt : markerList){
+                for(Marker markerIt : listOfAgentMarkers){
                     if(markerIt.getTag() == null || key == null){continue;}
                     if(markerIt.getTag().equals(key))
                         return;
@@ -929,19 +919,23 @@ public class CustomerMapActivity extends AppCompatActivity
                 Marker AgentMarker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory
                         .fromResource(R.drawable.agenticon))
                         .position(agentLocation).title(key));
-                AgentMarker.setTag(key);
+                AgentMarker.setTag("Agents Name Here");
+//                AgentMarker.setTitle("Real Estate Agent");
+                AgentMarker.setSnippet(AgentMarker.getId() + " is online!");
 
-                markerList.add(AgentMarker);
+                listOfAgentMarkers.add(AgentMarker);
+                Log.e("MARKERLIST",listOfAgentMarkers.toString());
+
 
             }
 
             @Override
             public void onKeyExited(String key) {
-                for(Marker markerIt : markerList) {
+                for(Marker markerIt : listOfAgentMarkers) {
                     if(markerIt.getTag() == null || key == null){continue;}
                     if(markerIt.getTag().equals(key)){
                         markerIt.remove();
-                        markerList.remove(markerIt);
+                        listOfAgentMarkers.remove(markerIt);
                         return;
                     }
 
@@ -950,7 +944,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
-                for(Marker markerIt : markerList) {
+                for(Marker markerIt : listOfAgentMarkers) {
                     if(markerIt.getTag() == null || key == null){continue;}
                     if(markerIt.getTag().equals(key)) {
                         markerIt.setPosition(new LatLng(location.latitude, location.longitude));
@@ -973,7 +967,6 @@ public class CustomerMapActivity extends AppCompatActivity
     /**
      * Checks if agent has not been updated in a while, if it has been more than x time
      * since the agent location was last updated then remove it from the database.
-     * @param key
      */
     private void checkAgentLastUpdated(String key) {
         FirebaseDatabase.getInstance().getReference()
@@ -1043,8 +1036,6 @@ public class CustomerMapActivity extends AppCompatActivity
     /**
      * Checks if route where fetched successfully, if yes then
      * add them to the map
-     * @param direction
-     * @param rawBody - data of the route
      */
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
