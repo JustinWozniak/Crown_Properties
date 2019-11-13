@@ -1,24 +1,71 @@
 package com.wozzytheprogrammer.kwproperty.Customer;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.TextView;
+import android.os.Handler;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.wozzytheprogrammer.kwproperty.R;
 
-public class CustomerListView extends AppCompatActivity {
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class CustomerListView extends AppCompatActivity implements SportAdapter.Callback {
+
+    @BindView(R.id.mRecyclerView)
+    RecyclerView mRecyclerView;
+    SportAdapter mSportAdapter;
+
+    LinearLayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_list_view);
-        initializeObjects();
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        setUp();
     }
 
-    private void initializeObjects() {
+    private void setUp() {
+        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        Drawable dividerDrawable = ContextCompat.getDrawable(this, R.drawable.divider_drawable);
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(dividerDrawable));
+        mSportAdapter = new SportAdapter(new ArrayList<>());
+
+        prepareDemoContent();
+    }
+
+    private void prepareDemoContent() {
+
+        new Handler().postDelayed(() -> {
+            //prepare data and show loading
+
+            ArrayList<Sport> mSports = new ArrayList<>();
+            String[] sportsList = getResources().getStringArray(R.array.sports_titles);
+            String[] sportsInfo = getResources().getStringArray(R.array.sports_info);
+            String[] sportsImage = getResources().getStringArray(R.array.sports_images);
+            for (int i = 0; i < sportsList.length; i++) {
+                mSports.add(new Sport(sportsImage[i], sportsInfo[i], "News", sportsList[i]));
+            }
+            mSportAdapter.addItems(mSports);
+            mRecyclerView.setAdapter(mSportAdapter);
+        }, 2000);
 
 
+    }
+
+    @Override
+    public void onEmptyViewRetryClick() {
+        prepareDemoContent();
     }
 }

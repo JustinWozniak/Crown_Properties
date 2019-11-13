@@ -24,7 +24,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".Customer.CustomerListView"></activity>
         <activity android:name=".Login.LauncherActivity" />
 
         <uses-library
