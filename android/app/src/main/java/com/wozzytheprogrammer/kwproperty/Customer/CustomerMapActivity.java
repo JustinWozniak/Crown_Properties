@@ -188,8 +188,8 @@ public class CustomerMapActivity extends AppCompatActivity
         listView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ListView = new Intent(CustomerMapActivity.this, CustomerListView.class);
-                startActivity(ListView);
+                Intent ListView2 = new Intent(CustomerMapActivity.this, CustomerListView.class);
+                startActivity(ListView2);
             }
         });
 

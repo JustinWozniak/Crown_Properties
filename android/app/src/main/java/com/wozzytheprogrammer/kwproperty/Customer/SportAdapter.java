@@ -19,7 +19,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
+/**
+ * Created on : Jan 26, 2019
+ * Author     : AndroidWave
+ * Email    : info@androidwave.com
+ */
 public class SportAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "SportAdapter";
     public static final int VIEW_TYPE_EMPTY = 0;

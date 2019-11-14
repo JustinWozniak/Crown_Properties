@@ -48,6 +48,7 @@
         <activity android:name=".Agent.AgentProfileActivity" />
         <activity android:name=".History.HistoryActivity" />
         <activity android:name=".History.HistorySingleActivity" />
+        <activity android:name=".Customer.CustomerListView" />
         <activity
             android:name=".Agent.AgentMapActivity"
             android:theme="@style/AppTheme.NoActionBar" />

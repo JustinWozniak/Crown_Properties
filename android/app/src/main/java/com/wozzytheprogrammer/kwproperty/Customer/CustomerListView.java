@@ -23,12 +23,13 @@ public class CustomerListView extends AppCompatActivity implements SportAdapter.
     RecyclerView mRecyclerView;
     SportAdapter mSportAdapter;
 
+
     LinearLayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_customer_list_view);
         ButterKnife.bind(this);
         setUp();
     }
