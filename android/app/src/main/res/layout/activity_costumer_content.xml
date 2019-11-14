@@ -196,7 +196,8 @@
                     android:backgroundTint="@color/black"
                     android:padding="20sp"
                     android:text="@string/search"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/mygold" />
+
                 <Button
                     android:id="@+id/viewListViewButton"
                     android:layout_width="match_parent"
@@ -204,7 +205,7 @@
                     android:backgroundTint="@color/black"
                     android:padding="20sp"
                     android:text="@string/list_view"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/mygold" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </RelativeLayout>
@@ -214,6 +215,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Button"
+        android:visibility="gone"
         app:layout_anchor="@+id/linearLayout2"
         app:layout_anchorGravity="center" />
 
