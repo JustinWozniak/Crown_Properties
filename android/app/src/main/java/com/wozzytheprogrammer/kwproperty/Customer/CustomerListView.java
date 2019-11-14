@@ -51,14 +51,14 @@ public class CustomerListView extends AppCompatActivity implements SportAdapter.
         new Handler().postDelayed(() -> {
             //prepare data and show loading
 
-            ArrayList<Sport> mSports = new ArrayList<>();
-            String[] sportsList = getResources().getStringArray(R.array.sports_titles);
-            String[] sportsInfo = getResources().getStringArray(R.array.sports_info);
-            String[] sportsImage = getResources().getStringArray(R.array.sports_images);
+            ArrayList<Properties> mProperties = new ArrayList<>();
+            String[] sportsList = getResources().getStringArray(R.array.property_addresses);
+            String[] sportsInfo = getResources().getStringArray(R.array.property_info);
+            String[] sportsImage = getResources().getStringArray(R.array.property_images);
             for (int i = 0; i < sportsList.length; i++) {
-                mSports.add(new Sport(sportsImage[i], sportsInfo[i], "News", sportsList[i]));
+                mProperties.add(new Properties(sportsImage[i], sportsInfo[i], "News", sportsList[i]));
             }
-            mSportAdapter.addItems(mSports);
+            mSportAdapter.addItems(mProperties);
             mRecyclerView.setAdapter(mSportAdapter);
         }, 2000);
 

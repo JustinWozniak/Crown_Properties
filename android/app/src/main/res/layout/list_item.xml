@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorIcons"
+    android:background="@color/black"
     android:layout_margin="@dimen/_4dp">
 
     <androidx.cardview.widget.CardView
@@ -12,19 +12,20 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:elevation="3dp"
-
+        android:background="@color/black"
         android:padding="@dimen/card_view_margin"
         card_view:cardCornerRadius="@dimen/card_radius">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/black">
 
             <ImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_height="200dp"
+                android:background="@drawable/logo"
                 android:scaleType="fitXY" />
 
             <TextView
@@ -36,9 +37,12 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:layout_marginBottom="8dp"
+                android:gravity="center"
                 android:padding="@dimen/_8dp"
                 android:text="@string/title_placeholder"
-                android:textColor="@color/colorIcons" />
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/newsTitle"
@@ -48,9 +52,13 @@
                 android:layout_below="@+id/thumbnail"
                 android:layout_alignParentStart="true"
                 android:layout_marginLeft="@dimen/_8dp"
-                android:textStyle="bold"
+                android:gravity="center"
                 android:padding="@dimen/_8dp"
-                android:text="@string/news_placeholder" />
+                android:text="@string/info_placeholder"
+                android:textAlignment="center"
+                android:textColor="@color/mygold"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/newsInfo"
@@ -61,9 +69,12 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:layout_marginBottom="@dimen/_8dp"
+                android:gravity="center"
                 android:padding="@dimen/_8dp"
-                android:text="@string/sports_info_placeholder"
-                />
+                android:text="@string/property_info_placeholder"
+                android:textAlignment="center"
+                android:textColor="@color/mygold"
+                android:textSize="28sp" />
 
         </RelativeLayout>
 

@@ -4,7 +4,7 @@ package com.wozzytheprogrammer.kwproperty.Customer;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Sport {
+public class Properties {
 
     @SerializedName("imageUrl")
     private String mImageUrl;
@@ -15,7 +15,7 @@ public class Sport {
     @SerializedName("title")
     private String mTitle;
 
-    public Sport(String mImageUrl, String mInfo, String mSubTitle, String mTitle) {
+    public Properties(String mImageUrl, String mInfo, String mSubTitle, String mTitle) {
         this.mImageUrl = mImageUrl;
         this.mInfo = mInfo;
         this.mSubTitle = mSubTitle;
