@@ -2,6 +2,7 @@ package com.wozzytheprogrammer.kwproperty.Customer;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.wozzytheprogrammer.kwproperty.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SportAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "PropertyAdapter";
     public static final int VIEW_TYPE_EMPTY = 0;
     public static final int VIEW_TYPE_NORMAL = 1;
@@ -27,7 +37,7 @@ public class SportAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private Callback mCallback;
     private List<Properties> mPropertiesList;
 
-    public SportAdapter(List<Properties> propertiesList) {
+    public PropertyAdapter(List<Properties> propertiesList) {
         mPropertiesList = propertiesList;
     }
 
@@ -42,7 +52,7 @@ public class SportAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+        getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
                 return new ViewHolder(
@@ -165,5 +175,109 @@ public class SportAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         }
 
+    }
+
+
+    /**
+     Calls the backend api and loads json data from it....
+     */
+    private void getJSON(final String urlWebService) {
+
+        class GetJSON extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+//                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+                try {
+                    loadIntoMaps(s);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //in this method we are fetching the json string
+            @Override
+            protected String doInBackground(Void... voids) {
+
+
+                try {
+                    //creating a URL
+                    URL url = new URL(urlWebService);
+
+                    //Opening the URL using HttpURLConnection
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+                    //StringBuilder object to read the string from the service
+                    StringBuilder sb = new StringBuilder();
+
+                    //We will use a buffered reader to read the string from service
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    //A simple string to read values from each line
+                    String json;
+
+                    //reading until we don't find null
+                    while ((json = bufferedReader.readLine()) != null) {
+
+                        //appending it to string builder
+                        sb.append(json + "\n");
+                    }
+
+                    //finally returning the read string
+                    return sb.toString().trim();
+                } catch (Exception e) {
+                    return null;
+                }
+
+            }
+        }
+
+        //creating asynctask object and executing it
+        GetJSON getJSON = new GetJSON();
+        getJSON.execute();
+
+
+    }
+    /**
+     Parses the Json when its returned....
+     */
+    private void loadIntoMaps(String json) throws JSONException {
+        //creating a json array from the json string
+        JSONArray addressArray = new JSONArray(json);
+
+        //creating a string array for listview
+        String[] markerNames = new String[addressArray.length()];
+        String[] addresses = new String[addressArray.length()];
+        String[] latittudes = new String[addressArray.length()];
+        String[] longitutes = new String[addressArray.length()];
+        String[] urlString = new String[addressArray.length()];
+        final String[] propertyInformation = new String[addressArray.length()];
+
+
+
+        //looping through all the elements in json array
+        for (int i = 0; i < addressArray.length(); i++) {
+
+            JSONObject obj = addressArray.getJSONObject(i);
+            List<String> addressStrings = new ArrayList<String>();
+            markerNames[i] = obj.getString("name");
+            Log.e("names", markerNames[i]);
+            addresses[i] = obj.getString("address");
+            addressStrings.add(addresses[i]);
+            latittudes[i] = obj.getString("lat");
+            longitutes[i] = obj.getString("lng");
+            propertyInformation[i] = obj.getString("information");
+            urlString[i] = obj.getString("urlString");
+
+
+
+            Log.e("obj", String.valueOf(obj));
+        }
     }
 }

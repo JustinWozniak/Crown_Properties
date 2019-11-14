@@ -1,11 +1,9 @@
 package com.wozzytheprogrammer.kwproperty.Customer;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,11 +15,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CustomerListView extends AppCompatActivity implements SportAdapter.Callback {
+public class CustomerListView extends AppCompatActivity implements PropertyAdapter.Callback {
 
     @BindView(R.id.mRecyclerView)
     RecyclerView mRecyclerView;
-    SportAdapter mSportAdapter;
+    PropertyAdapter mPropertyAdapter;
 
 
     LinearLayoutManager mLayoutManager;
@@ -39,9 +37,7 @@ public class CustomerListView extends AppCompatActivity implements SportAdapter.
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        Drawable dividerDrawable = ContextCompat.getDrawable(this, R.drawable.divider_drawable);
-//        mRecyclerView.addItemDecoration(new DividerItemDecoration(dividerDrawable));
-        mSportAdapter = new SportAdapter(new ArrayList<>());
+        mPropertyAdapter = new PropertyAdapter(new ArrayList<>());
 
         prepareDemoContent();
     }
@@ -52,14 +48,14 @@ public class CustomerListView extends AppCompatActivity implements SportAdapter.
             //prepare data and show loading
 
             ArrayList<Properties> mProperties = new ArrayList<>();
-            String[] sportsList = getResources().getStringArray(R.array.property_addresses);
-            String[] sportsInfo = getResources().getStringArray(R.array.property_info);
-            String[] sportsImage = getResources().getStringArray(R.array.property_images);
-            for (int i = 0; i < sportsList.length; i++) {
-                mProperties.add(new Properties(sportsImage[i], sportsInfo[i], "News", sportsList[i]));
+            String[] propertyAddressList = getResources().getStringArray(R.array.property_addresses);
+            String[] propertyInfo = getResources().getStringArray(R.array.property_info);
+            String[] propertyImage = getResources().getStringArray(R.array.property_images);
+            for (int i = 0; i < propertyAddressList.length; i++) {
+                mProperties.add(new Properties(propertyImage[i], propertyInfo[i], "News", propertyAddressList[i]));
             }
-            mSportAdapter.addItems(mProperties);
-            mRecyclerView.setAdapter(mSportAdapter);
+            mPropertyAdapter.addItems(mProperties);
+            mRecyclerView.setAdapter(mPropertyAdapter);
         }, 2000);
 
 

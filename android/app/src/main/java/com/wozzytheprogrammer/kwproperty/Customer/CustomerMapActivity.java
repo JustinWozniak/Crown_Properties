@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -784,16 +783,11 @@ public class CustomerMapActivity extends AppCompatActivity
             JSONObject obj = addressArray.getJSONObject(i);
 
             markerNames[i] = obj.getString("name");
-            Log.e("names", markerNames[i]);
             addresses[i] = obj.getString("address");
             latittudes[i] = obj.getString("lat");
             longitutes[i] = obj.getString("lng");
             propertyInformation[i] = obj.getString("information");
             urlString[i] = obj.getString("urlString");
-
-            if(addresses[i] == null) {
-                Log.e("THIS IS AN AGENT",addresses[i]);
-            }
 
             JSONObject jsonObj = addressArray.getJSONObject(i);
             final double finalLat = Double.valueOf(jsonObj.getString("lat"));
@@ -924,9 +918,6 @@ public class CustomerMapActivity extends AppCompatActivity
                 AgentMarker.setSnippet(AgentMarker.getId() + " is online!");
 
                 listOfAgentMarkers.add(AgentMarker);
-                Log.e("MARKERLIST",listOfAgentMarkers.toString());
-
-
             }
 
             @Override
@@ -1111,7 +1102,6 @@ public class CustomerMapActivity extends AppCompatActivity
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             // TODO: Handle the error.
             Status status = Autocomplete.getStatusFromIntent(data);
-            Log.i("PLACE_AUTOCOMPLETE", status.getStatusMessage());
         } else if (resultCode == RESULT_CANCELED) {
             initPlacesAutocomplete();
         }
