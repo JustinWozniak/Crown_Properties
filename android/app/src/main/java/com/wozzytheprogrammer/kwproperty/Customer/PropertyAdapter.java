@@ -23,7 +23,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,7 +51,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
+
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
                 return new ViewHolder(
@@ -75,11 +74,116 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
+        String finalJson = getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
+        try {
+            parseJsonInfo(finalJson);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         if (mPropertiesList != null && mPropertiesList.size() > 0) {
             return mPropertiesList.size();
         } else {
             return 1;
         }
+    }
+
+
+
+    /**
+     Calls the backend api and loads json data from it....
+     * @return
+     */
+    private String getJSON(final String urlWebService) {
+
+        class GetJSON extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+//                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+
+            }
+
+            //in this method we are fetching the json string
+            @Override
+            protected String doInBackground(Void... voids) {
+
+
+                try {
+                    //creating a URL
+                    URL url = new URL(urlWebService);
+
+                    //Opening the URL using HttpURLConnection
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+                    //StringBuilder object to read the string from the service
+                    StringBuilder sb = new StringBuilder();
+
+                    //We will use a buffered reader to read the string from service
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    //A simple string to read values from each line
+                    String json;
+
+                    //reading until we don't find null
+                    while ((json = bufferedReader.readLine()) != null) {
+
+                        //appending it to string builder
+                        sb.append(json + "\n\n\n");
+                        Log.e("json",json);
+                    }
+
+                    //finally returning the read string
+                    return sb.toString().trim();
+                } catch (Exception e) {
+                    return null;
+                }
+
+            }
+        }
+
+        //creating asynctask object and executing it
+        GetJSON getJSON = new GetJSON();
+        getJSON.execute();
+
+
+        return urlWebService;
+    }
+    /**
+     Parses the Json when its returned
+     * @return
+     */
+    private JSONObject parseJsonInfo(String json) throws JSONException {
+        //creating a json array from the json string
+        JSONArray addressArray = new JSONArray(json);
+
+        //creating a string array
+        String[] addressNames = new String[addressArray.length()];
+        String[] addresses = new String[addressArray.length()];
+        String[] imageUrlString = new String[addressArray.length()];
+        final String[] propertyInformation = new String[addressArray.length()];
+
+
+
+        //looping through all the elements in json array
+        for (int i = 0; i < addressArray.length(); i++) {
+
+            JSONObject obj = addressArray.getJSONObject(i);
+
+            addressNames[i] = obj.getString("name");
+            addresses[i] = obj.getString("address");
+            propertyInformation[i] = obj.getString("information");
+            imageUrlString[i] = obj.getString("imgUrl");
+            Log.e("JSONOBJ", String.valueOf(obj));
+
+            return obj;
+        }
+        return null;
     }
 
     public void addItems(List<Properties> propertiesList) {
@@ -177,107 +281,4 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     }
 
-
-    /**
-     Calls the backend api and loads json data from it....
-     */
-    private void getJSON(final String urlWebService) {
-
-        class GetJSON extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-//                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-                try {
-                    loadIntoMaps(s);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //in this method we are fetching the json string
-            @Override
-            protected String doInBackground(Void... voids) {
-
-
-                try {
-                    //creating a URL
-                    URL url = new URL(urlWebService);
-
-                    //Opening the URL using HttpURLConnection
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-                    //StringBuilder object to read the string from the service
-                    StringBuilder sb = new StringBuilder();
-
-                    //We will use a buffered reader to read the string from service
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    //A simple string to read values from each line
-                    String json;
-
-                    //reading until we don't find null
-                    while ((json = bufferedReader.readLine()) != null) {
-
-                        //appending it to string builder
-                        sb.append(json + "\n");
-                    }
-
-                    //finally returning the read string
-                    return sb.toString().trim();
-                } catch (Exception e) {
-                    return null;
-                }
-
-            }
-        }
-
-        //creating asynctask object and executing it
-        GetJSON getJSON = new GetJSON();
-        getJSON.execute();
-
-
-    }
-    /**
-     Parses the Json when its returned....
-     */
-    private void loadIntoMaps(String json) throws JSONException {
-        //creating a json array from the json string
-        JSONArray addressArray = new JSONArray(json);
-
-        //creating a string array for listview
-        String[] markerNames = new String[addressArray.length()];
-        String[] addresses = new String[addressArray.length()];
-        String[] latittudes = new String[addressArray.length()];
-        String[] longitutes = new String[addressArray.length()];
-        String[] urlString = new String[addressArray.length()];
-        final String[] propertyInformation = new String[addressArray.length()];
-
-
-
-        //looping through all the elements in json array
-        for (int i = 0; i < addressArray.length(); i++) {
-
-            JSONObject obj = addressArray.getJSONObject(i);
-            List<String> addressStrings = new ArrayList<String>();
-            markerNames[i] = obj.getString("name");
-            Log.e("names", markerNames[i]);
-            addresses[i] = obj.getString("address");
-            addressStrings.add(addresses[i]);
-            latittudes[i] = obj.getString("lat");
-            longitutes[i] = obj.getString("lng");
-            propertyInformation[i] = obj.getString("information");
-            urlString[i] = obj.getString("urlString");
-
-
-
-            Log.e("obj", String.valueOf(obj));
-        }
-    }
 }

@@ -93,8 +93,8 @@
 
         <com.addisonelliott.segmentedbutton.SegmentedButton
 
-            android:layout_width="7dp"
-            android:layout_height="match_parent"
+            android:layout_width="139dp"
+            android:layout_height="56dp"
             android:layout_weight="1"
             android:padding="10dp"
             app:drawable="@drawable/ic_user_black"
@@ -105,8 +105,8 @@
             app:textColor="@color/black" />
 
         <com.addisonelliott.segmentedbutton.SegmentedButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="105dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:padding="10dp"
             app:drawable="@drawable/agenticon"
@@ -121,7 +121,7 @@
         android:id="@+id/register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:background="@color/colorBackground"
         android:text="@string/register"
         android:textColor="@color/colorPrimaryDark" />

@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -112,7 +113,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mRequest, listView;
+    private Button mSearch, listView;
 
     private LocationObject pickupLocation, currentLocation, destinationLocation;
 
@@ -180,19 +181,19 @@ public class CustomerMapActivity extends AppCompatActivity
 
         mCurrentLocation = findViewById(R.id.current_location);
 
-        mRequest = findViewById(R.id.request);
+        mSearch = findViewById(R.id.search_button);
 
         listView = findViewById(R.id.viewListViewButton);
 
         listView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ListView2 = new Intent(CustomerMapActivity.this, CustomerListView.class);
-                startActivity(ListView2);
+                Intent ListView = new Intent(CustomerMapActivity.this, CustomerListView.class);
+                startActivity(ListView);
             }
         });
 
-        mRequest.setOnClickListener(v -> {
+        mSearch.setOnClickListener(v -> {
 
             if (requestBol) {
                 mCurrentRide.cancelRide();
@@ -211,7 +212,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
                 requestBol = true;
 
-                mRequest.setText(R.string.getting_agent);
+                mSearch.setText(R.string.getting_agent);
 
 
                 getClosestAgent();
@@ -251,7 +252,7 @@ public class CustomerMapActivity extends AppCompatActivity
                 getRouteToMarker();
                 getAgentsAround();
 
-                mRequest.setText(getString(R.string.call_agent));
+                mSearch.setText(getString(R.string.call_agent));
             }else{
 
                 mCurrentLocation.setImageDrawable(getResources().getDrawable(R.drawable.ic_location_on_grey_24dp));
@@ -402,7 +403,7 @@ public class CustomerMapActivity extends AppCompatActivity
             public void run(){
                 if(!agentFound){
                     requestBol = false;
-                    mRequest.setText(R.string.call_agent);
+                    mSearch.setText(R.string.call_agent);
                     Snackbar.make(findViewById(R.id.drawer_layout), R.string.no_agent_near_you, Snackbar.LENGTH_LONG).show();
                     geoQuery.removeAllListeners();
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -428,17 +429,17 @@ public class CustomerMapActivity extends AppCompatActivity
                                 return;
                             }
 
-                                agentFound = true;
-                                mCurrentRide.setAgent(new AgentObject(dataSnapshot.getKey()));
+                            agentFound = true;
+                            mCurrentRide.setAgent(new AgentObject(dataSnapshot.getKey()));
 
-                                mCurrentRide.postRideInfo();
+                            mCurrentRide.postRideInfo();
 
-                                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-                                getAgentLocation();
-                                getAgentInfo();
-                                getHasRideEnded();
-                                mRequest.setText(R.string.looking_agent);
+                            getAgentLocation();
+                            getAgentInfo();
+                            getHasRideEnded();
+                            mSearch.setText(R.string.looking_agent);
 
                         }
                     }
@@ -508,14 +509,20 @@ public class CustomerMapActivity extends AppCompatActivity
                     float distance = loc1.distanceTo(loc2);
 
                     if (distance<100){
-                        mRequest.setText(R.string.agent_here);
+                        mSearch.setText(R.string.agent_here);
                     }else{
-                        mRequest.setText(getString(R.string.agent_found));
+                        mSearch.setText(getString(R.string.agent_found));
                     }
 
                     mCurrentRide.getAgent().setLocation(mAgentLocation);
 
-                    mAgentMarker = mMap.addMarker(new MarkerOptions().position(mCurrentRide.getAgent().getLocation().getCoordinates()).title("your agent").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_agent)));
+                    mAgentMarker = mMap.addMarker(new MarkerOptions()
+                            .position(mCurrentRide
+                                    .getAgent()
+                                    .getLocation()
+                                    .getCoordinates())
+                            .title("your agent")
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_agent)));
                 }
 
             }
@@ -534,7 +541,7 @@ public class CustomerMapActivity extends AppCompatActivity
         if(mCurrentRide == null){return;}
 
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        
+
         DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(mCurrentRide.getAgent().getId());
         mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -605,7 +612,7 @@ public class CustomerMapActivity extends AppCompatActivity
         }
 
         if (polylines != null)  {
-           erasePolylines();
+            erasePolylines();
         }
 
         pickupLocation = null;
@@ -628,7 +635,7 @@ public class CustomerMapActivity extends AppCompatActivity
             mAgentMarker.remove();
         }
         mMap.clear();
-        mRequest.setText(getString(R.string.call_agent));
+        mSearch.setText(getString(R.string.call_agent));
 
         mAgentInfo.setVisibility(View.GONE);
         mRadioLayout.setVisibility(View.VISIBLE);
@@ -690,7 +697,7 @@ public class CustomerMapActivity extends AppCompatActivity
                 .build();
         routing.execute();
 
-        }
+    }
 
 
 
@@ -761,7 +768,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
     }
     /**
-    Parses the Json when its returned, and sets markers on the maps
+     Parses the Json when its returned, and sets markers on the maps
      */
     private void loadIntoMaps(String json) throws JSONException {
         //creating a json array from the json string
@@ -783,11 +790,16 @@ public class CustomerMapActivity extends AppCompatActivity
             JSONObject obj = addressArray.getJSONObject(i);
 
             markerNames[i] = obj.getString("name");
+            Log.e("names", markerNames[i]);
             addresses[i] = obj.getString("address");
             latittudes[i] = obj.getString("lat");
             longitutes[i] = obj.getString("lng");
             propertyInformation[i] = obj.getString("information");
             urlString[i] = obj.getString("urlString");
+
+            if(addresses[i] == null) {
+                Log.e("THIS IS AN AGENT",addresses[i]);
+            }
 
             JSONObject jsonObj = addressArray.getJSONObject(i);
             final double finalLat = Double.valueOf(jsonObj.getString("lat"));
@@ -884,7 +896,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
 
     boolean getAgentsAroundStarted = false;
-    public static List<Marker> listOfAgentMarkers = new ArrayList<Marker>();
+    List<Marker> markerList = new ArrayList<Marker>();
     /**
      * Displays agents around the user's current
      * location and updates them in real time.
@@ -900,7 +912,7 @@ public class CustomerMapActivity extends AppCompatActivity
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                for(Marker markerIt : listOfAgentMarkers){
+                for(Marker markerIt : markerList){
                     if(markerIt.getTag() == null || key == null){continue;}
                     if(markerIt.getTag().equals(key))
                         return;
@@ -913,20 +925,19 @@ public class CustomerMapActivity extends AppCompatActivity
                 Marker AgentMarker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory
                         .fromResource(R.drawable.agenticon))
                         .position(agentLocation).title(key));
-                AgentMarker.setTag("Agents Name Here");
-//                AgentMarker.setTitle("Real Estate Agent");
-                AgentMarker.setSnippet(AgentMarker.getId() + " is online!");
+                AgentMarker.setTag(key);
 
-                listOfAgentMarkers.add(AgentMarker);
+                markerList.add(AgentMarker);
+
             }
 
             @Override
             public void onKeyExited(String key) {
-                for(Marker markerIt : listOfAgentMarkers) {
+                for(Marker markerIt : markerList) {
                     if(markerIt.getTag() == null || key == null){continue;}
                     if(markerIt.getTag().equals(key)){
                         markerIt.remove();
-                        listOfAgentMarkers.remove(markerIt);
+                        markerList.remove(markerIt);
                         return;
                     }
 
@@ -935,7 +946,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
-                for(Marker markerIt : listOfAgentMarkers) {
+                for(Marker markerIt : markerList) {
                     if(markerIt.getTag() == null || key == null){continue;}
                     if(markerIt.getTag().equals(key)) {
                         markerIt.setPosition(new LatLng(location.latitude, location.longitude));
@@ -958,6 +969,7 @@ public class CustomerMapActivity extends AppCompatActivity
     /**
      * Checks if agent has not been updated in a while, if it has been more than x time
      * since the agent location was last updated then remove it from the database.
+     * @param key
      */
     private void checkAgentLastUpdated(String key) {
         FirebaseDatabase.getInstance().getReference()
@@ -965,25 +977,25 @@ public class CustomerMapActivity extends AppCompatActivity
                 .child("Agents")
                 .child(key)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()){return;}
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(!dataSnapshot.exists()){return;}
 
-                if(dataSnapshot.child("last_updated").getValue()!=null){
-                    long lastUpdated = Long.parseLong(dataSnapshot.child("last_updated").getValue().toString());
-                    long currentTimestamp = System.currentTimeMillis();
+                        if(dataSnapshot.child("last_updated").getValue()!=null){
+                            long lastUpdated = Long.parseLong(dataSnapshot.child("last_updated").getValue().toString());
+                            long currentTimestamp = System.currentTimeMillis();
 
-                    if(currentTimestamp - lastUpdated > 60000){
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("agentsAvailable");
-                        GeoFire geoFire = new GeoFire(ref);
-                        geoFire.removeLocation(dataSnapshot.getKey(), (key1, error) -> {});
+                            if(currentTimestamp - lastUpdated > 60000){
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("agentsAvailable");
+                                GeoFire geoFire = new GeoFire(ref);
+                                geoFire.removeLocation(dataSnapshot.getKey(), (key1, error) -> {});
+                            }
+                        }
                     }
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
     }
 
 
@@ -1027,6 +1039,8 @@ public class CustomerMapActivity extends AppCompatActivity
     /**
      * Checks if route where fetched successfully, if yes then
      * add them to the map
+     * @param direction
+     * @param rawBody - data of the route
      */
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
@@ -1096,12 +1110,13 @@ public class CustomerMapActivity extends AppCompatActivity
             getRouteToMarker();
             getAgentsAround();
 
-            mRequest.setText(getString(R.string.call_agent));
+            mSearch.setText(getString(R.string.call_agent));
 
 
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             // TODO: Handle the error.
             Status status = Autocomplete.getStatusFromIntent(data);
+            Log.i("PLACE_AUTOCOMPLETE", status.getStatusMessage());
         } else if (resultCode == RESULT_CANCELED) {
             initPlacesAutocomplete();
         }

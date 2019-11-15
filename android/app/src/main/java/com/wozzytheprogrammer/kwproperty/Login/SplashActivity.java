@@ -1,10 +1,10 @@
 package com.wozzytheprogrammer.kwproperty.Login;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.wozzytheprogrammer.kwproperty.R;
 
@@ -24,7 +24,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    sleep(1000);
+                    sleep(3000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
