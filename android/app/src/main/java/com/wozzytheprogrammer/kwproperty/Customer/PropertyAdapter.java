@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.cedarsoftware.util.io.JsonReader;
 import com.wozzytheprogrammer.kwproperty.R;
 
 import org.json.JSONArray;
@@ -37,11 +36,14 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private Callback mCallback;
     private List<Properties> mPropertiesList;
     private List<Properties> mJsonPropertiesList;
-    private JSONObject parseObj;
+    private int TOTAL_PROPERTIES_TO_REMOVE = 10;
 
     public PropertyAdapter(List<Properties> propertiesList) {
         mPropertiesList = propertiesList;
+
+
         mJsonPropertiesList = propertiesList;
+
 
     }
 
@@ -70,7 +72,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (mJsonPropertiesList != null && mJsonPropertiesList.size() > 0) {
+        if (mPropertiesList != null && mPropertiesList.size() > 0) {
             return VIEW_TYPE_NORMAL;
         } else {
             return VIEW_TYPE_EMPTY;
@@ -79,10 +81,10 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-       getJSON("https://www.wozzytheprogrammer.com/objectApi.php");
-        if (mJsonPropertiesList != null && mJsonPropertiesList.size() > 0) {
-            Log.e("size", String.valueOf(parseObj));
-            return mJsonPropertiesList.size();
+
+
+        if (mPropertiesList != null && mPropertiesList.size() > 0) {
+            return mPropertiesList.size();
         } else {
             return 1;
         }
@@ -90,6 +92,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
 
     public void addItems(List<Properties> propertiesList) {
+        getJSON("https://www.wozzytheprogrammer.com/objectApi.php");
         mPropertiesList.addAll(propertiesList);
         notifyDataSetChanged();
     }
@@ -257,24 +260,32 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         //creating a json array from the json string
         JSONArray addressArray = new JSONArray(json);
         //creating a string array for listview
-        String[] addresses = new String[addressArray.length()];
         String[] imageUrl = new String[addressArray.length()];
         String[] propertyInformation = new String[addressArray.length()];
-        String[] finalArray =  new String[addressArray.length()];
-
-
+        String[] addresses = new String[addressArray.length()];
+        String[] type = new String[addressArray.length()];
 
         //looping through all the elements in json array
         for (int i = 0; i < addressArray.length(); i++) {
-
             JSONObject obj = addressArray.getJSONObject(i);
-            Log.e("thdddddsa", obj.toString());
-            addresses[i] = obj.getString("address");
-            propertyInformation[i] = obj.getString("information");
             imageUrl[i] = obj.getString("imgUrl");
-            Object result =  JsonReader.jsonToJava(String.valueOf(addressArray));
-            Log.e("result", String.valueOf(result));
+            propertyInformation[i] = obj.getString("information");
+            addresses[i] = obj.getString("address");
+            type[i] = obj.getString("type");
+            Properties properties666 = new Properties(imageUrl[i],propertyInformation[i],addresses[i],type[i]);
+
+            //iterator removes dummy data from mPropertiesList
+
+            mPropertiesList.add(properties666);
+
 
         }
+        Log.e("Pop3cdss", String.valueOf(mPropertiesList));
+
+        //ASYNCHRONOUS ISSUE? THESE ITEMS WONT REMOVE IN A A LOOP, BUT DO EVENTUALLY IN APP
+        mPropertiesList.remove(0);
+        mPropertiesList.remove(0);
+        mPropertiesList.remove(0);
+
     }
 }
