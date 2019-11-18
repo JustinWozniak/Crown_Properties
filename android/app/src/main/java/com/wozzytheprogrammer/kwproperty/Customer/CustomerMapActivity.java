@@ -190,6 +190,7 @@ public class CustomerMapActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent ListView = new Intent(CustomerMapActivity.this, CustomerListView.class);
                 startActivity(ListView);
+                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
             }
         });
 
@@ -790,7 +791,6 @@ public class CustomerMapActivity extends AppCompatActivity
             JSONObject obj = addressArray.getJSONObject(i);
 
             markerNames[i] = obj.getString("name");
-            Log.e("names", markerNames[i]);
             addresses[i] = obj.getString("address");
             latittudes[i] = obj.getString("lat");
             longitutes[i] = obj.getString("lng");
@@ -798,7 +798,6 @@ public class CustomerMapActivity extends AppCompatActivity
             urlString[i] = obj.getString("urlString");
 
             if(addresses[i] == null) {
-                Log.e("THIS IS AN AGENT",addresses[i]);
             }
 
             JSONObject jsonObj = addressArray.getJSONObject(i);
@@ -818,6 +817,7 @@ public class CustomerMapActivity extends AppCompatActivity
                 public void onInfoWindowClick(Marker marker) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(anotherUrl));
                     startActivity(browserIntent);
+                    overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
 
                     marker.setSnippet(propertyInformation.toString());
 
@@ -1003,6 +1003,7 @@ public class CustomerMapActivity extends AppCompatActivity
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(CustomerMapActivity.this, LauncherActivity.class);
         startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
         finish();
     }
 
@@ -1167,9 +1168,11 @@ public class CustomerMapActivity extends AppCompatActivity
             Intent intent = new Intent(CustomerMapActivity.this, HistoryActivity.class);
             intent.putExtra("customerOrAgent", "Customers");
             startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
         } else if (id == R.id.profile) {
             Intent intent = new Intent(CustomerMapActivity.this, CustomerProfileActivity.class);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
         } else if (id == R.id.logout) {
             logOut();
         }

@@ -4,15 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.provider.MediaStore;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.addisonelliott.segmentedbutton.SegmentedButtonGroup;
 import com.bumptech.glide.Glide;
@@ -77,6 +77,7 @@ public class AgentProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
             startActivityForResult(intent, 1);
+            overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
         });
 
         mConfirm.setOnClickListener(v -> saveUserInformation());

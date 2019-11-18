@@ -11,14 +11,14 @@ public class Properties {
     @SerializedName("info")
     private String mInfo;
     @SerializedName("subTitle")
-    private String mSubTitle;
+    private String mAddress;
     @SerializedName("title")
     private String mTitle;
 
-    public Properties(String mImageUrl, String mInfo, String mSubTitle, String mTitle) {
+    public Properties(String mImageUrl, String mInfo, String mAddress, String mTitle) {
         this.mImageUrl = mImageUrl;
         this.mInfo = mInfo;
-        this.mSubTitle = mSubTitle;
+        this.mAddress = mAddress;
         this.mTitle = mTitle;
     }
 
@@ -39,11 +39,11 @@ public class Properties {
     }
 
     public String getSubTitle() {
-        return mSubTitle;
+        return mAddress;
     }
 
     public void setSubTitle(String subTitle) {
-        mSubTitle = subTitle;
+        mAddress = subTitle;
     }
 
     public String getTitle() {

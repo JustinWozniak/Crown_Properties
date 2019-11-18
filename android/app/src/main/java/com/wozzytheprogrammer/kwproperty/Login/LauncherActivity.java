@@ -32,6 +32,7 @@ public class LauncherActivity extends AppCompatActivity {
             Intent intent = new Intent(LauncherActivity.this, AuthenticationActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
             finish();
             return;
         }
@@ -49,6 +50,7 @@ public class LauncherActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplication(), CustomerMapActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                    overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
                     finish();
                 }
             }
@@ -65,6 +67,7 @@ public class LauncherActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplication(), AgentMapActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                    overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
                     finish();
                 }
             }

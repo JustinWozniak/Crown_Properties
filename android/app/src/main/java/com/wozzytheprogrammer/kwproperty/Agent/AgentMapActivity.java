@@ -741,6 +741,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(AgentMapActivity.this, LauncherActivity.class);
         startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
         finish();
         return;
     }

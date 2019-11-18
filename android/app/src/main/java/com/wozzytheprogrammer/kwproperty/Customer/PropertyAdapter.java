@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.cedarsoftware.util.io.JsonReader;
 import com.wozzytheprogrammer.kwproperty.R;
 
 import org.json.JSONArray;
@@ -35,9 +36,13 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private Callback mCallback;
     private List<Properties> mPropertiesList;
+    private List<Properties> mJsonPropertiesList;
+    private JSONObject parseObj;
 
     public PropertyAdapter(List<Properties> propertiesList) {
         mPropertiesList = propertiesList;
+        mJsonPropertiesList = propertiesList;
+
     }
 
     public void setCallback(Callback callback) {
@@ -65,7 +70,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (mPropertiesList != null && mPropertiesList.size() > 0) {
+        if (mJsonPropertiesList != null && mJsonPropertiesList.size() > 0) {
             return VIEW_TYPE_NORMAL;
         } else {
             return VIEW_TYPE_EMPTY;
@@ -74,117 +79,15 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        String finalJson = getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
-        try {
-            parseJsonInfo(finalJson);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if (mPropertiesList != null && mPropertiesList.size() > 0) {
-            return mPropertiesList.size();
+       getJSON("https://www.wozzytheprogrammer.com/objectApi.php");
+        if (mJsonPropertiesList != null && mJsonPropertiesList.size() > 0) {
+            Log.e("size", String.valueOf(parseObj));
+            return mJsonPropertiesList.size();
         } else {
             return 1;
         }
     }
 
-
-
-    /**
-     Calls the backend api and loads json data from it....
-     * @return
-     */
-    private String getJSON(final String urlWebService) {
-
-        class GetJSON extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-//                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-
-            }
-
-            //in this method we are fetching the json string
-            @Override
-            protected String doInBackground(Void... voids) {
-
-
-                try {
-                    //creating a URL
-                    URL url = new URL(urlWebService);
-
-                    //Opening the URL using HttpURLConnection
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-                    //StringBuilder object to read the string from the service
-                    StringBuilder sb = new StringBuilder();
-
-                    //We will use a buffered reader to read the string from service
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    //A simple string to read values from each line
-                    String json;
-
-                    //reading until we don't find null
-                    while ((json = bufferedReader.readLine()) != null) {
-
-                        //appending it to string builder
-                        sb.append(json + "\n\n\n");
-                        Log.e("json",json);
-                    }
-
-                    //finally returning the read string
-                    return sb.toString().trim();
-                } catch (Exception e) {
-                    return null;
-                }
-
-            }
-        }
-
-        //creating asynctask object and executing it
-        GetJSON getJSON = new GetJSON();
-        getJSON.execute();
-
-
-        return urlWebService;
-    }
-    /**
-     Parses the Json when its returned
-     * @return
-     */
-    private JSONObject parseJsonInfo(String json) throws JSONException {
-        //creating a json array from the json string
-        JSONArray addressArray = new JSONArray(json);
-
-        //creating a string array
-        String[] addressNames = new String[addressArray.length()];
-        String[] addresses = new String[addressArray.length()];
-        String[] imageUrlString = new String[addressArray.length()];
-        final String[] propertyInformation = new String[addressArray.length()];
-
-
-
-        //looping through all the elements in json array
-        for (int i = 0; i < addressArray.length(); i++) {
-
-            JSONObject obj = addressArray.getJSONObject(i);
-
-            addressNames[i] = obj.getString("name");
-            addresses[i] = obj.getString("address");
-            propertyInformation[i] = obj.getString("information");
-            imageUrlString[i] = obj.getString("imgUrl");
-            Log.e("JSONOBJ", String.valueOf(obj));
-
-            return obj;
-        }
-        return null;
-    }
 
     public void addItems(List<Properties> propertiesList) {
         mPropertiesList.addAll(propertiesList);
@@ -281,4 +184,97 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     }
 
+    /**
+     Calls the backend api and loads json data from it....
+     */
+    private void getJSON(final String urlWebService) {
+
+        class GetJSON extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+//                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+                try {
+                    parseJsonInfo(s);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //in this method we are fetching the json string
+            @Override
+            protected String doInBackground(Void... voids) {
+
+
+                try {
+                    //creating a URL
+                    URL url = new URL(urlWebService);
+
+                    //Opening the URL using HttpURLConnection
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+                    //StringBuilder object to read the string from the service
+                    StringBuilder sb = new StringBuilder();
+
+                    //We will use a buffered reader to read the string from service
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                    //A simple string to read values from each line
+                    String json;
+
+                    //reading until we don't find null
+                    while ((json = bufferedReader.readLine()) != null) {
+
+                        //appending it to string builder
+                        sb.append(json + "\n");
+                    }
+
+                    //finally returning the read string
+                    return sb.toString().trim();
+                } catch (Exception e) {
+                    return null;
+                }
+
+            }
+        }
+
+        //creating asynctask object and executing it
+        GetJSON getJSON = new GetJSON();
+        getJSON.execute();
+
+
+    }
+    /**
+     Parses the Json when its returned, and sets markers on the maps
+     */
+    private void parseJsonInfo(String json) throws JSONException {
+        //creating a json array from the json string
+        JSONArray addressArray = new JSONArray(json);
+        //creating a string array for listview
+        String[] addresses = new String[addressArray.length()];
+        String[] imageUrl = new String[addressArray.length()];
+        String[] propertyInformation = new String[addressArray.length()];
+        String[] finalArray =  new String[addressArray.length()];
+
+
+
+        //looping through all the elements in json array
+        for (int i = 0; i < addressArray.length(); i++) {
+
+            JSONObject obj = addressArray.getJSONObject(i);
+            Log.e("thdddddsa", obj.toString());
+            addresses[i] = obj.getString("address");
+            propertyInformation[i] = obj.getString("information");
+            imageUrl[i] = obj.getString("imgUrl");
+            Object result =  JsonReader.jsonToJava(String.valueOf(addressArray));
+            Log.e("result", String.valueOf(result));
+
+        }
+    }
 }

@@ -1,12 +1,13 @@
 package com.wozzytheprogrammer.kwproperty.Login;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.wozzytheprogrammer.kwproperty.R;
 
@@ -28,6 +29,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         if (view == null)
             view = inflater.inflate(R.layout.fragment_menu, container, false);
+
         else
             container.removeView(view);
 
@@ -49,6 +51,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.login:
                 ((AuthenticationActivity) getActivity()).loginClick();
+
                 break;
         }
     }

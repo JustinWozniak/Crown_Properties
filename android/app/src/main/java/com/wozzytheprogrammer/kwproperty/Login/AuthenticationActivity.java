@@ -1,9 +1,10 @@
 package com.wozzytheprogrammer.kwproperty.Login;
 
 import android.content.Intent;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +38,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             if(user!=null){
                 Intent intent = new Intent(AuthenticationActivity.this, LauncherActivity.class);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
                 finish();
             }
         };
