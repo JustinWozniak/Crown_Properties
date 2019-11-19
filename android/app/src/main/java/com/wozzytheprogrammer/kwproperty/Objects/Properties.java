@@ -1,5 +1,5 @@
 
-package com.wozzytheprogrammer.kwproperty.Customer;
+package com.wozzytheprogrammer.kwproperty.Objects;
 
 
 import com.google.gson.annotations.SerializedName;

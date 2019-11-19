@@ -58,7 +58,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/mygold"
                 android:textSize="24sp"
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:textStyle="bold" />
 
             <TextView

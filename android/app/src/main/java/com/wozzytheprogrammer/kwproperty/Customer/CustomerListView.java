@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.wozzytheprogrammer.kwproperty.Adapters.PropertyAdapter;
+import com.wozzytheprogrammer.kwproperty.Objects.Properties;
 import com.wozzytheprogrammer.kwproperty.R;
 
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class CustomerListView extends AppCompatActivity implements PropertyAdapt
             String[] propertyInfo = getResources().getStringArray(R.array.property_info);
             String[] propertyImage = getResources().getStringArray(R.array.property_images);
             for (int i = 0; i < propertyAddressList.length; i++) {
-                mProperties.add(new Properties(propertyImage[i], propertyInfo[i], "News", propertyAddressList[i]));
+                mProperties.add(new Properties(propertyImage[i], propertyInfo[i], "Rental Property", propertyAddressList[i]));
             }
             mPropertyAdapter.addItems(mProperties);
             mRecyclerView.setAdapter(mPropertyAdapter);

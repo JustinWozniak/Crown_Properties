@@ -7,15 +7,53 @@
     android:background="@color/grey"
     android:gravity="center"
     android:orientation="vertical"
+    android:padding="0dp"
     android:paddingLeft="40dp"
     android:paddingRight="40dp"
-    android:padding="5dp">
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:scrollbarStyle="insideInset"
+    android:scrollbars="vertical">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="232dp"
-        android:layout_height="186dp"
+        android:layout_width="251dp"
+        android:layout_height="213dp"
         app:srcCompat="@drawable/logo" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:drawableLeft="@drawable/ic_person_black_24dp"
+        android:drawablePadding="5sp"
+        android:hint="@string/name"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_email_black_24dp"
+        android:drawablePadding="5sp"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
+        android:drawablePadding="5sp"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -23,17 +61,6 @@
         android:layout_marginTop="30dp"
         android:textColorHint="@color/black">
 
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
-            android:drawableLeft="@drawable/ic_person_black_24dp"
-            android:drawablePadding="5sp"
-            android:hint="@string/name"
-            android:inputType="textEmailAddress"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -41,35 +68,6 @@
         android:layout_height="wrap_content"
         android:textColorHint="@color/black">
 
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_email_black_24dp"
-            android:drawablePadding="5sp"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30sp"
-        android:textColorHint="@color/black">
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
-            android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
-            android:drawablePadding="5sp"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.addisonelliott.segmentedbutton.SegmentedButtonGroup
@@ -93,8 +91,8 @@
 
         <com.addisonelliott.segmentedbutton.SegmentedButton
 
-            android:layout_width="139dp"
-            android:layout_height="56dp"
+            android:layout_width="208dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="10dp"
             app:drawable="@drawable/ic_user_black"
@@ -105,11 +103,11 @@
             app:textColor="@color/black" />
 
         <com.addisonelliott.segmentedbutton.SegmentedButton
-            android:layout_width="105dp"
-            android:layout_height="60dp"
+            android:layout_width="180dp"
+            android:layout_height="65dp"
             android:layout_weight="1"
             android:padding="10dp"
-            app:drawable="@drawable/agenticon"
+            app:drawable="@drawable/ic_places_local_government_office"
             app:drawableGravity="top"
             app:selectedTextColor="@color/black"
             app:text="@string/agentText"

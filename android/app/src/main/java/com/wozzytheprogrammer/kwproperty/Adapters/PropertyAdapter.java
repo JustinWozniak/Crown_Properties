@@ -1,4 +1,4 @@
-package com.wozzytheprogrammer.kwproperty.Customer;
+package com.wozzytheprogrammer.kwproperty.Adapters;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.wozzytheprogrammer.kwproperty.Customer.BaseViewHolder;
+import com.wozzytheprogrammer.kwproperty.Objects.Properties;
 import com.wozzytheprogrammer.kwproperty.R;
 
 import org.json.JSONArray;
@@ -272,13 +274,9 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             propertyInformation[i] = obj.getString("information");
             addresses[i] = obj.getString("address");
             type[i] = obj.getString("type");
-            Properties properties666 = new Properties(imageUrl[i],propertyInformation[i],addresses[i],type[i]);
-
-            //iterator removes dummy data from mPropertiesList
+            Properties properties666 = new Properties(imageUrl[i],propertyInformation[i],type[i],addresses[i]);
 
             mPropertiesList.add(properties666);
-
-
         }
         Log.e("Pop3cdss", String.valueOf(mPropertiesList));
 
