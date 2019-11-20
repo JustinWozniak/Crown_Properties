@@ -784,6 +784,7 @@ public class CustomerMapActivity extends AppCompatActivity
         String[] urlString = new String[addressArray.length()];
         final String[] propertyInformation = new String[addressArray.length()];
 
+        //Generates a random colour for the markers
         final int random = new Random().nextInt(0 + 360);
         float hue = random;
 

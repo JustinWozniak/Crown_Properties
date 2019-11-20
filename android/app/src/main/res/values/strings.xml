@@ -41,7 +41,8 @@
     <string name="agent_complete">Agent Completed</string>
     <string name="not_approved">Your Account Has Not Been Approved</string>
     <string name="no_agent_near_you">No agents have been found near you</string>
-    <string name="is_a_favorite">ADDED TO FAVORITES!</string>
+    <string name="is_a_favorite">Added To Favorites!</string>
+    <string name="is_not_a_favorite">Removed From Favorites!</string>
 
     <string name="title_activity_agent_map">Map</string>
     <string name="title_activity_main2">Main2Activity</string>

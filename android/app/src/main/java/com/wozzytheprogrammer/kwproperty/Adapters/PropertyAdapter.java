@@ -7,16 +7,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.wozzytheprogrammer.kwproperty.Customer.BaseViewHolder;
 import com.wozzytheprogrammer.kwproperty.Objects.Properties;
 import com.wozzytheprogrammer.kwproperty.R;
@@ -29,7 +29,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,23 +41,18 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public static final int VIEW_TYPE_EMPTY = 0;
     public static final int VIEW_TYPE_NORMAL = 1;
 
+    DatabaseReference mCustomer;
+
     private Callback mCallback;
     private List<Properties> mPropertiesList;
-    private List<Properties> mJsonPropertiesList;
-    private int TOTAL_PROPERTIES_TO_REMOVE = 10;
 
-    private ScaleAnimation scaleAnimation;
-    private BounceInterpolator bounceInterpolator;;
-    private Button buttonFavorite;
-    private EditText propertyAddedToFavs;
+
     private Boolean isAFavProperty = false;
 
 
     public PropertyAdapter(List<Properties> propertiesList) {
         mPropertiesList = propertiesList;
 
-
-        mJsonPropertiesList = propertiesList;
 
     }
 
@@ -141,6 +138,33 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            DatabaseReference mUser;
+            mUser = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(FirebaseAuth.getInstance().getUid());
+
+            DatabaseReference hopperRef = mUser.child("favoriteProperties");
+            Map<String, Object> hopperUpdates = new HashMap<>();
+
+
+
+
+            buttonFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isAFavProperty) {
+                        propertyAddedToFavs.setText(R.string.is_a_favorite);
+                        propertyAddedToFavs.setVisibility(View.VISIBLE);
+                        isAFavProperty = true;
+                        hopperUpdates.put("property", isAFavPdsroperty);
+
+                        hopperRef.updateChildren(hopperUpdates);
+                    }   else  {
+                        propertyAddedToFavs.setVisibility(View.GONE);
+                        isAFavProperty = false;
+
+                    }
+                }
+            });
         }
 
         protected void clear() {
@@ -152,25 +176,6 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         public void onBind(int position) {
             super.onBind(position);
-
-            buttonFavorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!isAFavProperty) {
-                        propertyAddedToFavs.setVisibility(View.VISIBLE);
-                        isAFavProperty = true;
-                        propertyAddedToFavs.postDelayed(new Runnable() {
-                            public void run() {
-                                propertyAddedToFavs.setVisibility(View.GONE);
-                            }
-                        }, 3000);
-
-                    }   else    {
-                        propertyAddedToFavs.setVisibility(View.GONE);
-                        isAFavProperty = false;
-                    }
-                }
-            });
 
             final Properties mProperties = mPropertiesList.get(position);
 
@@ -232,6 +237,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      Calls the backend api and loads json data from it....
      */
     private void getJSON(final String urlWebService) {
+
 
         class GetJSON extends AsyncTask<Void, Void, String> {
 
@@ -298,6 +304,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      Parses the Json when its returned, and sets markers on the maps
      */
     private void parseJsonInfo(String json) throws JSONException {
+
         //creating a json array from the json string
         JSONArray addressArray = new JSONArray(json);
         //creating a string array for listview

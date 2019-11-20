@@ -102,7 +102,6 @@
                 android:layout_marginTop="7dp"
                 android:background="@color/black"
                 android:padding="@dimen/_8dp"
-                android:text="@string/is_a_favorite"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/fav_pink_colour"
