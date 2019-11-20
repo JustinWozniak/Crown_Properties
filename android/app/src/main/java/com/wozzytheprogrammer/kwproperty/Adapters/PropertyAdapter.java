@@ -7,6 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,12 +44,18 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<Properties> mJsonPropertiesList;
     private int TOTAL_PROPERTIES_TO_REMOVE = 10;
 
+    private ScaleAnimation scaleAnimation;
+    private BounceInterpolator bounceInterpolator;;
+    private Button buttonFavorite;
+    private EditText propertyAddedToFavs;
+    private Boolean isAFavProperty = false;
+
+
     public PropertyAdapter(List<Properties> propertiesList) {
         mPropertiesList = propertiesList;
 
 
         mJsonPropertiesList = propertiesList;
-
 
     }
 
@@ -62,6 +72,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         switch (viewType) {
+
             case VIEW_TYPE_NORMAL:
                 return new ViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false));
@@ -70,6 +81,8 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return new EmptyViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.item_empty_view, parent, false));
         }
+
+
     }
 
     @Override
@@ -103,7 +116,12 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         void onEmptyViewRetryClick();
     }
 
+
+
     public class ViewHolder extends BaseViewHolder {
+
+        @BindView(R.id.property_added_text)
+        TextView propertyAddedToFavs;
 
         @BindView(R.id.thumbnail)
         ImageView coverImageView;
@@ -116,6 +134,8 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @BindView(R.id.newsInfo)
         TextView infoTextView;
+
+        @BindView(R.id.button_favorite) Button buttonFavorite;
 
 
         public ViewHolder(View itemView) {
@@ -132,6 +152,25 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         public void onBind(int position) {
             super.onBind(position);
+
+            buttonFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isAFavProperty) {
+                        propertyAddedToFavs.setVisibility(View.VISIBLE);
+                        isAFavProperty = true;
+                        propertyAddedToFavs.postDelayed(new Runnable() {
+                            public void run() {
+                                propertyAddedToFavs.setVisibility(View.GONE);
+                            }
+                        }, 3000);
+
+                    }   else    {
+                        propertyAddedToFavs.setVisibility(View.GONE);
+                        isAFavProperty = false;
+                    }
+                }
+            });
 
             final Properties mProperties = mPropertiesList.get(position);
 

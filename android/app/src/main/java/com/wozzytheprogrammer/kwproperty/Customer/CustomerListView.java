@@ -2,6 +2,7 @@ package com.wozzytheprogrammer.kwproperty.Customer;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -32,6 +33,8 @@ public class CustomerListView extends AppCompatActivity implements PropertyAdapt
         setContentView(R.layout.activity_customer_list_view);
         ButterKnife.bind(this);
         setUp();
+
+
     }
 
     private void setUp() {
@@ -41,10 +44,14 @@ public class CustomerListView extends AppCompatActivity implements PropertyAdapt
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mPropertyAdapter = new PropertyAdapter(new ArrayList<>());
 
-        prepareDemoContent();
+
+
+        prepareContent();
+
+
     }
 
-    private void prepareDemoContent() {
+    private void prepareContent() {
 
         new Handler().postDelayed(() -> {
             //prepare data and show loading
@@ -65,6 +72,6 @@ public class CustomerListView extends AppCompatActivity implements PropertyAdapt
 
     @Override
     public void onEmptyViewRetryClick() {
-        prepareDemoContent();
+        prepareContent();
     }
 }
