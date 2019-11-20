@@ -784,7 +784,8 @@ public class CustomerMapActivity extends AppCompatActivity
         String[] urlString = new String[addressArray.length()];
         final String[] propertyInformation = new String[addressArray.length()];
 
-
+        final int random = new Random().nextInt(0 + 360);
+        float hue = random;
 
         //looping through all the elements in json array
         for (int i = 0; i < addressArray.length(); i++) {
@@ -801,8 +802,7 @@ public class CustomerMapActivity extends AppCompatActivity
             if(addresses[i] == null) {
             }
 
-            final int random = new Random().nextInt(0 + 360);
-            float hue = random;
+
             JSONObject jsonObj = addressArray.getJSONObject(i);
             final double finalLat = Double.valueOf(jsonObj.getString("lat"));
             final double finalLng = Double.valueOf(jsonObj.getString("lng"));

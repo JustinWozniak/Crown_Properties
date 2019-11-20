@@ -670,6 +670,10 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         String[] urlString = new String[addressArray.length()];
         final String[] propertyInformation = new String[addressArray.length()];
 
+
+        final int random = new Random().nextInt(0 + 360);
+        float hue = random;
+
         //looping through all the elements in json array
         for (int i = 0; i < addressArray.length(); i++) {
 
@@ -689,8 +693,6 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
             double finalLng = Double.valueOf(jsonObj.getString("lng"));
 
 
-            final int random = new Random().nextInt(0 + 360);
-            float hue = random;
             mMap.addMarker(new MarkerOptions()
                     .title(jsonObj.getString("address"))
                     .snippet(propertyInformation[i])
