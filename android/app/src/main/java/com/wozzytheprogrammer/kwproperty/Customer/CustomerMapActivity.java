@@ -98,6 +98,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Main Activity displayed to the customer
@@ -800,12 +801,16 @@ public class CustomerMapActivity extends AppCompatActivity
             if(addresses[i] == null) {
             }
 
+            final int random = new Random().nextInt(0 + 360);
+            float hue = random;
             JSONObject jsonObj = addressArray.getJSONObject(i);
             final double finalLat = Double.valueOf(jsonObj.getString("lat"));
             final double finalLng = Double.valueOf(jsonObj.getString("lng"));
             mMap.addMarker(new MarkerOptions()
                     .title(jsonObj.getString("address"))
                     .snippet(propertyInformation[i])
+                    .icon(BitmapDescriptorFactory
+                            .defaultMarker(hue))
                     .position(new LatLng(finalLat,
                             finalLng)
                     ));

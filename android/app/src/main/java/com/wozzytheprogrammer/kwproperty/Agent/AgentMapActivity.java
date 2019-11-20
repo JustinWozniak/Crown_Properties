@@ -91,6 +91,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 /**
@@ -686,18 +687,21 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
             JSONObject jsonObj = addressArray.getJSONObject(i);
             double finalLat = Double.valueOf(jsonObj.getString("lat"));
             double finalLng = Double.valueOf(jsonObj.getString("lng"));
-            Log.e("finalLat", String.valueOf(finalLat));
-            Log.e("finalLng", String.valueOf(finalLng));
+
+
+            final int random = new Random().nextInt(0 + 360);
+            float hue = random;
             mMap.addMarker(new MarkerOptions()
                     .title(jsonObj.getString("address"))
                     .snippet(propertyInformation[i])
                     .icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                            .defaultMarker(hue))
                     .position(new LatLng(finalLat,
                             finalLng)
                     ));
         }
     }
+
 
     /**
      * Get permissions for our app if they didn't previously exist.
