@@ -21,7 +21,7 @@ if ($conn->connect_error) {
 $addresses = array(); 
  
 //this is our sql query 
-$sql = "SELECT * FROM markers";
+$sql = "SELECT * FROM properties";
  
 //creating an statment with the query
 $stmt = $conn->prepare($sql);
