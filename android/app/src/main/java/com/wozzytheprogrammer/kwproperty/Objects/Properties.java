@@ -14,12 +14,16 @@ public class Properties {
     private String mAddress;
     @SerializedName("title")
     private String mTitle;
+    @SerializedName("id")
+    private String mId;
 
-    public Properties(String mImageUrl, String mInfo, String mAddress, String mTitle) {
+    public Properties(String mImageUrl, String mInfo, String mAddress, String mTitle, String mId) {
         this.mImageUrl = mImageUrl;
         this.mInfo = mInfo;
         this.mAddress = mAddress;
         this.mTitle = mTitle;
+        this.mTitle = mTitle;
+        this.mId = mId;
     }
 
     public String getImageUrl() {
@@ -32,6 +36,10 @@ public class Properties {
 
     public String getInfo() {
         return mInfo;
+    }
+
+    public String getId() {
+        return mId;
     }
 
     public void setInfo(String info) {

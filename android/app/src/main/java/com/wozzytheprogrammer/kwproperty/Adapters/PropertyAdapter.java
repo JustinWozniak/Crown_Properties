@@ -29,9 +29,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -132,6 +132,9 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.newsInfo)
         TextView infoTextView;
 
+        @BindView(R.id.idTextView)
+        TextView idTextView;
+
         @BindView(R.id.button_favorite) Button buttonFavorite;
 
 
@@ -142,8 +145,8 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             DatabaseReference mUser;
             mUser = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(FirebaseAuth.getInstance().getUid());
 
-            DatabaseReference hopperRef = mUser.child("favoriteProperties");
-            Map<String, Object> hopperUpdates = new HashMap<>();
+            DatabaseReference favoritePropertiesRef = mUser.child("favoriteProperties");
+            Map<String, Object> favoritesUpdates = new TreeMap<>();
 
 
 
@@ -151,13 +154,15 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             buttonFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    int id = 0;
                     if (!isAFavProperty) {
+                        id++;
                         propertyAddedToFavs.setText(R.string.is_a_favorite);
                         propertyAddedToFavs.setVisibility(View.VISIBLE);
                         isAFavProperty = true;
-                        hopperUpdates.put("property", isAFavPdsroperty);
+                        favoritesUpdates.put((String) idTextView.getText(), titleTextView.getText());
 
-                        hopperRef.updateChildren(hopperUpdates);
+                        favoritePropertiesRef.updateChildren(favoritesUpdates);
                     }   else  {
                         propertyAddedToFavs.setVisibility(View.GONE);
                         isAFavProperty = false;
@@ -172,6 +177,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             titleTextView.setText("");
             newsTextView.setText("");
             infoTextView.setText("");
+            idTextView.setText("");
         }
 
         public void onBind(int position) {
@@ -195,6 +201,9 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             if (mProperties.getInfo() != null) {
                 infoTextView.setText(mProperties.getInfo());
+            }
+            if (mProperties.getId() != null) {
+                idTextView.setText(mProperties.getId());
             }
 
             itemView.setOnClickListener(v -> {
@@ -312,6 +321,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         String[] propertyInformation = new String[addressArray.length()];
         String[] addresses = new String[addressArray.length()];
         String[] type = new String[addressArray.length()];
+        String[] id = new String[addressArray.length()];
 
         //looping through all the elements in json array
         for (int i = 0; i < addressArray.length(); i++) {
@@ -320,7 +330,8 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             propertyInformation[i] = obj.getString("information");
             addresses[i] = obj.getString("address");
             type[i] = obj.getString("type");
-            Properties properties666 = new Properties(imageUrl[i],propertyInformation[i],type[i],addresses[i]);
+            id[i] = obj.getString("id");
+            Properties properties666 = new Properties(imageUrl[i],propertyInformation[i],type[i],addresses[i],id[i]);
 
             mPropertiesList.add(properties666);
         }

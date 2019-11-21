@@ -37,6 +37,7 @@ while($stmt->fetch()){
 	
 	//pushing fetched data in an array 
 	$temp = [
+        'id' => $id,
         'imgUrl' => $imgUrl,
         'information' => $information,
         'address' =>$address,

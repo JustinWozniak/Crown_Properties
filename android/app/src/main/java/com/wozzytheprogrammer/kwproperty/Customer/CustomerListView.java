@@ -2,7 +2,6 @@ package com.wozzytheprogrammer.kwproperty.Customer;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -60,8 +59,9 @@ public class CustomerListView extends AppCompatActivity implements PropertyAdapt
             String[] propertyAddressList = getResources().getStringArray(R.array.property_addresses);
             String[] propertyInfo = getResources().getStringArray(R.array.property_info);
             String[] propertyImage = getResources().getStringArray(R.array.property_images);
+            String[] id = getResources().getStringArray(R.array.property_info);
             for (int i = 0; i < propertyAddressList.length; i++) {
-                mProperties.add(new Properties(propertyImage[i], propertyInfo[i], "Rental Property", propertyAddressList[i]));
+                mProperties.add(new Properties(propertyImage[i], propertyInfo[i], "Rental Property", propertyAddressList[i],id[i]));
             }
             mPropertyAdapter.addItems(mProperties);
             mRecyclerView.setAdapter(mPropertyAdapter);
