@@ -3,14 +3,18 @@ package com.wozzytheprogrammer.kwproperty.Adapters;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -137,6 +141,17 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @BindView(R.id.button_favorite) Button buttonFavorite;
 
+        public void scaleView(View v, float startScale, float endScale) {
+            Animation anim = new ScaleAnimation(
+                    1f, 1f, // Start and end values for the X axis scaling
+                    startScale, endScale, // Start and end values for the Y axis scaling
+                    Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
+                    Animation.RELATIVE_TO_SELF, 1f); // Pivot point of Y scaling
+            anim.setFillAfter(true); // Needed to keep the result of the animation
+            anim.setDuration(1000);
+            v.startAnimation(anim);
+        }
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -152,11 +167,12 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
 
             buttonFavorite.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onClick(View view) {
-                    int id = 0;
+                    scaleView(buttonFavorite,0,2);
+                    scaleView(buttonFavorite,2,1);
                     if (!isAFavProperty) {
-                        id++;
                         propertyAddedToFavs.setText(R.string.is_a_favorite);
                         propertyAddedToFavs.setVisibility(View.VISIBLE);
                         isAFavProperty = true;
