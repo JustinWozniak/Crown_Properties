@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.wozzytheprogrammer.kwproperty.Customer.dummy.DummyContent;
+import com.wozzytheprogrammer.kwproperty.Customer.favorites.FavoritesContent;
 import com.wozzytheprogrammer.kwproperty.R;
 
 /**
@@ -29,7 +29,7 @@ public class PropertyDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private DummyContent.DummyItem mItem;
+    private FavoritesContent.FavoriteItem mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -46,7 +46,7 @@ public class PropertyDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = FavoritesContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
