@@ -190,12 +190,12 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/search_button"
+                    android:id="@+id/favorites_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/black"
                     android:padding="20sp"
-                    android:text="@string/search"
+                    android:text="@string/favorites"
                     android:textColor="@color/mygold" />
 
                 <Button

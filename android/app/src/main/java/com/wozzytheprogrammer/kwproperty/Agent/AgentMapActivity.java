@@ -73,7 +73,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.Adapters.AgentsCustomInfoWindowAdapter;
-import com.wozzytheprogrammer.kwproperty.History.HistoryActivity;
 import com.wozzytheprogrammer.kwproperty.Login.LauncherActivity;
 import com.wozzytheprogrammer.kwproperty.Objects.AgentObject;
 import com.wozzytheprogrammer.kwproperty.Objects.RideObject;
@@ -860,11 +859,8 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.history) {
-            Intent intent = new Intent(AgentMapActivity.this, HistoryActivity.class);
-            intent.putExtra("customerOrAgent", "Agents");
-            startActivity(intent);
-        } else if (id == R.id.profile) {
+
+     if (id == R.id.profile) {
             Intent intent = new Intent(AgentMapActivity.this, AgentProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.logout) {

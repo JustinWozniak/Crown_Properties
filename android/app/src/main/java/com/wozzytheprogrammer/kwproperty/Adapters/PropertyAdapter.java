@@ -118,7 +118,6 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
 
-
     public class ViewHolder extends BaseViewHolder {
 
         @BindView(R.id.property_added_text)
@@ -139,7 +138,8 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.idTextView)
         TextView idTextView;
 
-        @BindView(R.id.button_favorite) Button buttonFavorite;
+        @BindView(R.id.button_favorite)
+        Button buttonFavorite;
 
         public void scaleView(View v, float startScale, float endScale) {
             Animation anim = new ScaleAnimation(
@@ -148,7 +148,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
                     Animation.RELATIVE_TO_SELF, 1f); // Pivot point of Y scaling
             anim.setFillAfter(true); // Needed to keep the result of the animation
-            anim.setDuration(1000);
+            anim.setDuration(500);
             v.startAnimation(anim);
         }
 
@@ -164,14 +164,12 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             Map<String, Object> favoritesUpdates = new TreeMap<>();
 
 
-
-
             buttonFavorite.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onClick(View view) {
-                    scaleView(buttonFavorite,0,2);
-                    scaleView(buttonFavorite,2,1);
+                    scaleView(buttonFavorite, 1, 3);
+                    scaleView(buttonFavorite, 2, 1);
                     if (!isAFavProperty) {
                         propertyAddedToFavs.setText(R.string.is_a_favorite);
                         propertyAddedToFavs.setVisibility(View.VISIBLE);
@@ -179,7 +177,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         favoritesUpdates.put((String) idTextView.getText(), titleTextView.getText());
 
                         favoritePropertiesRef.updateChildren(favoritesUpdates);
-                    }   else  {
+                    } else {
                         propertyAddedToFavs.setVisibility(View.GONE);
                         isAFavProperty = false;
 
@@ -259,7 +257,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     /**
-     Calls the backend api and loads json data from it....
+     * Calls the backend api and loads json data from it....
      */
     private void getJSON(final String urlWebService) {
 
@@ -325,8 +323,9 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
 
     }
+
     /**
-     Parses the Json when its returned, and sets markers on the maps
+     * Parses the Json when its returned, and sets markers on the maps
      */
     private void parseJsonInfo(String json) throws JSONException {
 
@@ -347,7 +346,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             addresses[i] = obj.getString("address");
             type[i] = obj.getString("type");
             id[i] = obj.getString("id");
-            Properties properties666 = new Properties(imageUrl[i],propertyInformation[i],type[i],addresses[i],id[i]);
+            Properties properties666 = new Properties(imageUrl[i], propertyInformation[i], type[i], addresses[i], id[i]);
 
             mPropertiesList.add(properties666);
         }

@@ -9,7 +9,7 @@
     <string name="phone_agent">Phone</string>
     <string name="call_agent">Call Agent</string>
     <string name="list_view">Open House List View</string>
-    <string name="your_profile">Your Profile</string>
+    <string name="my_profile">My Profile</string>
     <string name="tap_image">Tap Image To Upload Another</string>
     <string name="type_5">Search Everything Else</string>
     <string name="name">Name </string>
@@ -43,6 +43,7 @@
     <string name="no_agent_near_you">No agents have been found near you</string>
     <string name="is_a_favorite">Added To Favorites!</string>
     <string name="is_not_a_favorite">Removed From Favorites!</string>
+    <string name="favorites">My Favorite Properties</string>
 
     <string name="title_activity_agent_map">Map</string>
     <string name="title_activity_main2">Main2Activity</string>

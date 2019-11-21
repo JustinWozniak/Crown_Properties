@@ -91,7 +91,7 @@ public class AgentProfileActivity extends AppCompatActivity {
     private void setupToolbar() {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setTitle(getString(R.string.your_profile));
+        getSupportActionBar().setTitle(getString(R.string.my_profile));
         myToolbar.setTitleTextColor(getResources().getColor(R.color.white));
         ActionBar ab = getSupportActionBar();
         assert ab != null;

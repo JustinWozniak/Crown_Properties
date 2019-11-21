@@ -2,12 +2,20 @@ package com.wozzytheprogrammer.kwproperty.Customer;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.Adapters.PropertyAdapter;
 import com.wozzytheprogrammer.kwproperty.Objects.Properties;
 import com.wozzytheprogrammer.kwproperty.R;
@@ -22,6 +30,8 @@ public class CustomerListView extends AppCompatActivity implements PropertyAdapt
     @BindView(R.id.mRecyclerView)
     RecyclerView mRecyclerView;
     PropertyAdapter mPropertyAdapter;
+
+    DatabaseReference mCustomer;
 
 
     LinearLayoutManager mLayoutManager;
@@ -67,9 +77,29 @@ public class CustomerListView extends AppCompatActivity implements PropertyAdapt
             mRecyclerView.setAdapter(mPropertyAdapter);
         }, 2000);
 
-
+    getCustomersFavs();
     }
+    // Get a reference to our favorite properties
+    private void getCustomersFavs() {
+        String customersId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference customersFavList = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customersId).child("favoriteProperties");
+        customersFavList.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Log.e("DataSnapshot", String.valueOf(dataSnapshot));
+                    if(dataSnapshot.hasChild("favoriteProperties")) {
 
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     @Override
     public void onEmptyViewRetryClick() {
         prepareContent();

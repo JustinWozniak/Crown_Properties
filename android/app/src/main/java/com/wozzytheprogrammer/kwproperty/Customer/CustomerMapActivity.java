@@ -79,7 +79,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.Adapters.CustomersCustomInfoWindowAdapter;
-import com.wozzytheprogrammer.kwproperty.History.HistoryActivity;
 import com.wozzytheprogrammer.kwproperty.Login.LauncherActivity;
 import com.wozzytheprogrammer.kwproperty.Objects.AgentObject;
 import com.wozzytheprogrammer.kwproperty.Objects.CustomerObject;
@@ -114,7 +113,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
     private FusedLocationProviderClient mFusedLocationClient;
 
-    private Button mSearch, listView;
+    private Button mFavorites, listView;
 
     private LocationObject pickupLocation, currentLocation, destinationLocation;
 
@@ -182,7 +181,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
         mCurrentLocation = findViewById(R.id.current_location);
 
-        mSearch = findViewById(R.id.search_button);
+        mFavorites = findViewById(R.id.favorites_button);
 
         listView = findViewById(R.id.viewListViewButton);
 
@@ -195,29 +194,14 @@ public class CustomerMapActivity extends AppCompatActivity
             }
         });
 
-        mSearch.setOnClickListener(v -> {
+        mFavorites.setOnClickListener(v -> {
 
             if (requestBol) {
-                mCurrentRide.cancelRide();
-                endRide();
+
 
             } else {
 
-                mCurrentRide.setDestination(destinationLocation);
-                mCurrentRide.setPickup(pickupLocation);
 
-                if(mCurrentRide.checkRide() == -1){
-                    return;
-                }
-                mCurrentRide.postRide();
-
-
-                requestBol = true;
-
-                mSearch.setText(R.string.getting_agent);
-
-
-                getClosestAgent();
             }
         });
 
@@ -254,7 +238,6 @@ public class CustomerMapActivity extends AppCompatActivity
                 getRouteToMarker();
                 getAgentsAround();
 
-                mSearch.setText(getString(R.string.call_agent));
             }else{
 
                 mCurrentLocation.setImageDrawable(getResources().getDrawable(R.drawable.ic_location_on_grey_24dp));
@@ -405,7 +388,6 @@ public class CustomerMapActivity extends AppCompatActivity
             public void run(){
                 if(!agentFound){
                     requestBol = false;
-                    mSearch.setText(R.string.call_agent);
                     Snackbar.make(findViewById(R.id.drawer_layout), R.string.no_agent_near_you, Snackbar.LENGTH_LONG).show();
                     geoQuery.removeAllListeners();
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -441,8 +423,6 @@ public class CustomerMapActivity extends AppCompatActivity
                             getAgentLocation();
                             getAgentInfo();
                             getHasRideEnded();
-                            mSearch.setText(R.string.looking_agent);
-
                         }
                     }
                     @Override
@@ -511,9 +491,9 @@ public class CustomerMapActivity extends AppCompatActivity
                     float distance = loc1.distanceTo(loc2);
 
                     if (distance<100){
-                        mSearch.setText(R.string.agent_here);
+
                     }else{
-                        mSearch.setText(getString(R.string.agent_found));
+
                     }
 
                     mCurrentRide.getAgent().setLocation(mAgentLocation);
@@ -637,7 +617,6 @@ public class CustomerMapActivity extends AppCompatActivity
             mAgentMarker.remove();
         }
         mMap.clear();
-        mSearch.setText(getString(R.string.call_agent));
 
         mAgentInfo.setVisibility(View.GONE);
         mRadioLayout.setVisibility(View.VISIBLE);
@@ -926,14 +905,16 @@ public class CustomerMapActivity extends AppCompatActivity
 
 
                 checkAgentLastUpdated(key);
-                LatLng agentLocation = new LatLng(location.latitude, location.longitude);
 
-                Marker AgentMarker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.agenticon))
-                        .position(agentLocation).title(key));
-                AgentMarker.setTag(key);
-
-                markerList.add(AgentMarker);
+                //code to show agents location...removed for now...
+//                LatLng agentLocation = new LatLng(location.latitude, location.longitude);
+//
+//                Marker AgentMarker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory
+//                        .fromResource(R.drawable.agenticon))
+//                        .position(agentLocation).title(key));
+//                AgentMarker.setTag(key);
+//
+//                markerList.add(AgentMarker);
 
             }
 
@@ -1117,8 +1098,6 @@ public class CustomerMapActivity extends AppCompatActivity
             getRouteToMarker();
             getAgentsAround();
 
-            mSearch.setText(getString(R.string.call_agent));
-
 
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             // TODO: Handle the error.
@@ -1170,12 +1149,7 @@ public class CustomerMapActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.history) {
-            Intent intent = new Intent(CustomerMapActivity.this, HistoryActivity.class);
-            intent.putExtra("customerOrAgent", "Customers");
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
-        } else if (id == R.id.profile) {
+        if (id == R.id.profile) {
             Intent intent = new Intent(CustomerMapActivity.this, CustomerProfileActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
