@@ -95,6 +95,8 @@
         <item>2 Bedrooms • 1 Bathroom • 5 appliances (fridge, stove, microwave, washer and dryer) • Fenced in yard perfect for a dog run area</item>
         <item> 2 Bedroom · 2 bathrooms · 5 Appliances-fridge, stove, dishwasher, washer and dryer · Bright open floor plan · Luxury finishes</item>
     </string-array>
+    <string name="title_property_list">My Favorite Properties</string>
+    <string name="title_property_detail">Property Detail</string>
 
 
 </resources>

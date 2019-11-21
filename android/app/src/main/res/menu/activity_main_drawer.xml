@@ -5,7 +5,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/history"
+            android:id="@+id/myFavorites"
             android:title="@string/history"
             android:tooltipText="view full drive history"/>
         <item

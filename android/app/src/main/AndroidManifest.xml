@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.wozzytheprogrammer.kwproperty">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -24,6 +25,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity
+            android:name=".Customer.PropertyListActivity"
+            android:label="@string/title_property_list"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity
+            android:name=".Customer.PropertyDetailActivity"
+            android:label="@string/title_property_detail"
+            android:parentActivityName=".Customer.PropertyListActivity"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wozzytheprogrammer.kwproperty.Customer.PropertyListActivity" />
+        </activity>
         <activity android:name=".Login.LauncherActivity" />
 
         <uses-library

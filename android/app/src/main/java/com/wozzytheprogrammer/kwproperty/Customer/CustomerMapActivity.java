@@ -65,7 +65,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
@@ -115,7 +114,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
     private Button mFavorites, listView;
 
-    private LocationObject pickupLocation, currentLocation, destinationLocation;
+    private LocationObject currentLocation;
 
     private Boolean requestBol = false, pickupIsCurrent = false;
 
@@ -130,8 +129,9 @@ public class CustomerMapActivity extends AppCompatActivity
     private ImageView mAgentProfileImage, mCurrentLocation;
 
     private TextView mAgentName,
-            mAgentCar,
-            mRatingText;
+            mAgentCar;
+
+   View favoritesView;
 
 
     DrawerLayout drawer;
@@ -150,6 +150,7 @@ public class CustomerMapActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_customer);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        favoritesView = findViewById(R.id.myFavorites);
         setSupportActionBar(toolbar);
 
         mCurrentRide = new RideObject(CustomerMapActivity.this, null);
@@ -177,13 +178,20 @@ public class CustomerMapActivity extends AppCompatActivity
         mAgentName = findViewById(R.id.agentName);
         mAgentCar = findViewById(R.id.agentCar);
 
-        mRatingText = findViewById(R.id.ratingText);
-
         mCurrentLocation = findViewById(R.id.current_location);
 
         mFavorites = findViewById(R.id.favorites_button);
 
         listView = findViewById(R.id.viewListViewButton);
+
+//        favoritesView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent ListView = new Intent(CustomerMapActivity.this, PropertyListActivity.class);
+//                startActivity(ListView);
+//                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+//            }
+//        });
 
         listView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,14 +202,13 @@ public class CustomerMapActivity extends AppCompatActivity
             }
         });
 
-        mFavorites.setOnClickListener(v -> {
 
-            if (requestBol) {
-
-
-            } else {
-
-
+        mFavorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ListView = new Intent(CustomerMapActivity.this, PropertyListActivity.class);
+                startActivity(ListView);
+                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
             }
         });
 
@@ -223,16 +230,6 @@ public class CustomerMapActivity extends AppCompatActivity
 
             if(pickupIsCurrent){
                 mCurrentLocation.setImageDrawable(getResources().getDrawable(R.drawable.ic_location_on_primary_24dp));
-                pickupLocation = currentLocation;
-                if(pickupLocation==null){return;}
-
-
-                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation.getCoordinates()).title("Pickup").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_radio)));
-                mCurrentRide.setPickup(pickupLocation);
-                if(destinationLocation != null){
-                    destinationMarker = mMap.addMarker(new MarkerOptions().position(destinationLocation.getCoordinates()).title("Destination").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_radio_filled)));
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
 
                 erasePolylines();
                 getRouteToMarker();
@@ -241,10 +238,7 @@ public class CustomerMapActivity extends AppCompatActivity
             }else{
 
                 mCurrentLocation.setImageDrawable(getResources().getDrawable(R.drawable.ic_location_on_grey_24dp));
-                if(destinationLocation != null){
-                    destinationMarker = mMap.addMarker(new MarkerOptions().position(destinationLocation.getCoordinates()).title("Destination").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_radio_filled)));
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
+
                 erasePolylines();
                 getAgentsAround();
             }
@@ -254,7 +248,6 @@ public class CustomerMapActivity extends AppCompatActivity
         ViewTreeObserver vto = mBringUpBottomLayout.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(() -> {
             initializeBottomLayout();
-            initPlacesAutocomplete();
         });
 
         initRecyclerView();
@@ -313,22 +306,6 @@ public class CustomerMapActivity extends AppCompatActivity
 
             }
         });
-    }
-
-    /**
-     * Init Places according the updated google api and
-     * listen for user inputs, when a user chooses a place change the values
-     * of destination and destinationLocation so that the user can call an agent
-     */
-    void initPlacesAutocomplete() {
-        /*
-          Initialize Places. For simplicity, the API key is hard-coded. In a production
-          environment we recommend using a secure mechanism to manage API keys.
-         */
-        if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
-        }
-
     }
 
 
@@ -481,8 +458,6 @@ public class CustomerMapActivity extends AppCompatActivity
                         mAgentMarker.remove();
                     }
                     Location loc1 = new Location("");
-                    loc1.setLatitude(pickupLocation.getCoordinates().latitude);
-                    loc1.setLongitude(pickupLocation.getCoordinates().longitude);
 
                     Location loc2 = new Location("");
                     loc2.setLatitude(mAgentLocation.getCoordinates().latitude);
@@ -596,9 +571,6 @@ public class CustomerMapActivity extends AppCompatActivity
         if (polylines != null)  {
             erasePolylines();
         }
-
-        pickupLocation = null;
-        destinationLocation = null;
 
         agentFound = false;
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -1074,24 +1046,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
 
             if (requestCode == 1) {
-                mMap.clear();
-                destinationLocation = mLocation;
-                destinationMarker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_radio_filled)).position(destinationLocation.getCoordinates()).title("Destination"));
-                mCurrentRide.setDestination(destinationLocation);
-                if(pickupLocation != null){
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation.getCoordinates()).title("Pickup").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_radio)));
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
-            }else if(requestCode == 2){
-                mMap.clear();
-                pickupLocation = mLocation;
-                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation.getCoordinates()).title("Pickup").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_radio)));
-                mCurrentRide.setPickup(pickupLocation);
 
-                if(destinationLocation != null){
-                    destinationMarker = mMap.addMarker(new MarkerOptions().position(destinationLocation.getCoordinates()).title("Destination").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_radio_filled)));
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
             }
 
             erasePolylines();
@@ -1104,9 +1059,9 @@ public class CustomerMapActivity extends AppCompatActivity
             Status status = Autocomplete.getStatusFromIntent(data);
             Log.i("PLACE_AUTOCOMPLETE", status.getStatusMessage());
         } else if (resultCode == RESULT_CANCELED) {
-            initPlacesAutocomplete();
+
         }
-        initPlacesAutocomplete();
+
 
 
     }

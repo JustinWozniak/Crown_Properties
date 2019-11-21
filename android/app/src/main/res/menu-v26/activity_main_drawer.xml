@@ -10,7 +10,7 @@
             android:tooltipText="View Your Profile"/>
         <item
             android:visibility="gone"
-            android:id="@+id/history"
+            android:id="@+id/myFavorites"
             android:title="@string/favorites" />
         <item
             android:id="@+id/settings"
