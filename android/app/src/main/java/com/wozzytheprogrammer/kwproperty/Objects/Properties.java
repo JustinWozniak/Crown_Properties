@@ -22,7 +22,6 @@ public class Properties {
         this.mInfo = mInfo;
         this.mAddress = mAddress;
         this.mTitle = mTitle;
-        this.mTitle = mTitle;
         this.mId = mId;
     }
 
