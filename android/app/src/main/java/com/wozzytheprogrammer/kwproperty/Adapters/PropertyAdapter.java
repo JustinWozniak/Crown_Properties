@@ -350,7 +350,6 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             mPropertiesList.add(properties666);
         }
-        Log.e("Pop3cdss", String.valueOf(mPropertiesList));
 
         //ASYNCHRONOUS ISSUE? THESE ITEMS WONT REMOVE IN A A LOOP, BUT DO EVENTUALLY IN APP
         mPropertiesList.remove(0);

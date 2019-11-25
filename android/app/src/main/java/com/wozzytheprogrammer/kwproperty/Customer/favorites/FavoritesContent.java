@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,23 +39,21 @@ public class FavoritesContent {
      */
     public static final Map<String, FavoriteItem> ITEM_MAP = new HashMap<String, FavoriteItem>();
 
-    private static final int COUNT = 23;
-
-
+    //initiate gatherFavoriteProperties()
     static {
-        // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
-            addItem(gatherFavoriteProperties(i));
-        }
+            addItem(gatherFavoriteProperties(0));
+
     }
 
     private static void addItem(FavoriteItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
+
     }
 
     private static FavoriteItem gatherFavoriteProperties(int position) {
         final String[] propertyIds = new String[100];
+        ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(propertyIds));
         String customersId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference customersFavList = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customersId).child("favoriteProperties");
         customersFavList.addValueEventListener(new ValueEventListener() {
@@ -63,12 +62,12 @@ public class FavoritesContent {
                 if (dataSnapshot.exists()) {
                     for(DataSnapshot snapshot:dataSnapshot.getChildren()){
 
-//                        Log.e("key", snapshot.getKey());
+                        Log.e("key", snapshot.getKey());
 //                        Log.e("val", (String) snapshot.getValue());
                         propertyIds[0] = snapshot.getKey();
-
+                        arrayList.add(snapshot.getKey());
                     }
-                    getJSON("https://www.wozzytheprogrammer.com/onlineapi.php",propertyIds[0]);                }
+                    getJSON("https://www.wozzytheprogrammer.com/onlineapi.php",arrayList);                }
             }
 
             @Override
@@ -76,7 +75,7 @@ public class FavoritesContent {
 
             }
         });
-        return new FavoriteItem(String.valueOf(position), "Item " + position, makeDetails(position));
+        return new FavoriteItem(String.valueOf(position), "Item " + position, makeDetails(position),"blank Url");
     }
 
 
@@ -98,11 +97,13 @@ public class FavoritesContent {
         public final String id;
         public final String content;
         public final String details;
+        public final String imgUrl;
 
-        public FavoriteItem(String id, String content, String details) {
+        public FavoriteItem(String id, String content, String details, String urlImg) {
             this.id = id;
             this.content = content;
             this.details = details;
+            this.imgUrl = urlImg;
         }
 
         @Override
@@ -114,7 +115,7 @@ public class FavoritesContent {
     }
 
 
-    private static void getJSON(final String urlWebService, String passedFavId) {
+    private static void getJSON(final String urlWebService, ArrayList<String> passedFavId) {
 
         class GetJSON extends AsyncTask<Void, Void, String> {
 
@@ -181,19 +182,16 @@ public class FavoritesContent {
     /**
      Parses the Json when its returned, and sets markers on the maps
      */
-    private static void parseJson(String json, String favoriteId) throws JSONException {
+    private static void parseJson(String json, ArrayList<String> favoriteId) throws JSONException {
         //creating a json array from the json string
         JSONArray addressArray = new JSONArray(json);
 
         //creating a string array for listview
         String[] ids = new String[addressArray.length()];
         String[] addresses = new String[addressArray.length()];
-        String[] urlString = new String[addressArray.length()];
+        String[] imagesUrlString = new String[addressArray.length()];
         final String[] propertyInformation = new String[addressArray.length()];
 
-
-        ITEMS.clear();
-        ITEM_MAP.clear();
         //looping through all the elements in json array
         for (int i = 0; i < addressArray.length(); i++) {
 
@@ -201,16 +199,20 @@ public class FavoritesContent {
             ids[i] = obj.getString("id");
             addresses[i] = obj.getString("address");
             propertyInformation[i] = obj.getString("information");
-            urlString[i] = obj.getString("urlString");
+            imagesUrlString[i] = obj.getString("imgUrl");
 
-            FavoriteItem newestItem = new FavoriteItem(ids[i],addresses[i],propertyInformation[i]);
+            if(favoriteId.contains(ids[i])) {
+
+                Log.e("its a match2", ids[i]);
+
+                FavoriteItem newestItem = new FavoriteItem(ids[i], addresses[i], propertyInformation[i],imagesUrlString[i]);
 
 
-            ITEMS.add(newestItem);
-            ITEM_MAP.put(newestItem.id, newestItem);
-            Log.e("ITEMS", String.valueOf(ITEMS));
-            Log.e("ITEM_MAP", String.valueOf(ITEM_MAP));
-
+                ITEMS.add(newestItem);
+                ITEM_MAP.put(newestItem.id, newestItem);
+//            Log.e("ITEMS", String.valueOf(ITEMS));
+//            Log.e("ITEM_MAP", String.valueOf(ITEM_MAP));
+            }
         }
     }
 }
