@@ -71,12 +71,14 @@ public class PropertyListActivity extends AppCompatActivity {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, FavoritesContent.ITEMS, mTwoPane));
     }
 
-    public static class SimpleItemRecyclerViewAdapter
+    public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final PropertyListActivity mParentActivity;
         private final List<FavoritesContent.FavoriteItem> mValues;
         private final boolean mTwoPane;
+
+
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,12 +107,14 @@ public class PropertyListActivity extends AppCompatActivity {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
+
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.property_list_content, parent, false);
+
             return new ViewHolder(view);
         }
 
@@ -121,10 +125,19 @@ public class PropertyListActivity extends AppCompatActivity {
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
+
         }
 
         @Override
         public int getItemCount() {
+            if (mValues.size() == 1 )   {
+             
+                recreate();
+            }
+            if(mValues.size() == 0) {
+
+            }
+
             return mValues.size();
         }
 
@@ -136,7 +149,9 @@ public class PropertyListActivity extends AppCompatActivity {
                 super(view);
                 mIdView = (TextView) view.findViewById(R.id.id_text);
                 mContentView = (TextView) view.findViewById(R.id.content);
+
             }
         }
     }
+
 }

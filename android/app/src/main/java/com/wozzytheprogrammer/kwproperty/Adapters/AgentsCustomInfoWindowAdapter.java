@@ -52,7 +52,11 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
         String snippet = marker.getSnippet();
         informationText.setText(snippet);
         getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
+        getPropertyInformation();
 
+    }
+
+    private void getPropertyInformation() {
 
     }
 

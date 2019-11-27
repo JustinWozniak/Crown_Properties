@@ -254,10 +254,6 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         });
 
 
-
-
-
-
         ImageView mDrawerButton = findViewById(R.id.drawerButton);
         mDrawerButton.setOnClickListener(v -> drawer.openDrawer(Gravity.LEFT));
 
@@ -548,7 +544,8 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
+//        getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
+        getPropertyInformation();
         LatLng Kitchener = new LatLng(43.467831, -80.521872);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Kitchener, 12));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
@@ -558,9 +555,9 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                if(isWorking) {
+                if (isWorking) {
                     getRoutes(marker);
-                }   else    {
+                } else {
 //                    Toast.makeText(getApplicationContext(), "You must be available to view properties", Toast.LENGTH_SHORT).show();
                 }
                 return false;
@@ -576,6 +573,134 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
+    private void getPropertyInformation() {
+//        //creating a json array from the json string
+//        JSONArray addressArray = new JSONArray(json);
+//
+//        //creating a string array for listview
+//        String[] markerNames = new String[addressArray.length()];
+//        String[] addresses = new String[addressArray.length()];
+//        String[] latittudes = new String[addressArray.length()];
+//        String[] longitutes = new String[addressArray.length()];
+//        String[] urlString = new String[addressArray.length()];
+//        final String[] propertyInformation = new String[addressArray.length()];
+//
+//        //Generates a random colour for the markers
+//        final int random = new Random().nextInt(0 + 360);
+//        float hue = random;
+//
+//        //looping through all the elements in json array
+//        for (int i = 0; i < addressArray.length(); i++) {
+//
+//            JSONObject obj = addressArray.getJSONObject(i);
+//
+//            markerNames[i] = obj.getString("name");
+//            addresses[i] = obj.getString("address");
+//            latittudes[i] = obj.getString("lat");
+//            longitutes[i] = obj.getString("lng");
+//            propertyInformation[i] = obj.getString("information");
+//            Log.e("propertyInformation", String.valueOf(propertyInformation[i]));
+//            urlString[i] = obj.getString("urlString");
+//
+//
+//            JSONObject jsonObj = addressArray.getJSONObject(i);
+//            double finalLat = Double.valueOf(jsonObj.getString("lat"));
+//            double finalLng = Double.valueOf(jsonObj.getString("lng"));
+//
+//
+//            mMap.addMarker(new MarkerOptions()
+//                    .title(jsonObj.getString("address"))
+//                    .snippet(propertyInformation[i])
+//                    .icon(BitmapDescriptorFactory
+//                            .defaultMarker(hue))
+//                    .position(new LatLng(finalLat,
+//                            finalLng)
+//                    ));
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
+        Log.e("ref", String.valueOf(propertyReference));
+        propertyReference.addValueEventListener(new ValueEventListener() {
+
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    long numberOfProperties = dataSnapshot.getChildrenCount();
+                    int propertyCount = 0;
+                    int snapshotCount = 0;
+
+                    String[] markerNames = new String[(int) numberOfProperties];
+                    String[] addresses = new String[(int) numberOfProperties];
+                    String[] imageUrlString = new String[(int) numberOfProperties];
+                    String[] propertyInformation = new String[(int) numberOfProperties];
+                    Double[] latituds = new Double[(int) numberOfProperties];
+                    Double[] longitudes = new Double[(int) numberOfProperties];
+
+//                        Generates a random colour for the markers
+                    final int random = new Random().nextInt(0 + 360);
+                    float hue = random;
+
+                    Double latitude;
+                    Double longitude;
+
+
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+                        snapshotCount++;
+                        String key = child.getKey();
+                        Log.e("snapshotCount", String.valueOf(snapshotCount));
+                        if (Integer.parseInt(key) == snapshotCount) {
+                            // child is a snapshot of a sport location; Basketball or Football
+                            // latitude and longitude are children of the sport shapshot
+                            latitude = child.child("Lat").getValue(Double.class);
+                            Log.e("latitude", String.valueOf(latitude));
+
+                            longitude = child.child("Long").getValue(Double.class);
+                            Log.e("longitude", String.valueOf(longitude));
+
+
+
+                            latituds[snapshotCount -1] = latitude;
+                            longitudes[snapshotCount -1] = longitude;
+                            Log.e("latituds", String.valueOf(latituds));
+                            Log.e("longitudes", String.valueOf(longitudes));
+                        }
+
+                        for (int i = 0; i < numberOfProperties; i++) {
+
+                            propertyCount++;
+                            String stringedPropertyCount = String.valueOf(propertyCount);
+
+                            DatabaseReference latRef = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id").child(String.valueOf(propertyCount)).child("lat");
+                            markerNames[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+                            addresses[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+                            imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
+                            propertyInformation[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Information"));
+
+
+
+                            mMap.addMarker(new MarkerOptions()
+                                    .title(markerNames[i])
+                                    .snippet(propertyInformation[i])
+                                    .icon(BitmapDescriptorFactory
+                                            .defaultMarker(hue))
+                                    .position(new LatLng(43.628609, -80.509087)
+                                    ));
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void getRoutes(Marker marker) {
         LatLng propertiesPos = marker.getPosition();
@@ -584,7 +709,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                 .alternativeRoutes(false)
                 .withListener(this)
                 .key("AIzaSyDRMQHpMV2u2cB27aC1q7ejEy74kCb8Y6c")
-                .waypoints(new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude()), propertiesPos)
+                .waypoints(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), propertiesPos)
                 .build();
         routing.execute();
 
@@ -601,6 +726,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
             protected void onPreExecute() {
                 super.onPreExecute();
             }
+
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
@@ -613,6 +739,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                     Toast.makeText(getApplicationContext(), "NO DATABASE LOADED", Toast.LENGTH_LONG).show();
                 }
             }
+
             @Override
             protected String doInBackground(Void... voids) {
 
@@ -654,6 +781,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         GetJSON getJSON = new GetJSON();
         getJSON.execute();
     }
+
     /**
      * Parses all the data from retrieved Json, and loads it onto the map.
      */
@@ -746,7 +874,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(AgentMapActivity.this, LauncherActivity.class);
         startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         finish();
         return;
     }
@@ -860,7 +988,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         int id = item.getItemId();
 
 
-     if (id == R.id.profile) {
+        if (id == R.id.profile) {
             Intent intent = new Intent(AgentMapActivity.this, AgentProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.logout) {
@@ -914,7 +1042,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
             Polyline polyline = mMap.addPolyline(polyOptions);
             polylines.add(polyline);
 
-            Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance: "+ route.get(i).getDistanceValue()+ " KM " + ": duration: "+ route.get(i).getDurationValue()+ " Mins",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance: " + route.get(i).getDistanceValue() + " KM " + ": duration: " + route.get(i).getDurationValue() + " Mins", Toast.LENGTH_LONG).show();
         }
 
     }

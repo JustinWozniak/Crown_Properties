@@ -86,6 +86,7 @@ public class FavoritesContent {
         builder.append("Details about Item: ").append(position);
         for (int i = 0; i < position; i++) {
             builder.append("\nMore details information here.");
+
         }
         return builder.toString();
     }
@@ -210,6 +211,7 @@ public class FavoritesContent {
 
                 ITEMS.add(newestItem);
                 ITEM_MAP.put(newestItem.id, newestItem);
+
 //            Log.e("ITEMS", String.valueOf(ITEMS));
 //            Log.e("ITEM_MAP", String.valueOf(ITEM_MAP));
             }
