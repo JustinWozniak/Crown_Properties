@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -85,14 +83,6 @@ import com.wozzytheprogrammer.kwproperty.Objects.LocationObject;
 import com.wozzytheprogrammer.kwproperty.Objects.RideObject;
 import com.wozzytheprogrammer.kwproperty.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -609,9 +599,7 @@ public class CustomerMapActivity extends AppCompatActivity
         LatLng Kitchener = new LatLng(43.467831, -80.521872);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Kitchener, 12));
         mMap.setInfoWindowAdapter(new CustomersCustomInfoWindowAdapter(CustomerMapActivity.this));
-
-        getJSON("https://www.wozzytheprogrammer.com/onlineapi.php");
-
+        getPropertyInformation();
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -639,6 +627,75 @@ public class CustomerMapActivity extends AppCompatActivity
 
     }
 
+    private void getPropertyInformation() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
+        final long[] numberOfProperties = {0};
+
+        propertyReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                //    Generates a random colour for the markers
+                final int random = new Random().nextInt(0 + 360);
+                float hue = random;
+
+
+                if (dataSnapshot.exists()) {
+                    numberOfProperties[0] = dataSnapshot.getChildrenCount();
+                    int propertyCount = 0;
+                    int snapshotCount = 0;
+
+                    String[] markerNames = new String[(int) numberOfProperties[0]];
+                    String[] addresses = new String[(int) numberOfProperties[0]];
+                    String[] imageUrlString = new String[(int) numberOfProperties[0]];
+                    String[] propertyInformation = new String[(int) numberOfProperties[0]];
+                    Double[] latitudes = new Double[(int) numberOfProperties[0]];
+                    Double[] longitudes = new Double[(int) numberOfProperties[0]];
+
+                    Double latitude;
+                    Double longitude;
+
+
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+                        snapshotCount++;
+                        for (int i = 0; i < numberOfProperties[0]; i++) {
+
+                            propertyCount++;
+
+                            String key = child.getKey();
+                            if (Integer.parseInt(key) == snapshotCount) {
+                                latitude = child.child("Lat").getValue(Double.class);
+                                longitude = child.child("Long").getValue(Double.class);
+
+                                markerNames[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+                                addresses[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+                                imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
+                                propertyInformation[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Information"));
+                                latitudes[i] = latitude;
+                                longitudes[i] = longitude;
+
+                                mMap.addMarker(new MarkerOptions()
+                                        .title(markerNames[i])
+                                        .snippet(propertyInformation[i])
+                                        .icon(BitmapDescriptorFactory
+                                                .defaultMarker(hue))
+                                        .position(new LatLng(latitudes[i], longitudes[i])
+                                        ));
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void getRoutes(Marker marker) {
         LatLng propertiesPos = marker.getPosition();
         Routing routing = new Routing.Builder()
@@ -652,137 +709,6 @@ public class CustomerMapActivity extends AppCompatActivity
 
     }
 
-
-
-    /**
-     Calls the backend api and loads json data from it....
-     */
-    private void getJSON(final String urlWebService) {
-
-        class GetJSON extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-//                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-                try {
-                    loadIntoMaps(s);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //in this method we are fetching the json string
-            @Override
-            protected String doInBackground(Void... voids) {
-
-
-                try {
-                    //creating a URL
-                    URL url = new URL(urlWebService);
-
-                    //Opening the URL using HttpURLConnection
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-                    //StringBuilder object to read the string from the service
-                    StringBuilder sb = new StringBuilder();
-
-                    //We will use a buffered reader to read the string from service
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    //A simple string to read values from each line
-                    String json;
-
-                    //reading until we don't find null
-                    while ((json = bufferedReader.readLine()) != null) {
-
-                        //appending it to string builder
-                        sb.append(json + "\n");
-                    }
-
-                    //finally returning the read string
-                    return sb.toString().trim();
-                } catch (Exception e) {
-                    return null;
-                }
-
-            }
-        }
-
-        //creating asynctask object and executing it
-        GetJSON getJSON = new GetJSON();
-        getJSON.execute();
-
-
-    }
-    /**
-     Parses the Json when its returned, and sets markers on the maps
-     */
-    private void loadIntoMaps(String json) throws JSONException {
-        //creating a json array from the json string
-        JSONArray addressArray = new JSONArray(json);
-
-        //creating a string array for listview
-        String[] markerNames = new String[addressArray.length()];
-        String[] addresses = new String[addressArray.length()];
-        String[] latittudes = new String[addressArray.length()];
-        String[] longitutes = new String[addressArray.length()];
-        String[] urlString = new String[addressArray.length()];
-        final String[] propertyInformation = new String[addressArray.length()];
-
-        //Generates a random colour for the markers
-        final int random = new Random().nextInt(0 + 360);
-        float hue = random;
-
-        //looping through all the elements in json array
-        for (int i = 0; i < addressArray.length(); i++) {
-
-            JSONObject obj = addressArray.getJSONObject(i);
-
-            markerNames[i] = obj.getString("name");
-            addresses[i] = obj.getString("address");
-            latittudes[i] = obj.getString("lat");
-            longitutes[i] = obj.getString("lng");
-            propertyInformation[i] = obj.getString("information");
-            urlString[i] = obj.getString("urlString");
-
-            if(addresses[i] == null) {
-            }
-
-
-            JSONObject jsonObj = addressArray.getJSONObject(i);
-            final double finalLat = Double.valueOf(jsonObj.getString("lat"));
-            final double finalLng = Double.valueOf(jsonObj.getString("lng"));
-            mMap.addMarker(new MarkerOptions()
-                    .title(jsonObj.getString("address"))
-                    .snippet(propertyInformation[i])
-                    .icon(BitmapDescriptorFactory
-                            .defaultMarker(hue))
-                    .position(new LatLng(finalLat,
-                            finalLng)
-                    ));
-
-
-            final String anotherUrl = urlString[i];
-            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(anotherUrl));
-                    startActivity(browserIntent);
-                    overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
-
-                    marker.setSnippet(propertyInformation.toString());
-
-                }
-            });
-
-        }
-    }
 
     boolean zoomUpdated = false;
     LocationCallback mLocationCallback = new LocationCallback(){

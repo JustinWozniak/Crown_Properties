@@ -562,6 +562,9 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
+    /**
+     * Gathers property information from Firebase to display open houses on our map
+     */
     private void getPropertyInformation() {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
