@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -629,6 +628,8 @@ public class CustomerMapActivity extends AppCompatActivity
 
     private void getPropertyInformation() {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
         DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
         final long[] numberOfProperties = {0};
 
@@ -655,21 +656,21 @@ public class CustomerMapActivity extends AppCompatActivity
 
                     Double latitude;
                     Double longitude;
-
+                    String MarkerNameString;
 
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
-
+                        DatabaseReference markerRef = database.getReference("Properties/Id").child(String.valueOf(snapshotCount));
+                        MarkerNameString = child.child("Information").getValue(String.class);
                         snapshotCount++;
+
                         for (int i = 0; i < numberOfProperties[0]; i++) {
-
                             propertyCount++;
-
                             String key = child.getKey();
                             if (Integer.parseInt(key) == snapshotCount) {
                                 latitude = child.child("Lat").getValue(Double.class);
                                 longitude = child.child("Long").getValue(Double.class);
 
-                                markerNames[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+                                markerNames[i] = MarkerNameString;
                                 addresses[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
                                 imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
                                 propertyInformation[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Information"));
@@ -983,7 +984,6 @@ public class CustomerMapActivity extends AppCompatActivity
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             // TODO: Handle the error.
             Status status = Autocomplete.getStatusFromIntent(data);
-            Log.i("PLACE_AUTOCOMPLETE", status.getStatusMessage());
         } else if (resultCode == RESULT_CANCELED) {
 
         }
