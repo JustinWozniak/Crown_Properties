@@ -567,6 +567,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
      */
     private void getPropertyInformation() {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
         final long[] numberOfProperties = {0};
 
@@ -593,9 +594,13 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
 
                 Double latitude;
                 Double longitude;
-
+                String MarkerNameString;
+                String propertyInformationString;
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    DatabaseReference markerRef = database.getReference("Properties/Id").child(String.valueOf(snapshotCount));
+                    MarkerNameString = child.child("Address").getValue(String.class);
+                    propertyInformationString = child.child("Information").getValue(String.class);
 
                     snapshotCount++;
                     for (int i = 0; i < numberOfProperties[0]; i++) {
@@ -607,10 +612,10 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                             latitude = child.child("Lat").getValue(Double.class);
                             longitude = child.child("Long").getValue(Double.class);
 
-                            markerNames[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+                            markerNames[i] = MarkerNameString;
                             addresses[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
                             imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
-                            propertyInformation[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Information"));
+                            propertyInformation[i] = propertyInformationString;
                             latitudes[i] = latitude;
                             longitudes[i] = longitude;
 

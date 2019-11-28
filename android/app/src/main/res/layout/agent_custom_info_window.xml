@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -14,47 +15,17 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="147dp"
-            android:layout_marginLeft="147dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="152dp"
-            android:layout_marginRight="152dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Open House!"
-            android:textColor="#000"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/agentAddressOpenHouse"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/agentsCustomWindowImage1"
-            android:layout_width="87dp"
-            android:layout_height="77dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/agentAddressOpenHouse"
-            app:srcCompat="@drawable/logo" />
-
-        <TextView
             android:id="@+id/agentOpenHouseInformation"
             android:layout_width="252dp"
             android:layout_height="76dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="34dp"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
             android:text="Default Text"
             android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/agentsCustomWindowImage1"
             app:layout_constraintTop_toBottomOf="@+id/agentAddressOpenHouse" />
@@ -63,17 +34,31 @@
             android:id="@+id/agentAddressOpenHouse"
             android:layout_width="340dp"
             android:layout_height="22dp"
-            android:layout_marginStart="21dp"
-            android:layout_marginLeft="21dp"
-            android:layout_marginEnd="19dp"
-            android:layout_marginRight="19dp"
-            android:layout_marginBottom="7dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
             android:text="The address will go here"
             android:textColor="@color/black"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/agentsCustomWindowImage1"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/agentsCustomWindowImage1"
+            android:layout_width="87dp"
+            android:layout_height="77dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="9dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/agentOpenHouseInformation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/agentAddressOpenHouse"
+            app:srcCompat="@drawable/logo" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

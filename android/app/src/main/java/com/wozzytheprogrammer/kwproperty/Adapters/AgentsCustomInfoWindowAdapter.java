@@ -47,7 +47,6 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
         openHouseImage1 = view.findViewById(R.id.agentsCustomWindowImage1);
         informationText = view.findViewById(R.id.agentOpenHouseInformation);
         addressText = view.findViewById(R.id.agentAddressOpenHouse);
-        tvTitle.setText("Open House!");
         addressText.setText(title);
         String snippet = marker.getSnippet();
         informationText.setText(snippet);

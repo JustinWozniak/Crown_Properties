@@ -657,10 +657,12 @@ public class CustomerMapActivity extends AppCompatActivity
                     Double latitude;
                     Double longitude;
                     String MarkerNameString;
+                    String propertyInformationString;
 
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         DatabaseReference markerRef = database.getReference("Properties/Id").child(String.valueOf(snapshotCount));
-                        MarkerNameString = child.child("Information").getValue(String.class);
+                        MarkerNameString = child.child("Address").getValue(String.class);
+                        propertyInformationString = child.child("Information").getValue(String.class);
                         snapshotCount++;
 
                         for (int i = 0; i < numberOfProperties[0]; i++) {
@@ -673,7 +675,7 @@ public class CustomerMapActivity extends AppCompatActivity
                                 markerNames[i] = MarkerNameString;
                                 addresses[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
                                 imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
-                                propertyInformation[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Information"));
+                                propertyInformation[i] = propertyInformationString;
                                 latitudes[i] = latitude;
                                 longitudes[i] = longitude;
 
