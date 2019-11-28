@@ -2,7 +2,6 @@ package com.wozzytheprogrammer.kwproperty.Adapters;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,14 +24,6 @@ import com.wozzytheprogrammer.kwproperty.Customer.BaseViewHolder;
 import com.wozzytheprogrammer.kwproperty.Objects.Properties;
 import com.wozzytheprogrammer.kwproperty.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -88,6 +79,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
+
         if (mPropertiesList != null && mPropertiesList.size() > 0) {
             return VIEW_TYPE_NORMAL;
         } else {
@@ -108,10 +100,11 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
 
     public void addItems(List<Properties> propertiesList) {
-        getJSON("https://www.wozzytheprogrammer.com/objectApi.php");
         mPropertiesList.addAll(propertiesList);
         notifyDataSetChanged();
+
     }
+
 
     public interface Callback {
         void onEmptyViewRetryClick();
@@ -192,6 +185,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             newsTextView.setText("");
             infoTextView.setText("");
             idTextView.setText("");
+
         }
 
         public void onBind(int position) {
@@ -255,106 +249,47 @@ public class PropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
 
     }
-
-    /**
-     * Calls the backend api and loads json data from it....
-     */
-    private void getJSON(final String urlWebService) {
-
-
-        class GetJSON extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-//                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-                try {
-                    parseJsonInfo(s);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //in this method we are fetching the json string
-            @Override
-            protected String doInBackground(Void... voids) {
-
-
-                try {
-                    //creating a URL
-                    URL url = new URL(urlWebService);
-
-                    //Opening the URL using HttpURLConnection
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-                    //StringBuilder object to read the string from the service
-                    StringBuilder sb = new StringBuilder();
-
-                    //We will use a buffered reader to read the string from service
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    //A simple string to read values from each line
-                    String json;
-
-                    //reading until we don't find null
-                    while ((json = bufferedReader.readLine()) != null) {
-
-                        //appending it to string builder
-                        sb.append(json + "\n");
-                    }
-
-                    //finally returning the read string
-                    return sb.toString().trim();
-                } catch (Exception e) {
-                    return null;
-                }
-
-            }
-        }
-
-        //creating asynctask object and executing it
-        GetJSON getJSON = new GetJSON();
-        getJSON.execute();
-
-
-    }
-
-    /**
-     * Parses the Json when its returned, and sets markers on the maps
-     */
-    private void parseJsonInfo(String json) throws JSONException {
-
-        //creating a json array from the json string
-        JSONArray addressArray = new JSONArray(json);
-        //creating a string array for listview
-        String[] imageUrl = new String[addressArray.length()];
-        String[] propertyInformation = new String[addressArray.length()];
-        String[] addresses = new String[addressArray.length()];
-        String[] type = new String[addressArray.length()];
-        String[] id = new String[addressArray.length()];
-
-        //looping through all the elements in json array
-        for (int i = 0; i < addressArray.length(); i++) {
-            JSONObject obj = addressArray.getJSONObject(i);
-            imageUrl[i] = obj.getString("imgUrl");
-            propertyInformation[i] = obj.getString("information");
-            addresses[i] = obj.getString("address");
-            type[i] = obj.getString("type");
-            id[i] = obj.getString("id");
-            Properties properties666 = new Properties(imageUrl[i], propertyInformation[i], type[i], addresses[i], id[i]);
-
-            mPropertiesList.add(properties666);
-        }
-
-        //ASYNCHRONOUS ISSUE? THESE ITEMS WONT REMOVE IN A A LOOP, BUT DO EVENTUALLY IN APP
-        mPropertiesList.remove(0);
-        mPropertiesList.remove(0);
-        mPropertiesList.remove(0);
-
-    }
+//
+//    private void getPropertyInformation() {
+//        DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
+//        final long[] numberOfProperties = {0};
+//
+//        propertyReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                if (dataSnapshot.exists()) {
+//                    numberOfProperties[0] = dataSnapshot.getChildrenCount();
+//                    int propertyCount = -1;
+//
+//                    String[] addresses = new String[(int) numberOfProperties[0]];
+//                    String[] imageUrlString = new String[(int) numberOfProperties[0]];
+//                    String[] propertyInformation = new String[(int) numberOfProperties[0]];
+//
+//                    mPropertiesList.clear();
+//
+//                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                            propertyCount++;
+//
+//                            String key = child.getKey();
+//                            addresses[propertyCount] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+//                            imageUrlString[propertyCount] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
+//                            propertyInformation[propertyCount] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Information"));
+//
+//                            Properties properties666 = new Properties(imageUrlString[propertyCount], propertyInformation[propertyCount], propertyInformation[propertyCount], addresses[propertyCount], key);
+//
+//                            mPropertiesList.add(properties666);
+//
+//                            }
+//                        }
+//
+//                }
+//
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 }

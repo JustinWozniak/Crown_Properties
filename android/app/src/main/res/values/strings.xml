@@ -75,28 +75,10 @@
     <string name="property_info_placeholder">Here is some information</string>
     <string name="empty_screen">We do not have anything\nhere right now. Please Retry</string>
     <string name="btn_retry">Retry</string>
-
-    <string-array name="property_images">
-        <item>https://www.kwproperty.com/images/uploads/IMG_2993-d7e87ea4-a5aedf71.jpg</item>
-        <item>https://www.kwproperty.com/images/uploads/IMG_4891-d5c54019.jpg</item>
-        <item>https://www.kwproperty.com/images/uploads/IMG_1036-0fe3cd6b-c9f1ebab.jpg</item>
-        <item>https://www.kwproperty.com/images/uploads/87%20RIDGE-8fb278af.jpg</item>
-    </string-array>
-
-
-    <string-array name="property_addresses">
-        <item>31 Amherst Dr  Kitchener, ON </item>
-        <item>Unit B - 105 Village Road  Wellesley, ON </item>
-        <item>133A Village Road  Wellesley, ON </item>
-    </string-array>
-
-    <string-array name="property_info">
-        <item>3 Bedroom · 2.5 Bathroom · Freshly painted throughout · Eat in kitchen · 4 appliances fridge, stove, washer, and dryer · Large Dining  Living Room · Gas Heating </item>
-        <item>2 Bedrooms • 1 Bathroom • 5 appliances (fridge, stove, microwave, washer and dryer) • Fenced in yard perfect for a dog run area</item>
-        <item> 2 Bedroom · 2 bathrooms · 5 Appliances-fridge, stove, dishwasher, washer and dryer · Bright open floor plan · Luxury finishes</item>
-    </string-array>
     <string name="title_property_list">My Favorite Properties</string>
     <string name="title_property_detail">Property Detail</string>
+    <string name="title_favorite_list">Favorites</string>
+    <string name="title_favorite_detail">Favorite Detail</string>
 
 
 </resources>

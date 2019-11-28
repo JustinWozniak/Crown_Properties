@@ -14,17 +14,17 @@ import com.google.android.material.snackbar.Snackbar;
 import com.wozzytheprogrammer.kwproperty.R;
 
 /**
- * An activity representing a single Property detail screen. This
+ * An activity representing a single Favorite detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link PropertyListActivity}.
+ * in a {@link FavoriteListActivity}.
  */
-public class PropertyDetailActivity extends AppCompatActivity {
+public class FavoriteDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_property_detail);
+        setContentView(R.layout.activity_favorite_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,12 +56,12 @@ public class PropertyDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(PropertyDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(PropertyDetailFragment.ARG_ITEM_ID));
-            PropertyDetailFragment fragment = new PropertyDetailFragment();
+            arguments.putString(FavoriteDetailFragment.ARG_ITEM_ID,
+                    getIntent().getStringExtra(FavoriteDetailFragment.ARG_ITEM_ID));
+            FavoriteDetailFragment fragment = new FavoriteDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.property_detail_container, fragment)
+                    .add(R.id.favorite_detail_container, fragment)
                     .commit();
         }
     }
@@ -76,7 +76,7 @@ public class PropertyDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, PropertyListActivity.class));
+            navigateUpTo(new Intent(this, FavoriteListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

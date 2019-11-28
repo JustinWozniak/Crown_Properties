@@ -1,14 +1,18 @@
 package com.wozzytheprogrammer.kwproperty.Customer;
 
 import android.os.Bundle;
-import android.os.Handler;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.Adapters.PropertyAdapter;
 import com.wozzytheprogrammer.kwproperty.Objects.Properties;
 import com.wozzytheprogrammer.kwproperty.R;
@@ -46,31 +50,61 @@ public class CustomerListView extends AppCompatActivity implements PropertyAdapt
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mPropertyAdapter = new PropertyAdapter(new ArrayList<>());
 
-
-
         prepareContent();
-
 
     }
 
     private void prepareContent() {
+        DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
+        final long[] numberOfProperties = {0};
 
-        new Handler().postDelayed(() -> {
-            //prepare data and show loading
 
-            ArrayList<Properties> mProperties = new ArrayList<>();
-            String[] propertyAddressList = getResources().getStringArray(R.array.property_addresses);
-            String[] propertyInfo = getResources().getStringArray(R.array.property_info);
-            String[] propertyImage = getResources().getStringArray(R.array.property_images);
-            String[] id = getResources().getStringArray(R.array.property_info);
-            for (int i = 0; i < propertyAddressList.length; i++) {
-                mProperties.add(new Properties(propertyImage[i], propertyInfo[i], "Rental Property", propertyAddressList[i],id[i]));
+        //prepare data and show loading
+
+        ArrayList<Properties> mProperties = new ArrayList<>();
+        String[] propertyAddressList = new String[1];
+        String[] propertyInfo = new String[1];
+        String[] propertyImage = new String[1];
+        String[] id = new String[1];
+
+        propertyReference.addValueEventListener(new ValueEventListener() {
+
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+
+                {
+                    numberOfProperties[0] = dataSnapshot.getChildrenCount();
+                    int propertyCount = -1;
+
+                    String[] addresses = new String[(int) numberOfProperties[0]];
+                    String[] imageUrlString = new String[(int) numberOfProperties[0]];
+                    String[] propertyInformation = new String[(int) numberOfProperties[0]];
+
+
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        propertyCount++;
+
+                        String key = child.getKey();
+                        addresses[propertyCount] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+                        imageUrlString[propertyCount] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
+                        propertyInformation[propertyCount] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Information"));
+
+                        mProperties.add(new Properties(imageUrlString[propertyCount], propertyInformation[propertyCount], propertyInformation[propertyCount], addresses[propertyCount], key));
+                    }
+                    mPropertyAdapter.addItems(mProperties);
+                    mRecyclerView.setAdapter(mPropertyAdapter);
+                    }
+
+                }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
-            mPropertyAdapter.addItems(mProperties);
-            mRecyclerView.setAdapter(mPropertyAdapter);
-        }, 2000);
-
-    }
+        });}
 
     @Override
     public void onEmptyViewRetryClick() {

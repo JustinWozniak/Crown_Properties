@@ -11,7 +11,6 @@ public class CustomerObject{
 
     private String  id = "",
                     name = "",
-                    phone = "",
                     profileImage = "default";
 
     public CustomerObject(String id) {

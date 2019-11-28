@@ -15,20 +15,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.wozzytheprogrammer.kwproperty.Customer.favorites.FavoritesContent;
+import com.wozzytheprogrammer.kwproperty.Customer.dummy.DummyContent;
 import com.wozzytheprogrammer.kwproperty.R;
 
 import java.util.List;
 
 /**
- * An activity representing a list of My Favorite Properties. This activity
+ * An activity representing a list of Favorites. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link PropertyDetailActivity} representing
+ * lead to a {@link FavoriteDetailActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class PropertyListActivity extends AppCompatActivity {
+public class FavoriteListActivity extends AppCompatActivity {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -39,7 +39,7 @@ public class PropertyListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_property_list);
+        setContentView(R.layout.activity_favorite_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,7 +54,7 @@ public class PropertyListActivity extends AppCompatActivity {
             }
         });
 
-        if (findViewById(R.id.property_detail_container) != null) {
+        if (findViewById(R.id.favorite_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
@@ -62,59 +62,55 @@ public class PropertyListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.property_list);
+        View recyclerView = findViewById(R.id.favorite_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, FavoritesContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
     }
 
-    public class SimpleItemRecyclerViewAdapter
+    public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final PropertyListActivity mParentActivity;
-        private final List<FavoritesContent.FavoriteItem> mValues;
+        private final FavoriteListActivity mParentActivity;
+        private final List<DummyContent.DummyItem> mValues;
         private final boolean mTwoPane;
-
-
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FavoritesContent.FavoriteItem item = (FavoritesContent.FavoriteItem) view.getTag();
+                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(PropertyDetailFragment.ARG_ITEM_ID, item.id);
-                    PropertyDetailFragment fragment = new PropertyDetailFragment();
+                    arguments.putString(FavoriteDetailFragment.ARG_ITEM_ID, item.id);
+                    FavoriteDetailFragment fragment = new FavoriteDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.property_detail_container, fragment)
+                            .replace(R.id.favorite_detail_container, fragment)
                             .commit();
                 } else {
                     Context context = view.getContext();
-                    Intent intent = new Intent(context, PropertyDetailActivity.class);
-                    intent.putExtra(PropertyDetailFragment.ARG_ITEM_ID, item.id);
+                    Intent intent = new Intent(context, FavoriteDetailActivity.class);
+                    intent.putExtra(FavoriteDetailFragment.ARG_ITEM_ID, item.id);
 
                     context.startActivity(intent);
                 }
             }
         };
 
-        SimpleItemRecyclerViewAdapter(PropertyListActivity parent,
-                                      List<FavoritesContent.FavoriteItem> items,
+        SimpleItemRecyclerViewAdapter(FavoriteListActivity parent,
+                                      List<DummyContent.DummyItem> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
-
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.property_list_content, parent, false);
-
+                    .inflate(R.layout.favorite_list_content, parent, false);
             return new ViewHolder(view);
         }
 
@@ -125,19 +121,10 @@ public class PropertyListActivity extends AppCompatActivity {
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
-
         }
 
         @Override
         public int getItemCount() {
-            if (mValues.size() == 1 )   {
-             
-                recreate();
-            }
-            if(mValues.size() == 0) {
-
-            }
-
             return mValues.size();
         }
 
@@ -149,9 +136,7 @@ public class PropertyListActivity extends AppCompatActivity {
                 super(view);
                 mIdView = (TextView) view.findViewById(R.id.id_text);
                 mContentView = (TextView) view.findViewById(R.id.content);
-
             }
         }
     }
-
 }

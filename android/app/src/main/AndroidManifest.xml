@@ -26,17 +26,17 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".Customer.PropertyListActivity"
-            android:label="@string/title_property_list"
+            android:name=".Customer.FavoriteListActivity"
+            android:label="@string/title_favorite_list"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
         <activity
-            android:name=".Customer.PropertyDetailActivity"
-            android:label="@string/title_property_detail"
-            android:parentActivityName=".Customer.PropertyListActivity"
+            android:name=".Customer.FavoriteDetailActivity"
+            android:label="@string/title_favorite_detail"
+            android:parentActivityName=".Customer.FavoriteListActivity"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.wozzytheprogrammer.kwproperty.Customer.PropertyListActivity" />
+                android:value="com.wozzytheprogrammer.kwproperty.Customer.FavoriteListActivity" />
         </activity>
         <activity android:name=".Login.LauncherActivity" />
 

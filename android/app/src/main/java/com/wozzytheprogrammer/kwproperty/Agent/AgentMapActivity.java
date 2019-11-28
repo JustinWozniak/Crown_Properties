@@ -571,68 +571,68 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         final long[] numberOfProperties = {0};
 
         propertyReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                //    Generates a random colour for the markers
-                final int random = new Random().nextInt(0 + 360);
-                float hue = random;
-
-
-                if (dataSnapshot.exists()) {
-                    numberOfProperties[0] = dataSnapshot.getChildrenCount();
-                    int propertyCount = 0;
-                    int snapshotCount = 0;
-
-                    String[] markerNames = new String[(int) numberOfProperties[0]];
-                    String[] addresses = new String[(int) numberOfProperties[0]];
-                    String[] imageUrlString = new String[(int) numberOfProperties[0]];
-                    String[] propertyInformation = new String[(int) numberOfProperties[0]];
-                    Double[] latitudes = new Double[(int) numberOfProperties[0]];
-                    Double[] longitudes = new Double[(int) numberOfProperties[0]];
-
-                    Double latitude;
-                    Double longitude;
+            //    Generates a random colour for the markers
+            final int random = new Random().nextInt(0 + 360);
+            float hue = random;
 
 
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+            if (dataSnapshot.exists()) {
+                numberOfProperties[0] = dataSnapshot.getChildrenCount();
+                int propertyCount = 0;
+                int snapshotCount = 0;
 
-                        snapshotCount++;
-                        for (int i = 0; i < numberOfProperties[0]; i++) {
+                String[] markerNames = new String[(int) numberOfProperties[0]];
+                String[] addresses = new String[(int) numberOfProperties[0]];
+                String[] imageUrlString = new String[(int) numberOfProperties[0]];
+                String[] propertyInformation = new String[(int) numberOfProperties[0]];
+                Double[] latitudes = new Double[(int) numberOfProperties[0]];
+                Double[] longitudes = new Double[(int) numberOfProperties[0]];
 
-                            propertyCount++;
+                Double latitude;
+                Double longitude;
 
-                            String key = child.getKey();
-                            if (Integer.parseInt(key) == snapshotCount) {
-                                latitude = child.child("Lat").getValue(Double.class);
-                                longitude = child.child("Long").getValue(Double.class);
 
-                                markerNames[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
-                                addresses[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
-                                imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
-                                propertyInformation[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Information"));
-                                latitudes[i] = latitude;
-                                longitudes[i] = longitude;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
 
-                                mMap.addMarker(new MarkerOptions()
-                                        .title(markerNames[i])
-                                        .snippet(propertyInformation[i])
-                                        .icon(BitmapDescriptorFactory
-                                                .defaultMarker(hue))
-                                        .position(new LatLng(latitudes[i], longitudes[i])
-                                        ));
-                            }
+                    snapshotCount++;
+                    for (int i = 0; i < numberOfProperties[0]; i++) {
+
+                        propertyCount++;
+
+                        String key = child.getKey();
+                        if (Integer.parseInt(key) == snapshotCount) {
+                            latitude = child.child("Lat").getValue(Double.class);
+                            longitude = child.child("Long").getValue(Double.class);
+
+                            markerNames[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+                            addresses[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+                            imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
+                            propertyInformation[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Information"));
+                            latitudes[i] = latitude;
+                            longitudes[i] = longitude;
+
+                            mMap.addMarker(new MarkerOptions()
+                                    .title(markerNames[i])
+                                    .snippet(propertyInformation[i])
+                                    .icon(BitmapDescriptorFactory
+                                            .defaultMarker(hue))
+                                    .position(new LatLng(latitudes[i], longitudes[i])
+                                    ));
                         }
                     }
                 }
             }
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-    }
+        }
+    });
+}
 
 
     private void getRoutes(Marker marker) {
