@@ -586,6 +586,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                 int snapshotCount = 0;
 
                 String[] markerNames = new String[(int) numberOfProperties[0]];
+                String[] markerIds = new String[(int) numberOfProperties[0]];
                 String[] addresses = new String[(int) numberOfProperties[0]];
                 String[] imageUrlString = new String[(int) numberOfProperties[0]];
                 String[] propertyInformation = new String[(int) numberOfProperties[0]];
@@ -613,6 +614,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                             longitude = child.child("Long").getValue(Double.class);
 
                             markerNames[i] = MarkerNameString;
+                            markerIds[i] = key;
                             addresses[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
                             imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
                             propertyInformation[i] = propertyInformationString;

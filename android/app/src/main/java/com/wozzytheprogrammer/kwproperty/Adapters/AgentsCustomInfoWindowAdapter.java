@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,11 +44,15 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
         addressText.setText(title);
         String snippet = marker.getSnippet();
         informationText.setText(snippet);
-        loadPropertyImage();
+
+        String markerId = marker.getTitle();
+        Log.e("markerid",markerId);
+        loadPropertyImage(markerId);
 
     }
 
-    private void loadPropertyImage() {
+    private void loadPropertyImage(String markerId) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
         final long[] numberOfProperties = {0};
@@ -59,28 +63,41 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
 
                 if (dataSnapshot.exists()) {
                     numberOfProperties[0] = dataSnapshot.getChildrenCount();
+                    int propertyCount = 0;
                     int snapshotCount = 0;
 
+                    String[] markerIds = new String[(int) numberOfProperties[0]];
                     String[] imageUrlString = new String[(int) numberOfProperties[0]];
 
-                    String urlString;
 
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        DatabaseReference urlRef = database.getReference("Properties/Id").child(String.valueOf(snapshotCount));
 
+                        String id = String.valueOf(child);
+                        Log.e("CHILDREED",id);
+                        Log.e("Datasnap", String.valueOf(dataSnapshot));
+                        DataSnapshot propertyAddress = dataSnapshot.child("");
+                        Log.e("propertyAddress", String.valueOf(propertyAddress));
+
+
+                        imageUrlString[snapshotCount] = String.valueOf(dataSnapshot.child("Id").child(String.valueOf(snapshotCount)).child("ImgUrl").getValue());
+                        Log.e("dsadsadddsdsdds",String.valueOf(dataSnapshot.child(String.valueOf(snapshotCount)).child("ImgUrl").getValue()));
+
+                        //LEFT OFF HERE FRIDAY NOT WORKING
+//                        Glide.with(mContext.getApplicationContext()).load(imageUrlString).into(openHouseImage1);
 
                         snapshotCount++;
                         for (int i = 0; i < numberOfProperties[0]; i++) {
 
-//                            snapshotCount++;
-                            urlString = String.valueOf(urlRef.child("ImgUrl"));
+                            propertyCount++;
+
                             String key = child.getKey();
+                            if (Integer.parseInt(key) == snapshotCount) {
 
-                            //ENDED HERE THURSDAY
-                                imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(snapshotCount)).child("ImgUrl"));
-                                Glide.with(mContext.getApplicationContext()).load(urlString).into(openHouseImage1);
-                                Log.e("URLSTR",imageUrlString[i]);
+                                markerIds[i] = key;
+                           Log.e("markerid",markerIds[i]);
 
+
+                            }
                         }
                     }
                 }
