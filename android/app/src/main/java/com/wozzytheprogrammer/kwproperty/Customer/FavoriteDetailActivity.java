@@ -24,7 +24,7 @@ public class FavoriteDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite_detail);
+        setContentView(R.layout.activity_property_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,7 +61,7 @@ public class FavoriteDetailActivity extends AppCompatActivity {
             FavoriteDetailFragment fragment = new FavoriteDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.favorite_detail_container, fragment)
+                    .add(R.id.property_detail_container, fragment)
                     .commit();
         }
     }

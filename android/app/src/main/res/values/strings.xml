@@ -79,6 +79,7 @@
     <string name="title_property_detail">Property Detail</string>
     <string name="title_favorite_list">Favorites</string>
     <string name="title_favorite_detail">Favorite Detail</string>
+    <string name="find_an_agent">Find an Agent</string>
 
 
 </resources>

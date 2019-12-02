@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,7 +47,6 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
         informationText.setText(snippet);
 
         String markerId = marker.getTitle();
-        Log.e("markerid",markerId);
         loadPropertyImage(markerId);
 
     }
@@ -63,7 +63,6 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
 
                 if (dataSnapshot.exists()) {
                     numberOfProperties[0] = dataSnapshot.getChildrenCount();
-                    int propertyCount = 0;
                     int snapshotCount = 0;
 
                     String[] markerIds = new String[(int) numberOfProperties[0]];
@@ -73,35 +72,25 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
 
                         String id = String.valueOf(child);
-                        Log.e("CHILDREED",id);
+                        Log.e("CHILDREED", id);
                         Log.e("Datasnap", String.valueOf(dataSnapshot));
                         DataSnapshot propertyAddress = dataSnapshot.child("");
                         Log.e("propertyAddress", String.valueOf(propertyAddress));
 
 
-                        imageUrlString[snapshotCount] = String.valueOf(dataSnapshot.child("Id").child(String.valueOf(snapshotCount)).child("ImgUrl").getValue());
-                        Log.e("dsadsadddsdsdds",String.valueOf(dataSnapshot.child(String.valueOf(snapshotCount)).child("ImgUrl").getValue()));
-
+                        imageUrlString[snapshotCount] = String.valueOf(dataSnapshot.child(String.valueOf(snapshotCount)).child("ImgUrl").getValue());
+                        Log.e("dsadsadddsdsdds", String.valueOf(dataSnapshot.child(String.valueOf(snapshotCount)).child("ImgUrl").getValue()));
+                        Log.e("BLAHHHH", imageUrlString[snapshotCount]);
                         //LEFT OFF HERE FRIDAY NOT WORKING
-//                        Glide.with(mContext.getApplicationContext()).load(imageUrlString).into(openHouseImage1);
+//                        NEED TO GO THROUGH DATA AND COMPARE TITLE TO DATABASE THEN IF A MATCH< DISPLAY THAT IMAGE
+                        Glide.with(mContext.getApplicationContext()).load(imageUrlString[snapshotCount]).into(openHouseImage1);
 
                         snapshotCount++;
-                        for (int i = 0; i < numberOfProperties[0]; i++) {
 
-                            propertyCount++;
-
-                            String key = child.getKey();
-                            if (Integer.parseInt(key) == snapshotCount) {
-
-                                markerIds[i] = key;
-                           Log.e("markerid",markerIds[i]);
-
-
-                            }
-                        }
                     }
                 }
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -109,6 +98,7 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
             }
         });
     }
+
     @Override
     public View getInfoWindow(Marker marker) {
         renderWindowText(marker, mWindow);

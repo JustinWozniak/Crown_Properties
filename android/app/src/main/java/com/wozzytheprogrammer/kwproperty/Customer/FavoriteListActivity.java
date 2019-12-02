@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.wozzytheprogrammer.kwproperty.Customer.dummy.DummyContent;
+import com.wozzytheprogrammer.kwproperty.Customer.favorites.FavoritesContent;
 import com.wozzytheprogrammer.kwproperty.R;
 
 import java.util.List;
@@ -30,6 +30,7 @@ import java.util.List;
  */
 public class FavoriteListActivity extends AppCompatActivity {
 
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -39,7 +40,7 @@ public class FavoriteListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite_list);
+        setContentView(R.layout.activity_property_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,7 +55,7 @@ public class FavoriteListActivity extends AppCompatActivity {
             }
         });
 
-        if (findViewById(R.id.favorite_detail_container) != null) {
+        if (findViewById(R.id.property_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
@@ -62,32 +63,32 @@ public class FavoriteListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.favorite_list);
+        View recyclerView = findViewById(R.id.property_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, FavoritesContent.ITEMS, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final FavoriteListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<FavoritesContent.FavoriteItem> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+                FavoritesContent.FavoriteItem item = (FavoritesContent.FavoriteItem) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(FavoriteDetailFragment.ARG_ITEM_ID, item.id);
                     FavoriteDetailFragment fragment = new FavoriteDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.favorite_detail_container, fragment)
+                            .replace(R.id.property_detail_container, fragment)
                             .commit();
                 } else {
                     Context context = view.getContext();
@@ -100,7 +101,7 @@ public class FavoriteListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(FavoriteListActivity parent,
-                                      List<DummyContent.DummyItem> items,
+                                      List<FavoritesContent.FavoriteItem> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
@@ -110,7 +111,7 @@ public class FavoriteListActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.favorite_list_content, parent, false);
+                    .inflate(R.layout.property_list_content, parent, false);
             return new ViewHolder(view);
         }
 
