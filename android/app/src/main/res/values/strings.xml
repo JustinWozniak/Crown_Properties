@@ -80,6 +80,8 @@
     <string name="title_favorite_list">Favorites</string>
     <string name="title_favorite_detail">Favorite Detail</string>
     <string name="find_an_agent">Find an Agent</string>
+    <string name="title_favoriteproperty_list">FavoriteProperties</string>
+    <string name="title_favoriteproperty_detail">FavoriteProperty Detail</string>
 
 
 </resources>

@@ -203,7 +203,6 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
                     clickCount++;
 
-
                     Log.e("view", view.toString());
                     scaleView(buttonFavorite, 1, 3);
                     scaleView(buttonFavorite, 2, 1);
@@ -230,7 +229,6 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
 
             itemView.setOnClickListener(v -> {
-
 
                 if (mProperties.getImageUrl() != null) {
                     try {

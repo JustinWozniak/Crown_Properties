@@ -26,9 +26,22 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
+            android:name=".Favorites.FavoritePropertyListActivity"
+            android:label="@string/title_favoriteproperty_list"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+        <activity
+            android:name=".Favorites.FavoritePropertyDetailActivity"
+            android:label="@string/title_favoriteproperty_detail"
+            android:parentActivityName=".Favorites.FavoritePropertyListActivity"
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.wozzytheprogrammer.kwproperty.Favorites.FavoritePropertyListActivity" />
+        </activity>
+        <activity
             android:name=".Customer.FavoriteListActivity"
             android:label="@string/title_favorite_list"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
             android:name=".Customer.FavoriteDetailActivity"
             android:label="@string/title_favorite_detail"
