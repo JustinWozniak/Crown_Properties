@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.wozzytheprogrammer.kwproperty.Adapters.FavoritePropertyAdapter;
+import com.wozzytheprogrammer.kwproperty.Adapters.PropertyListViewAdapter;
 import com.wozzytheprogrammer.kwproperty.Objects.Properties;
 import com.wozzytheprogrammer.kwproperty.R;
 
@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CustomerListView extends AppCompatActivity implements FavoritePropertyAdapter.Callback {
+public class CustomerListView extends AppCompatActivity implements PropertyListViewAdapter.Callback {
 
     @BindView(R.id.mRecyclerView)
     RecyclerView mRecyclerView;
-    FavoritePropertyAdapter mPropertyAdapter;
+    PropertyListViewAdapter mPropertyAdapter;
 
     LinearLayoutManager mLayoutManager;
 
@@ -45,7 +45,7 @@ public class CustomerListView extends AppCompatActivity implements FavoritePrope
         mLayoutManager.setOrientation(RecyclerView.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mPropertyAdapter = new FavoritePropertyAdapter(new ArrayList<>());
+        mPropertyAdapter = new PropertyListViewAdapter(new ArrayList<>());
 
         prepareContent();
 

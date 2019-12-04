@@ -31,8 +31,8 @@ import java.util.TreeMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FavoritePropertyAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-    private static final String TAG = "FavoritePropertyAdapter";
+public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+    private static final String TAG = "PropertyListViewAdapter";
     public static final int VIEW_TYPE_EMPTY = 0;
     public static final int VIEW_TYPE_NORMAL = 1;
 
@@ -45,7 +45,7 @@ public class FavoritePropertyAdapter extends RecyclerView.Adapter<BaseViewHolder
     private Boolean isAFavProperty = false;
 
 
-    public FavoritePropertyAdapter(List<Properties> propertiesList) {
+    public PropertyListViewAdapter(List<Properties> propertiesList) {
         mPropertiesList = propertiesList;
 
 
