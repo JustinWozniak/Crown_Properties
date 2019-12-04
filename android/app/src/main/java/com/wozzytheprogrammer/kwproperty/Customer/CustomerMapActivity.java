@@ -174,14 +174,6 @@ public class CustomerMapActivity extends AppCompatActivity
 
         listView = findViewById(R.id.viewListViewButton);
 
-//        favoritesView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent ListView = new Intent(CustomerMapActivity.this, PropertyListActivity.class);
-//                startActivity(ListView);
-//                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
-//            }
-//        });
 
         listView.setOnClickListener(new View.OnClickListener() {
             @Override

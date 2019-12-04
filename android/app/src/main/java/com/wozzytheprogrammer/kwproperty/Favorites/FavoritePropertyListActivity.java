@@ -3,22 +3,19 @@ package com.wozzytheprogrammer.kwproperty.Favorites;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.wozzytheprogrammer.kwproperty.R;
-import com.wozzytheprogrammer.kwproperty.dummy.DummyContent;
 
 import java.util.List;
 
@@ -70,19 +67,19 @@ public class FavoritePropertyListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, FavoriteObject.ITEMS, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final FavoritePropertyListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<FavoriteObject.FavPropertyItem> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+                FavoriteObject.FavPropertyItem item = (FavoriteObject.FavPropertyItem) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(FavoritePropertyDetailFragment.ARG_ITEM_ID, item.id);
@@ -102,7 +99,7 @@ public class FavoritePropertyListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(FavoritePropertyListActivity parent,
-                                      List<DummyContent.DummyItem> items,
+                                      List<FavoriteObject.FavPropertyItem> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
