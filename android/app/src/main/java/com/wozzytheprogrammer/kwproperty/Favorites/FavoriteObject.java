@@ -35,12 +35,11 @@ public class FavoriteObject {
     public static final Map<String, FavPropertyItem> ITEM_MAP = new HashMap<String, FavPropertyItem>();
 
 
-
-    private static int COUNT = 25;
+    private static int COUNT = 0;
 
     static {
         // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
+        for (int i = 0; i <= COUNT; i++) {
             addItem(createPropertyItem(i));
         }
     }
@@ -54,49 +53,80 @@ public class FavoriteObject {
 
         DatabaseReference mUser = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(FirebaseAuth.getInstance().getUid());
         String usersId = mUser.getKey();
-        Log.e("user", String.valueOf(mUser));
+
         DatabaseReference propertyFavRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(String.valueOf(usersId)).child("favoriteProperties");
-        Log.e("propertyFavRef", String.valueOf(propertyFavRef));
+
+        DatabaseReference propertyListFromDatabase = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
 
 
+
+        final long[] numberOfProperties = {0};
 
         propertyFavRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                        String key = snapshot.getKey();
-                        COUNT = Integer.parseInt(snapshot.getKey());
-                        Log.e("key",key);
-                        Log.e("datasnap", String.valueOf(dataSnapshot));
-
-                        DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id").child(key);
-                        Log.e("newest", String.valueOf(propertyReference));
-
-                        DataSnapshot propertyAddress = snapshot.child("Address");
-                        Log.e("newaddress", String.valueOf(propertyAddress));
-
-                        DatabaseReference propertyImgUrl = propertyReference.child("ImgUrl");
-                        Log.e("propertyImgUrl", String.valueOf(propertyImgUrl));
-
-                        DatabaseReference propertyInformation = propertyReference.child("Information");
-                        Log.e("propertyInformation", String.valueOf(propertyInformation));
-
-
-
-                        FavPropertyItem Blahh =  new FavPropertyItem(String.valueOf(position),String.valueOf(propertyAddress),String.valueOf(propertyInformation),String.valueOf(propertyImgUrl));
-                        Log.e("Blahh", String.valueOf(Blahh));
-                        addItem(Blahh);
-
+                String favkey = "";
+                if (dataSnapshot.exists()) {
+                    numberOfProperties[0] = dataSnapshot.getChildrenCount();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        favkey = snapshot.getKey();
+                        Log.e("favkeys",favkey);
                     }
+
+
+                    DatabaseReference propertyListFomDatabase = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
+
+                    String finalFavkey = favkey;
+                    propertyListFromDatabase.addValueEventListener(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                String key = snapshot.getKey();
+                                COUNT = Integer.parseInt(snapshot.getKey());
+                                Log.e("key", key);
+                                Log.e("datasnap", String.valueOf(dataSnapshot));
+                                Log.e("favkey[0]", String.valueOf(finalFavkey));
+                                if(finalFavkey.equals(key))    {
+
+                                    String matchingPropertyId = finalFavkey;
+                                    Log.e("matchingPropertyid", matchingPropertyId);
+
+                                    String matchingPropertyContent = (String) dataSnapshot.child(key).child("Information").getValue();
+                                    Log.e("matchingPropertycontent", matchingPropertyContent);
+
+                                    String matchingPropertydetails = (String) dataSnapshot.child(key).child("Address").getValue();
+                                    Log.e("matchingPropertydetails", matchingPropertydetails);
+
+                                    String matchingPropertImgUrl = (String) dataSnapshot.child(key).child("ImgUrl").getValue();
+                                    Log.e("matchingPropertyurl", matchingPropertImgUrl);
+                                    FavPropertyItem finalPropertyObject = new FavPropertyItem(matchingPropertyId,matchingPropertyContent,matchingPropertydetails,matchingPropertImgUrl);
+
+                                    addItem(finalPropertyObject);
+                                    Log.e("WE GOOD?", String.valueOf(finalPropertyObject));
+                                }
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
                 }
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
 
-        return new FavPropertyItem(String.valueOf(position), "Item " + position, makeDetails(position),"blank");
+        return new FavPropertyItem(String.valueOf(position), "Item " + position, makeDetails(position), "blank");
     }
 
     private static String makeDetails(int position) {

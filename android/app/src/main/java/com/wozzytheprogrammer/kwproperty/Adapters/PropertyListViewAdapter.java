@@ -31,6 +31,8 @@ import java.util.TreeMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static java.lang.Integer.parseInt;
+
 public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final String TAG = "PropertyListViewAdapter";
     public static final int VIEW_TYPE_EMPTY = 0;
@@ -209,7 +211,13 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
                     propertyAddedToFavs.setText(R.string.is_a_favorite);
                     propertyAddedToFavs.setVisibility(View.VISIBLE);
 
-                    favoritesUpdates.put((String) idTextView.getText(), titleTextView.getText());
+                    Log.e("idtext", String.valueOf(idTextView.getText()));
+                    String propertyIdString = String.valueOf(idTextView.getText());
+
+                    String linedUpIds = String.valueOf(parseInt(propertyIdString)-1);
+                    Log.e("linedUpIds", linedUpIds);
+
+                    favoritesUpdates.put((String) linedUpIds, titleTextView.getText());
                     Log.e("dsds", favoritesUpdates.toString());
                     favoritePropertiesRef.updateChildren(favoritesUpdates);
                     String key = String.valueOf(idTextView.getText());

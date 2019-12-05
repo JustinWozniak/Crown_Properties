@@ -59,9 +59,7 @@ public class CustomerListView extends AppCompatActivity implements PropertyListV
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-
-                {
+                if(dataSnapshot.exists()) {
                     numberOfProperties[0] = dataSnapshot.getChildrenCount();
                     int propertyCount = -1;
 
