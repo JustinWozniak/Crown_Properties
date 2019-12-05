@@ -2,19 +2,16 @@ package com.wozzytheprogrammer.kwproperty.Favorites;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.wozzytheprogrammer.kwproperty.R;
-
-import androidx.appcompat.widget.Toolbar;
-
+import android.view.MenuItem;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-import android.view.MenuItem;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.wozzytheprogrammer.kwproperty.Customer.FindAgentsActivity;
+import com.wozzytheprogrammer.kwproperty.R;
 
 /**
  * An activity representing a single FavoriteProperty detail screen. This
@@ -35,8 +32,9 @@ public class FavoritePropertyDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(FavoritePropertyDetailActivity.this, FindAgentsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
             }
         });
 

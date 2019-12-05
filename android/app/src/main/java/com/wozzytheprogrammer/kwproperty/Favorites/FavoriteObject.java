@@ -1,7 +1,5 @@
 package com.wozzytheprogrammer.kwproperty.Favorites;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,16 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Helper class for providing sample content for user interfaces created by
- * Android template wizards.
- * <p>
- * TODO: Replace all uses of this class before publishing your app.
- */
 public class FavoriteObject {
 
     /**
-     * An array of sample favorite items.
+     * An array of favorite items.
      */
     public static final List<FavPropertyItem> ITEMS = new ArrayList<FavPropertyItem>();
 
@@ -39,10 +31,10 @@ public class FavoriteObject {
 
     static {
         // Add some sample items.
-        for (int i = 0; i <= COUNT; i++) {
-            addItem(createPropertyItem(i));
+
+            addItem(createPropertyItem(1));
         }
-    }
+
 
     private static void addItem(FavPropertyItem item) {
         ITEMS.add(item);
@@ -70,7 +62,6 @@ public class FavoriteObject {
                     numberOfProperties[0] = dataSnapshot.getChildrenCount();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         favkey = snapshot.getKey();
-                        Log.e("favkeys",favkey);
                     }
 
 
@@ -86,26 +77,15 @@ public class FavoriteObject {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 String key = snapshot.getKey();
                                 COUNT = Integer.parseInt(snapshot.getKey());
-                                Log.e("key", key);
-                                Log.e("datasnap", String.valueOf(dataSnapshot));
-                                Log.e("favkey[0]", String.valueOf(finalFavkey));
                                 if(finalFavkey.equals(key))    {
-
                                     String matchingPropertyId = finalFavkey;
-                                    Log.e("matchingPropertyid", matchingPropertyId);
-
                                     String matchingPropertyContent = (String) dataSnapshot.child(key).child("Information").getValue();
-                                    Log.e("matchingPropertycontent", matchingPropertyContent);
-
                                     String matchingPropertydetails = (String) dataSnapshot.child(key).child("Address").getValue();
-                                    Log.e("matchingPropertydetails", matchingPropertydetails);
-
                                     String matchingPropertImgUrl = (String) dataSnapshot.child(key).child("ImgUrl").getValue();
-                                    Log.e("matchingPropertyurl", matchingPropertImgUrl);
                                     FavPropertyItem finalPropertyObject = new FavPropertyItem(matchingPropertyId,matchingPropertyContent,matchingPropertydetails,matchingPropertImgUrl);
 
                                     addItem(finalPropertyObject);
-                                    Log.e("WE GOOD?", String.valueOf(finalPropertyObject));
+
                                 }
 
                             }
@@ -149,8 +129,8 @@ public class FavoriteObject {
 
         public FavPropertyItem(String id, String address, String details, String imgUrl) {
             this.id = id;
-            this.content = address;
-            this.details = details;
+            this.content = details;
+            this.details = address;
             this.imgUrl = imgUrl;
         }
 
