@@ -144,7 +144,14 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                     mLastLocation = location;
 
                     Map newUserMap = new HashMap();
+                    String currentLatitude = String.valueOf(location.getLatitude());
+                    String currentLongitude = String.valueOf(location.getLongitude());
+
+
                     newUserMap.put("last_updated", ServerValue.TIMESTAMP);
+                    newUserMap.put("curent_lat", currentLatitude);
+                    newUserMap.put("curent_long", currentLongitude);
+
                     mUser.updateChildren(newUserMap);
 
                     if (mCurrentRide == null) {
@@ -713,6 +720,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         mWorkingSwitch.setChecked(true);
         checkLocationPermission();
         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+
         mMap.setMyLocationEnabled(true);
     }
 

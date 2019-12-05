@@ -1,16 +1,35 @@
 package com.wozzytheprogrammer.kwproperty.Customer;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.R;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FindAgentsActivity extends AppCompatActivity {
+    private ProgressDialog loadingBar;
+    Button findAgentButton;
+
+    private LatLng customersLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,14 +38,106 @@ public class FindAgentsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        setupPage();
+
+
+
+
+    }
+
+    private void setupPage() {
+        loadingBar = new ProgressDialog(this);
+        findAgentButton = findViewById(R.id.find_agent_confirm);
+
+        findAgentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               findAnAgent();
+            }
+        });
+
+    }
+
+    private int radius = 1;
+    private Boolean agentFound = false;
+    private String agentFoundID;
+
+    GeoQuery geoQuery;
+
+    private void findAnAgent() {
+
+
+        DatabaseReference agentLocation = FirebaseDatabase.getInstance().getReference().child("agentsAvailable");
+
+        GeoFire geoFire = new GeoFire(agentLocation);
+
+        geoQuery = geoFire.queryAtLocation(new GeoLocation(customersLocation.latitude, customersLocation.longitude), radius);
+        geoQuery.removeAllListeners();
+
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                if (!agentFound ) {
+                    loadingBar.setTitle("Locating Real Estate Agent...");
+                    loadingBar.setMessage("Please wait, we are scanning your location...");
+                    loadingBar.show();
+
+                    DatabaseReference agentsOnline = FirebaseDatabase.getInstance().getReference().child("Users").child("agentsAvailable").child(key);
+                    agentsOnline.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+                                Map<String, Object> agentMap = (Map<String, Object>) dataSnapshot.getValue();
+                                if (agentFound) {
+                                    return;
+                                }
+
+
+                                agentFound = true;
+                                agentFoundID = dataSnapshot.getKey();
+
+                                DatabaseReference agentRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(agentFoundID).child("customerRequest");
+                                String customerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                HashMap map = new HashMap();
+                                agentRef.updateChildren(map);
+
+//                                getAgentLocation();
+//                                getAgentInfo();
+
+                                findAgentButton.setText("Looking for Agents Location....");
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                if (!agentFound) {
+                    radius++;
+//                    getClosestAgent();
+                }
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
             }
         });
     }
-
 }

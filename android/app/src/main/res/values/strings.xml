@@ -44,6 +44,10 @@
     <string name="is_a_favorite">Added To Favorites!</string>
     <string name="is_not_a_favorite">Removed From Favorites!</string>
     <string name="favorites">My Favorite Properties</string>
+    <string name="agent_profile_picture">Agents Profile Picture</string>
+    <string name="find_closest_agent">I agree, Find Closest Agent!</string>
+    <string name="agents_name">Agents Name</string>
+    <string name="agents_location">Agents Location</string>
 
     <string name="title_activity_agent_map">Map</string>
     <string name="title_activity_main2">Main2Activity</string>
@@ -66,6 +70,13 @@
     <string name="action_example">Example action</string>
 
     <string name="waiting_for_location">Waiting for Location</string>
+
+
+    <string name="find_an_agent_description">
+    Clicking the button below you agree to let Crown Properties use your
+        location and our state of the art algorithm to find you a
+        Real Estate Agent that\'s ready to help you find your dream home!
+    </string>
 
     <!--
                 The following Strings are for Recycler View
