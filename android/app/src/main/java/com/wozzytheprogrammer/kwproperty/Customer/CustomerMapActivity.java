@@ -4,11 +4,14 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -84,6 +88,7 @@ import com.wozzytheprogrammer.kwproperty.Objects.RideObject;
 import com.wozzytheprogrammer.kwproperty.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -111,6 +116,11 @@ public class CustomerMapActivity extends AppCompatActivity
     private Marker destinationMarker, pickupMarker;
 
     private SupportMapFragment mapFragment;
+
+    private DatabaseReference mCustomerDatabase;
+
+    private String userID;
+
 
 
     private LinearLayout mAgentInfo,
@@ -634,12 +644,60 @@ public class CustomerMapActivity extends AppCompatActivity
 
                 mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                 mMap.setMyLocationEnabled(true);
+                storeUsersLocation();
             } else {
                 checkLocationPermission();
             }
         }
 
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void storeUsersLocation() {
+
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider = service.getBestProvider(criteria, false);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return;
+        }
+        Location location = service.getLastKnownLocation(provider);
+        LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
+        Log.e("locatoion", String.valueOf(userLocation));
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.e("uid", String.valueOf(uid));
+        DatabaseReference customer = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(uid).child("location");
+        Log.e("customer", String.valueOf(customer));
+        customer.setValue(userLocation);
+
+        customer.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())   {
+                    String key = dataSnapshot.getKey();
+                    Log.e("key", String.valueOf(key));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        Map userInfo = new HashMap();
+        userInfo.put("Location", userLocation);
+//        mCustomerDatabase.updateChildren(userInfo);
+    }
+
 
     private void getPropertyInformation() {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
