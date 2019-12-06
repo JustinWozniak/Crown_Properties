@@ -20,9 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.R;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class FindAgentsActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     Button findAgentButton;
@@ -75,16 +72,13 @@ public class FindAgentsActivity extends AppCompatActivity {
         customerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Long[] location = new Long[2];
-                int locationCount = 0;
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        Map userInfo = new HashMap();
-                        userInfo.put("Location", dataSnapshot.getChildren());
-                        Log.e("loc", String.valueOf(userInfo));
-                        String lat = (String) userInfo.get(0);
-                        Log.e("lat", String.valueOf(lat));
-                    locationCount++;
+                        String  customersLat = String.valueOf(dataSnapshot.child("Lat:").getValue());
+                        Log.e("lat",customersLat);
+                        String  customersLong = String.valueOf(dataSnapshot.child("Long:").getValue());
+                        Log.e("customersLong",customersLong);
+                     
                     }
                 }
 
