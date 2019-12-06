@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,7 +87,6 @@ import com.wozzytheprogrammer.kwproperty.Objects.RideObject;
 import com.wozzytheprogrammer.kwproperty.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -659,43 +657,20 @@ public class CustomerMapActivity extends AppCompatActivity
         Criteria criteria = new Criteria();
         String provider = service.getBestProvider(criteria, false);
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
             return;
         }
         Location location = service.getLastKnownLocation(provider);
         LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
-        Log.e("locatoion", String.valueOf(userLocation));
+        double userLat = userLocation.latitude;
+        double userLong = userLocation.longitude;
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.e("uid", String.valueOf(uid));
-        DatabaseReference customer = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(uid).child("location");
-        Log.e("customer", String.valueOf(customer));
-        customer.setValue(userLocation);
+        DatabaseReference customerLat = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(uid).child("location").child("Lat:");
+        DatabaseReference customerLong = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(uid).child("location").child("Long:");
 
-        customer.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())   {
-                    String key = dataSnapshot.getKey();
-                    Log.e("key", String.valueOf(key));
-                }
-            }
+        customerLat.setValue(userLat);
+        customerLong.setValue(userLong);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        Map userInfo = new HashMap();
-        userInfo.put("Location", userLocation);
-//        mCustomerDatabase.updateChildren(userInfo);
     }
 
 
