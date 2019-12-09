@@ -722,6 +722,8 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
 
         mMap.setMyLocationEnabled(true);
+
+
     }
 
     /**

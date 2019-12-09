@@ -15,7 +15,6 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,11 +23,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.R;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FindAgentsActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     Button findAgentButton;
-
-    private LatLng customersLocation;
 
 
     @Override
@@ -56,12 +56,9 @@ public class FindAgentsActivity extends AppCompatActivity {
 
     }
 
-    private int radius = 1;
     private Boolean agentFound = false;
     int MAX_SEARCH_DISTANCE = 100000;
-    boolean requestBol = false;
 
-    GeoQuery geoQuery;
 
     private void findAnAgent() {
 
@@ -75,8 +72,6 @@ public class FindAgentsActivity extends AppCompatActivity {
 
         DatabaseReference agentLocation = FirebaseDatabase.getInstance().getReference().child("agentsAvailable");
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users/Customers/" + uid + "/location");
-        GeoFire geoFire = new GeoFire(ref);
 
         customerLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -90,7 +85,7 @@ public class FindAgentsActivity extends AppCompatActivity {
                         Log.e("customersLong", String.valueOf(customersLong));
                         if (customersLat != null) {
                             GeoFire geoFire = new GeoFire(agentLocation);
-                            GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(customersLat, customersLong), 10000);
+                            GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(customersLat, customersLong), MAX_SEARCH_DISTANCE);
 
                             Handler handler = new Handler();
                             int delay = 5000; //milliseconds
@@ -113,11 +108,18 @@ public class FindAgentsActivity extends AppCompatActivity {
                             geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                                 @Override
                                 public void onKeyEntered(String key, GeoLocation location) {
+                                    Map customersId = new HashMap();
+                                    Map agentsId = new HashMap();
+                                    DatabaseReference foundAgent = FirebaseDatabase.getInstance().getReference().child("agentsAvailable").child(key);
+                                    DatabaseReference connectedPeople = FirebaseDatabase.getInstance().getReference().child("connected").child(key);
                                     Log.e("key", String.valueOf(key));
                                     Log.e("location", String.valueOf(location));
                                     agentFound = true;
+                                    customersId.put("conectedCustomersId",String.valueOf(uid));
+                                    agentsId.put("connectedagentsid",foundAgent);
                                     loadingBar.setTitle("Agent found!!!!!");
                                     loadingBar.setMessage("Please wait, we are contacting your agent!...");
+                                    connectedPeople.child("customerFound").updateChildren(customersId);
                                 }
 
                                 @Override
