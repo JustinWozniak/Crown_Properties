@@ -1,6 +1,7 @@
 package com.wozzytheprogrammer.kwproperty.Customer;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.wozzytheprogrammer.kwproperty.Chat.ChatMainActivity;
 import com.wozzytheprogrammer.kwproperty.R;
 
 import java.util.HashMap;
@@ -120,6 +122,11 @@ public class FindAgentsActivity extends AppCompatActivity {
                                     loadingBar.setTitle("Agent found!!!!!");
                                     loadingBar.setMessage("Please wait, we are contacting your agent!...");
                                     connectedPeople.child("customerFound").updateChildren(customersId);
+
+
+                                    Intent intent = new Intent(FindAgentsActivity.this, ChatMainActivity.class);
+                                    startActivity(intent);
+                                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                                 }
 
                                 @Override
