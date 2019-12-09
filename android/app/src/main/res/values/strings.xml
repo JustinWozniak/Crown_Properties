@@ -48,6 +48,9 @@
     <string name="find_closest_agent">I agree, Find Closest Agent!</string>
     <string name="agents_name">Agents Name</string>
     <string name="agents_location">Agents Location</string>
+    <string name="accept">Accept, Start Chat</string>
+    <string name="decline">Decine</string>
+    <string name="customer_asking">A Customer Would Like to Contact You</string>
 
     <string name="title_activity_agent_map">Map</string>
     <string name="title_activity_main2">Main2Activity</string>

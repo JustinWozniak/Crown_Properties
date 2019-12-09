@@ -8,7 +8,9 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -159,6 +162,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                         });
                         if (mWorkingSwitch.isChecked()) {
                             geoFireAvailable.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()), (key, error) -> {
+                          watchForConnection();
                             });
                         }
                     } else {
@@ -172,6 +176,37 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
             }
         }
     };
+
+    private void watchForConnection() {
+        DatabaseReference connectedPeople = FirebaseDatabase.getInstance().getReference("connected");
+        Log.e("connected", String.valueOf(connectedPeople));
+        connectedPeople.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e("dataSnapshot", String.valueOf(dataSnapshot));
+                if(dataSnapshot.exists()){
+                    // inflate the layout of the popup window
+                    LayoutInflater inflater = (LayoutInflater)
+                            getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View popupView = inflater.inflate(R.layout.customer_wants_chat_popup, null);
+                    // create the popup window
+                    int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                    int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                    boolean focusable = true; // lets taps outside the popup also dismiss it
+                    final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+                    // show the popup window
+                    // which view you pass in doesn't matter, it is only used for the window tolken
+                    popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
