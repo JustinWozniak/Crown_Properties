@@ -2,6 +2,7 @@ package com.wozzytheprogrammer.kwproperty.Customer;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,8 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.R;
-
-import java.util.Map;
 
 public class FindAgentsActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
@@ -59,7 +58,7 @@ public class FindAgentsActivity extends AppCompatActivity {
 
     private int radius = 1;
     private Boolean agentFound = false;
-    int MAX_SEARCH_DISTANCE = 1000;
+    int MAX_SEARCH_DISTANCE = 100000;
     boolean requestBol = false;
 
     GeoQuery geoQuery;
@@ -83,40 +82,42 @@ public class FindAgentsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    Log.e("datasnap", String.valueOf(dataSnapshot));
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         Double customersLat = (Double) dataSnapshot.child("Lat:").getValue();
                         Double customersLong = (Double) dataSnapshot.child("Long:").getValue();
+                        Log.e("customersLat", String.valueOf(customersLat));
+                        Log.e("customersLong", String.valueOf(customersLong));
                         if (customersLat != null) {
-                            GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(customersLat, customersLong), MAX_SEARCH_DISTANCE);
+                            GeoFire geoFire = new GeoFire(agentLocation);
+                            GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(customersLat, customersLong), 10000);
+
+                            Handler handler = new Handler();
+                            int delay = 5000; //milliseconds
+
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
+                                    if (!agentFound) {
+                                        loadingBar.setTitle("No Agents Online!!!!!");
+                                        loadingBar.setMessage("Please Try Again Later...");
+                                        geoQuery.removeAllListeners();
+
+                                        return;
+                                    }
+                                    handler.postDelayed(this, delay);
+                                }
+                            }, delay);
+
 
 
                             geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                                 @Override
                                 public void onKeyEntered(String key, GeoLocation location) {
-                                    DatabaseReference agentAvailable = FirebaseDatabase.getInstance().getReference().child("agentsAvailable");
-                                    Log.e("agentAvailable", String.valueOf(agentAvailable));
-                                    agentAvailable.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.exists()) {
-                                                Map<String, Object> agentMap = (Map<String, Object>) dataSnapshot.getValue();
-                                                Log.e("MAP", String.valueOf(agentMap));
-
-                                                agentFound = true;
-                                                loadingBar.setTitle("Agent Found!...");
-                                                loadingBar.setMessage("Please wait, while we contact them!...");
-
-                                            }   else    {
-                                                agentFound = false;
-                                                loadingBar.setTitle("No Agents Online!...");
-                                                loadingBar.setMessage("Please Try Again Later!...");
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-                                        }
-                                    });
+                                    Log.e("key", String.valueOf(key));
+                                    Log.e("location", String.valueOf(location));
+                                    agentFound = true;
+                                    loadingBar.setTitle("Agent found!!!!!");
+                                    loadingBar.setMessage("Please wait, we are contacting your agent!...");
                                 }
 
                                 @Override
@@ -130,18 +131,20 @@ public class FindAgentsActivity extends AppCompatActivity {
                                 }
 
                                 @Override
-
                                 public void onGeoQueryReady() {
-                                    Log.e("ready", String.valueOf(MAX_SEARCH_DISTANCE));
+
                                 }
 
                                 @Override
                                 public void onGeoQueryError(DatabaseError error) {
+                                    Log.e("key", String.valueOf(error));
+                                    loadingBar.setTitle("No Agents Online!!!!!");
+                                    loadingBar.setMessage("Please Try Again Later...");
                                 }
                             });
                         }
-
                     }
+
                 }
             }
 
@@ -149,7 +152,7 @@ public class FindAgentsActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
         });
+
 
     }}
