@@ -74,6 +74,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.Adapters.AgentsCustomInfoWindowAdapter;
+import com.wozzytheprogrammer.kwproperty.Chat.ChatMainActivity;
 import com.wozzytheprogrammer.kwproperty.Login.LauncherActivity;
 import com.wozzytheprogrammer.kwproperty.Objects.AgentObject;
 import com.wozzytheprogrammer.kwproperty.Objects.RideObject;
@@ -103,7 +104,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
     BottomSheetBehavior mBottomSheetBehavior;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
-    private Button mRideStatus, mMaps;
+    private Button mRideStatus, mMaps, acceptChatButton, declineChatButton;;
     private Switch mWorkingSwitch;
     private int status = 0;
     private LinearLayout mCustomerInfo, mBringUpBottomLayout;
@@ -162,7 +163,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                         });
                         if (mWorkingSwitch.isChecked()) {
                             geoFireAvailable.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()), (key, error) -> {
-                          watchForConnection();
+                                watchForConnection();
                             });
                         }
                     } else {
@@ -184,7 +185,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.e("dataSnapshot", String.valueOf(dataSnapshot));
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     // inflate the layout of the popup window
                     LayoutInflater inflater = (LayoutInflater)
                             getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -198,6 +199,21 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                     // show the popup window
                     // which view you pass in doesn't matter, it is only used for the window tolken
                     popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+
+
+                    acceptChatButton = popupView.findViewById(R.id.accept_chat_button);
+                    declineChatButton = popupView.findViewById(R.id.decline_chat_button);
+                    acceptChatButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(AgentMapActivity.this, ChatMainActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
+
+                        }
+                    });
+
                 }
             }
 
@@ -240,6 +256,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
 
         mCustomerProfileImage = findViewById(R.id.customerProfileImage);
         mBringUpBottomLayout = findViewById(R.id.bringUpBottomLayout);
+
 
         mCustomerName = findViewById(R.id.name);
         mUsername = navigationView.getHeaderView(0).findViewById(R.id.usernameDrawer);
@@ -614,74 +631,74 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         final long[] numberOfProperties = {0};
 
         propertyReference.addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-            //    Generates a random colour for the markers
-            final int random = new Random().nextInt(0 + 360);
-            float hue = random;
+                //    Generates a random colour for the markers
+                final int random = new Random().nextInt(0 + 360);
+                float hue = random;
 
 
-            if (dataSnapshot.exists()) {
-                numberOfProperties[0] = dataSnapshot.getChildrenCount();
-                int propertyCount = 0;
-                int snapshotCount = 0;
+                if (dataSnapshot.exists()) {
+                    numberOfProperties[0] = dataSnapshot.getChildrenCount();
+                    int propertyCount = 0;
+                    int snapshotCount = 0;
 
-                String[] markerNames = new String[(int) numberOfProperties[0]];
-                String[] markerIds = new String[(int) numberOfProperties[0]];
-                String[] addresses = new String[(int) numberOfProperties[0]];
-                String[] imageUrlString = new String[(int) numberOfProperties[0]];
-                String[] propertyInformation = new String[(int) numberOfProperties[0]];
-                Double[] latitudes = new Double[(int) numberOfProperties[0]];
-                Double[] longitudes = new Double[(int) numberOfProperties[0]];
+                    String[] markerNames = new String[(int) numberOfProperties[0]];
+                    String[] markerIds = new String[(int) numberOfProperties[0]];
+                    String[] addresses = new String[(int) numberOfProperties[0]];
+                    String[] imageUrlString = new String[(int) numberOfProperties[0]];
+                    String[] propertyInformation = new String[(int) numberOfProperties[0]];
+                    Double[] latitudes = new Double[(int) numberOfProperties[0]];
+                    Double[] longitudes = new Double[(int) numberOfProperties[0]];
 
-                Double latitude;
-                Double longitude;
-                String MarkerNameString;
-                String propertyInformationString;
+                    Double latitude;
+                    Double longitude;
+                    String MarkerNameString;
+                    String propertyInformationString;
 
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    DatabaseReference markerRef = database.getReference("Properties/Id").child(String.valueOf(snapshotCount));
-                    MarkerNameString = child.child("Address").getValue(String.class);
-                    propertyInformationString = child.child("Information").getValue(String.class);
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        DatabaseReference markerRef = database.getReference("Properties/Id").child(String.valueOf(snapshotCount));
+                        MarkerNameString = child.child("Address").getValue(String.class);
+                        propertyInformationString = child.child("Information").getValue(String.class);
 
-                    snapshotCount++;
-                    for (int i = 0; i < numberOfProperties[0]; i++) {
+                        snapshotCount++;
+                        for (int i = 0; i < numberOfProperties[0]; i++) {
 
-                        propertyCount++;
+                            propertyCount++;
 
-                        String key = child.getKey();
-                        if (Integer.parseInt(key) == snapshotCount) {
-                            latitude = child.child("Lat").getValue(Double.class);
-                            longitude = child.child("Long").getValue(Double.class);
+                            String key = child.getKey();
+                            if (Integer.parseInt(key) == snapshotCount) {
+                                latitude = child.child("Lat").getValue(Double.class);
+                                longitude = child.child("Long").getValue(Double.class);
 
-                            markerNames[i] = MarkerNameString;
-                            markerIds[i] = key;
-                            addresses[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
-                            imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
-                            propertyInformation[i] = propertyInformationString;
-                            latitudes[i] = latitude;
-                            longitudes[i] = longitude;
+                                markerNames[i] = MarkerNameString;
+                                markerIds[i] = key;
+                                addresses[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("Address"));
+                                imageUrlString[i] = String.valueOf(propertyReference.child(String.valueOf(propertyCount)).child("ImgUrl"));
+                                propertyInformation[i] = propertyInformationString;
+                                latitudes[i] = latitude;
+                                longitudes[i] = longitude;
 
-                            mMap.addMarker(new MarkerOptions()
-                                    .title(markerNames[i])
-                                    .snippet(propertyInformation[i])
-                                    .icon(BitmapDescriptorFactory
-                                            .defaultMarker(hue))
-                                    .position(new LatLng(latitudes[i], longitudes[i])
-                                    ));
+                                mMap.addMarker(new MarkerOptions()
+                                        .title(markerNames[i])
+                                        .snippet(propertyInformation[i])
+                                        .icon(BitmapDescriptorFactory
+                                                .defaultMarker(hue))
+                                        .position(new LatLng(latitudes[i], longitudes[i])
+                                        ));
+                            }
                         }
                     }
                 }
             }
-        }
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        }
-    });
-}
+            }
+        });
+    }
 
 
     private void getRoutes(Marker marker) {
@@ -697,7 +714,6 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
 
 
     }
-
 
 
     /**
