@@ -34,7 +34,7 @@ public class FavoritePropertyDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(FavoritePropertyDetailActivity.this, FindAgentsActivity.class);
                 startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 

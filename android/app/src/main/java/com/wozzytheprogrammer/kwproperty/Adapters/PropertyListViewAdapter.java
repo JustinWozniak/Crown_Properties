@@ -3,6 +3,7 @@ package com.wozzytheprogrammer.kwproperty.Adapters;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -205,22 +206,30 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
                     clickCount++;
 
-                    Log.e("view", view.toString());
                     scaleView(buttonFavorite, 1, 3);
                     scaleView(buttonFavorite, 2, 1);
                     propertyAddedToFavs.setText(R.string.is_a_favorite);
                     propertyAddedToFavs.setVisibility(View.VISIBLE);
 
-                    Log.e("idtext", String.valueOf(idTextView.getText()));
                     String propertyIdString = String.valueOf(idTextView.getText());
 
-                    String linedUpIds = String.valueOf(parseInt(propertyIdString)-1);
-                    Log.e("linedUpIds", linedUpIds);
+                    String linedUpIds = String.valueOf(parseInt(propertyIdString) - 1);
 
                     favoritesUpdates.put((String) linedUpIds, titleTextView.getText());
-                    Log.e("dsds", favoritesUpdates.toString());
                     favoritePropertiesRef.updateChildren(favoritesUpdates);
                     String key = String.valueOf(idTextView.getText());
+
+                    new CountDownTimer(1000, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        public void onFinish() {
+                            propertyAddedToFavs.setVisibility(View.GONE);
+                        }
+                    }.start();
+
 
                     if (clickCount > 1) {
                         propertyAddedToFavs.setText(R.string.is_not_a_favorite);
