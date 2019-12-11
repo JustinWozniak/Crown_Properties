@@ -45,7 +45,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="451dp"
+            android:layout_height="370dp"
             android:orientation="vertical"
             android:padding="20sp">
 
@@ -54,33 +54,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"
-                android:text="@string/agent_profile_picture" />
+                android:text="@string/agent_profile_picture"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/find_agent_profileImage"
                 android:layout_width="100sp"
                 android:layout_height="100sp"
-                android:visibility="gone"
                 android:layout_gravity="center"
                 android:layout_marginBottom="20sp"
-                android:src="@mipmap/ic_default_user" />
+                android:src="@mipmap/ic_default_user"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"
-                android:text="@string/agents_name" />
+                android:text="@string/agents_name"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"
-                android:text="@string/agents_location" />
+                android:text="@string/agents_location"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/textView7"

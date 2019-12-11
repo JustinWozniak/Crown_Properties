@@ -78,7 +78,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.wozzytheprogrammer.kwproperty.Adapters.CustomersCustomInfoWindowAdapter;
-import com.wozzytheprogrammer.kwproperty.Favorites.FavoritePropertyListActivity;
 import com.wozzytheprogrammer.kwproperty.Login.LauncherActivity;
 import com.wozzytheprogrammer.kwproperty.Objects.AgentObject;
 import com.wozzytheprogrammer.kwproperty.Objects.CustomerObject;
@@ -196,9 +195,9 @@ public class CustomerMapActivity extends AppCompatActivity
         mFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ListView = new Intent(CustomerMapActivity.this, FavoritePropertyListActivity.class);
-                startActivity(ListView);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+//                Intent ListView = new Intent(CustomerMapActivity.this, FavoritePropertyListActivity.class);
+//                startActivity(ListView);
+//                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
             }
         });
@@ -1097,9 +1096,9 @@ public class CustomerMapActivity extends AppCompatActivity
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         if (id == R.id.myFavorites) {
-            Intent intent = new Intent(CustomerMapActivity.this, FavoritePropertyListActivity.class);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+//            Intent intent = new Intent(CustomerMapActivity.this, FavoritePropertyListActivity.class);
+//            startActivity(intent);
+//            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         if (id == R.id.find_agent) {
             Intent intent = new Intent(CustomerMapActivity.this, FindAgentsActivity.class);

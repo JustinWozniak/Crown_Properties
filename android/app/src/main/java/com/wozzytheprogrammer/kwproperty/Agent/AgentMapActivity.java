@@ -202,13 +202,9 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                     boolean focusable = true; // lets taps outside the popup also dismiss it
                     final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
-                    if (dataSnapshot.exists()) {
-
                         // show the popup window
                         // which view you pass in doesn't matter, it is only used for the window tolken
                         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
-//                        wantsConnection.setValue("maybe");
-                    }
 
                     acceptChatButton = popupView.findViewById(R.id.accept_chat_button);
                     declineChatButton = popupView.findViewById(R.id.decline_chat_button);
