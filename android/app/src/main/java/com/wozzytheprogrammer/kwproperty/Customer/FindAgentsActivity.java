@@ -114,21 +114,55 @@ public class FindAgentsActivity extends AppCompatActivity {
                                     Map agentsId = new HashMap();
                                     DatabaseReference foundAgent = FirebaseDatabase.getInstance().getReference().child("agentsAvailable").child(key);
                                     DatabaseReference connectedPeople = FirebaseDatabase.getInstance().getReference().child("connected").child(key);
+                                    DatabaseReference wantsConnection = FirebaseDatabase.getInstance().getReference().child("connected").child(key).child("wants Connection");
+                                    DatabaseReference connectionsAGo = FirebaseDatabase.getInstance().getReference().child("connected").child(key).child("wants Connection").child("connectCustomer");
                                     Log.e("key", String.valueOf(key));
                                     Log.e("location", String.valueOf(location));
                                     agentFound = true;
-                                    customersId.put("conectedCustomersId",String.valueOf(uid));
-                                    agentsId.put("connectedagentsid",foundAgent);
+                                    customersId.put("conectedCustomersId", String.valueOf(uid));
+                                    agentsId.put("connectedagentsid", foundAgent);
                                     loadingBar.setTitle("Agent found!!!!!");
                                     loadingBar.setMessage("Please wait, we are contacting your agent!...");
                                     connectedPeople.child("customerFound").updateChildren(customersId);
+                                    Log.e("data", String.valueOf(dataSnapshot));
+
+                                        wantsConnection.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                Log.e("NEW DATASNAP", String.valueOf(dataSnapshot));
+                                                Log.e("getval", String.valueOf(dataSnapshot.getValue()));
+
+                                                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                                                    connectionsAGo.addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            Intent intent = new Intent(FindAgentsActivity.this, ChatMainActivity.class);
+                                                            startActivity(intent);
+                                                            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+                                                    Log.e("childSnapshot", String.valueOf(childSnapshot.getValue()));
+                                                    Log.e("getchildren", String.valueOf(dataSnapshot.getChildren()));
+                                                    if (childSnapshot.getValue() == "yes") {
+
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
 
 
-                                    Intent intent = new Intent(FindAgentsActivity.this, ChatMainActivity.class);
-                                    startActivity(intent);
-                                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                                 }
-
                                 @Override
                                 public void onKeyExited(String key) {
 

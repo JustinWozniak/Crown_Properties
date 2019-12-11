@@ -15,11 +15,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/linearLayout"
-        android:background="@android:color/white"
+        android:background="@android:color/black"
         android:divider="@android:color/transparent"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
-        tools:listitem="@layout/item_message" >
+        tools:listitem="@layout/item_message">
 
 
     </ListView>

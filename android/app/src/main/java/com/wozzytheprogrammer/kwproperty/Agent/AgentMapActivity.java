@@ -104,7 +104,8 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
     BottomSheetBehavior mBottomSheetBehavior;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
-    private Button mRideStatus, mMaps, acceptChatButton, declineChatButton;;
+    private Button mRideStatus, mMaps, acceptChatButton, declineChatButton;
+    ;
     private Switch mWorkingSwitch;
     private int status = 0;
     private LinearLayout mCustomerInfo, mBringUpBottomLayout;
@@ -179,13 +180,18 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
     };
 
     private void watchForConnection() {
-        DatabaseReference connectedPeople = FirebaseDatabase.getInstance().getReference("connected");
-        Log.e("connected", String.valueOf(connectedPeople));
-        connectedPeople.addListenerForSingleValueEvent(new ValueEventListener() {
+        String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference connectedPeople = FirebaseDatabase.getInstance().getReference("connected").child(currentuser);
+        DatabaseReference wantsConnection = FirebaseDatabase.getInstance().getReference("connected").child(currentuser).child("wants Connection");
+        Log.e("connectedPeople", String.valueOf(connectedPeople));
+        String key = connectedPeople.getKey();
+        Log.e("key",key);
+        connectedPeople.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.e("dataSnapshot", String.valueOf(dataSnapshot));
                 if (dataSnapshot.exists()) {
+
                     // inflate the layout of the popup window
                     LayoutInflater inflater = (LayoutInflater)
                             getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -196,19 +202,36 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                     boolean focusable = true; // lets taps outside the popup also dismiss it
                     final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
-                    // show the popup window
-                    // which view you pass in doesn't matter, it is only used for the window tolken
-                    popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+                    if (dataSnapshot.exists()) {
 
+                        // show the popup window
+                        // which view you pass in doesn't matter, it is only used for the window tolken
+                        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0);
+//                        wantsConnection.setValue("maybe");
+                    }
 
                     acceptChatButton = popupView.findViewById(R.id.accept_chat_button);
                     declineChatButton = popupView.findViewById(R.id.decline_chat_button);
                     acceptChatButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            connectedPeople.child("wants Connection").setValue("yes");
                             Intent intent = new Intent(AgentMapActivity.this, ChatMainActivity.class);
                             startActivity(intent);
                             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                            connectedPeople.child("wants Connection").child("connectCustomer").setValue("yes");
+                        }
+                    });
+                    declineChatButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            connectedPeople.removeValue();
+                            declineChatButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    popupWindow.dismiss();
+                                }
+                            });
 
 
                         }
@@ -754,7 +777,6 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
 
     private void logOut() {
         disconnectAgent();
-
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(AgentMapActivity.this, LauncherActivity.class);
         startActivity(intent);
@@ -788,6 +810,10 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("agentsAvailable").child(userId);
         ref.removeValue();
+
+        DatabaseReference connectedPeople = FirebaseDatabase.getInstance().getReference("connected").child(userId);
+        connectedPeople.removeValue();
+
         isWorking = false;
     }
 
