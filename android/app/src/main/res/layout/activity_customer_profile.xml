@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/mygold"
                 android:hint="@string/name"
-                android:id="@+id/name"
+                android:id="@+id/address"
                 android:inputType="textPersonName"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>

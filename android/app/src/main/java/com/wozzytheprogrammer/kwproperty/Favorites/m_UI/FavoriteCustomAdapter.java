@@ -56,15 +56,15 @@ public class FavoriteCustomAdapter extends BaseAdapter {
 
         final Favorite s= (Favorite) this.getItem(position);
 
-        nameTxt.setText(s.getName());
-        propTxt.setText(s.getPropellant());
-        descTxt.setText(s.getDescription());
+        nameTxt.setText(s.getAddress());
+        propTxt.setText(s.getInfo());
+        descTxt.setText(s.getImgUrl());
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //OPEN DETAIL
-                openDetailActivity(s.getName(),s.getDescription(),s.getPropellant());
+                openDetailActivity(s.getAddress(),s.getImgUrl(),s.getInfo());
             }
         });
 

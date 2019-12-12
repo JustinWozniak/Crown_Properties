@@ -28,9 +28,9 @@ public class FirebaseHelper {
     //WRITE IF NOT NULL
     public Boolean save(Favorite favorite)
     {
-        if(favorite ==null)
+        if(favorite == null)
         {
-            saved=false;
+            saved = false;
         }else
         {
             try
@@ -54,7 +54,7 @@ public class FirebaseHelper {
 
         for (DataSnapshot ds : dataSnapshot.getChildren())
         {
-            Favorite favorite =ds.getValue(Favorite.class);
+            Favorite favorite = ds.getValue(Favorite.class);
             favorites.add(favorite);
         }
     }

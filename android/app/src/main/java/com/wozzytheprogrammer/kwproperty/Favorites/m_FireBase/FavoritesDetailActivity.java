@@ -15,7 +15,7 @@ import com.wozzytheprogrammer.kwproperty.R;
 public class FavoritesDetailActivity extends AppCompatActivity {
 
 
-    TextView nameTxt,descTxt, propTxt;
+    TextView nameTxt,descTxt, imgUrlTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class FavoritesDetailActivity extends AppCompatActivity {
 
         nameTxt = (TextView) findViewById(R.id.nameDetailTxt);
         descTxt= (TextView) findViewById(R.id.descDetailTxt);
-        propTxt = (TextView) findViewById(R.id.propellantDetailTxt);
+        imgUrlTxt = (TextView) findViewById(R.id.propellantDetailTxt);
 
         //GET INTENT
         Intent i=this.getIntent();
@@ -41,7 +41,7 @@ public class FavoritesDetailActivity extends AppCompatActivity {
         //BIND DATA
         nameTxt.setText(name);
         descTxt.setText(desc);
-        propTxt.setText(propellant);
+        imgUrlTxt.setText(propellant);
 
 
         fab.setOnClickListener(new View.OnClickListener() {
