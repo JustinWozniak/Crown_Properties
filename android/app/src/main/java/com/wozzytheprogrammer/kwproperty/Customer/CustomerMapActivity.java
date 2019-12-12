@@ -84,7 +84,6 @@ import com.wozzytheprogrammer.kwproperty.Objects.CustomerObject;
 import com.wozzytheprogrammer.kwproperty.Objects.LocationObject;
 import com.wozzytheprogrammer.kwproperty.Objects.RideObject;
 import com.wozzytheprogrammer.kwproperty.R;
-import com.wozzytheprogrammer.kwproperty.Favorites.m_UI.MainFavoritesActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1097,9 +1096,9 @@ public class CustomerMapActivity extends AppCompatActivity
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         if (id == R.id.myFavorites) {
-            Intent intent = new Intent(CustomerMapActivity.this, MainFavoritesActivity.class);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+//            Intent intent = new Intent(CustomerMapActivity.this, FavoritePropertyListActivity.class);
+//            startActivity(intent);
+//            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         if (id == R.id.find_agent) {
             Intent intent = new Intent(CustomerMapActivity.this, FindAgentsActivity.class);
