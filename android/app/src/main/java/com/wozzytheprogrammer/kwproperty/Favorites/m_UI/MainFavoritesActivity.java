@@ -41,8 +41,8 @@ public class MainFavoritesActivity extends AppCompatActivity {
         lv = (ListView) findViewById(R.id.lv);
 
         //INITIALIZE FIREBASE DB
-        db = FirebaseDatabase.getInstance().getReference();
-        helper = new FirebaseHelper(db);
+        db= FirebaseDatabase.getInstance().getReference();
+        helper=new FirebaseHelper(db);
 
         //ADAPTER
         adapter=new FavoriteCustomAdapter(this,helper.retrieve());
@@ -81,9 +81,9 @@ public class MainFavoritesActivity extends AppCompatActivity {
 
                 //SET DATA
                 Favorite s=new Favorite();
-                s.setAddress(name);
-                s.setInfo(propellant);
-                s.setImgUrl(desc);
+                s.setName(name);
+                s.setPropellant(propellant);
+                s.setDescription(desc);
 
 
                 //SIMPLE VALIDATION

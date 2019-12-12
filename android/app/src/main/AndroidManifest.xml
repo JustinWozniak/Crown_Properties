@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.wozzytheprogrammer.kwproperty">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality.
+         location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -22,22 +23,21 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-
+        android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
         <activity
             android:name=".Customer.FindAgentsActivity"
             android:label="@string/title_activity_find_agents"
-            android:theme="@style/AppTheme.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name=".Favorites.FavoritePropertyListActivity"
+            android:name=".Favorites.m_UI.MainFavoritesActivity"
             android:label="@string/title_favoriteproperty_list"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
         <activity
-            android:name="com.wozzytheprogrammer.kwproperty.Chat.ChatMainActivity"
+            android:name=".Chat.ChatMainActivity"
             android:label="@string/chat"
             android:theme="@style/AppTheme.NoActionBar.NoActionBar" />
-
-
         <activity android:name=".Login.LauncherActivity" />
 
         <uses-library

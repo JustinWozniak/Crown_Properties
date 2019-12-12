@@ -6,32 +6,32 @@ package com.wozzytheprogrammer.kwproperty.Favorites.m_Model;
  */
 public class Favorite {
 
-    String address, info, imgUrl;
+    String name,propellant,description;
 
     public Favorite() {
     }
 
-    public String getAddress() {
-        return address;
+    public String getName() {
+        return name;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getInfo() {
-        return info;
+    public String getPropellant() {
+        return propellant;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setPropellant(String propellant) {
+        this.propellant = propellant;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getDescription() {
+        return description;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

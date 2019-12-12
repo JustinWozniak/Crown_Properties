@@ -92,7 +92,7 @@
                         <TextView
                             android:textSize="18sp"
                             android:lines="1"
-                            android:id="@+id/address"
+                            android:id="@+id/name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textStyle="bold"
