@@ -84,10 +84,8 @@ dependencies {
     implementation 'com.cedarsoftware:json-io:4.10.1'
 
 
-
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
-
 
 
 }
