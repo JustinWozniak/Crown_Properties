@@ -121,6 +121,7 @@ public class FavoriteListActivity extends AppCompatActivity {
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
+
         }
 
         @Override

@@ -12,9 +12,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -29,12 +31,14 @@ public class FavoritesData {
      */
     public static final List<FavoriteProperty> ITEMS = new ArrayList<FavoriteProperty>();
 
+    //this will hold our new fav properties
+    static final List<FavoriteProperty> myNewFavPropertyList = new ArrayList<FavoriteProperty>();
     /**
      * A map of sample (dummy) items, by ID.
      */
     public static final Map<String, FavoriteProperty> ITEM_MAP = new HashMap<String, FavoriteProperty>();
 
-    private static final int COUNT = 25;
+    private static final int COUNT = 1;
 
 
     static {
@@ -52,48 +56,48 @@ public class FavoritesData {
 
     private static FavoriteProperty createFavoriteItem(int position) {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference usersFavPropRef = FirebaseDatabase.getInstance().getReference("Users/Customers").child(uid).child("favoriteProperties");
-        DatabaseReference propertiesList = FirebaseDatabase.getInstance().getReference("Properties").child("Id");
+        DatabaseReference topLevelRef = FirebaseDatabase.getInstance().getReference();
 
-        usersFavPropRef.addValueEventListener(new ValueEventListener() {
+        topLevelRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("dat", String.valueOf(dataSnapshot));
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String key = snapshot.getKey();
-                    Log.e("key", key);
-                    String address = (String) dataSnapshot.child(key).getValue();
-                    Log.e("address", address);
-
-                    propertiesList.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
-                            DataSnapshot snap = dataSnapshot2.child(key);
-                            Log.e("addresgfgfs", String.valueOf(snap));
-
-                            DataSnapshot addressName = snap.child("Address");
-                            Log.e("addresname", String.valueOf(addressName.getValue()));
-
-                            DataSnapshot propertyInformation = snap.child("Information");
-                            Log.e("propertyInformation", String.valueOf(propertyInformation.getValue()));
-
-                            DataSnapshot imgUrl = snap.child("ImgUrl");
-                            Log.e("ImgUrl", String.valueOf(imgUrl.getValue()));
-
-                            FavoriteProperty newFav = new FavoriteProperty(key, (String) addressName.getValue(),(String) propertyInformation.getValue(),(String) imgUrl.getValue());
-
-                            Log.e("addrfdsfdsesname", String.valueOf(addressName.getValue()));
+                DataSnapshot favPropIdKey;
+                String userFavPropIdKey = "";
+                DataSnapshot propertyList;
+                String propertyListIdKey = "";
 
 
-                            ITEMS.add(newFav);
-                            ITEM_MAP.put(newFav.id, newFav);
+                Log.e("gfgf", String.valueOf(dataSnapshot));
+                favPropIdKey = dataSnapshot.child("Users").child("Customers").child(uid).child("favoriteProperties");
+                Log.e("favPropIdKey", String.valueOf(favPropIdKey));
+                for (DataSnapshot childSnapshot : favPropIdKey.getChildren()) {
+                    userFavPropIdKey = childSnapshot.getKey();
+                    Log.e("userFavPropIdKey", String.valueOf(userFavPropIdKey));
+
+
+                    propertyList = dataSnapshot.child("Properties").child("Id");
+                    Log.e("propertyList", String.valueOf(propertyList));
+
+                    for (DataSnapshot childSnapshot2 : propertyList.getChildren()) {
+                        propertyListIdKey = childSnapshot.getKey();
+                        Log.e("propertyListIdKey", String.valueOf(propertyListIdKey));
+                        String content = String.valueOf(childSnapshot2.child("Address").getValue());
+                        String details = String.valueOf(childSnapshot2.child("Information").getValue());
+                        String imgUrl = String.valueOf(childSnapshot2.child("ImgUrl").getValue());
+
+                        Log.e("contdfent",(content));
+                        Log.e("detagfgils",(details));
+                        Log.e("imgUrgfgl",(imgUrl));
+
+                        if (userFavPropIdKey == propertyListIdKey) {
+                            FavoriteProperty propertyToDisplay = new FavoriteProperty(userFavPropIdKey, content, details, imgUrl);
+                            myNewFavPropertyList.add(propertyToDisplay);
+                            createNewPropertyObjects(myNewFavPropertyList);
+                            ITEMS.add(propertyToDisplay);
+                            ITEM_MAP.put(propertyToDisplay.id, propertyToDisplay);
                         }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                    }
                 }
             }
 
@@ -103,29 +107,17 @@ public class FavoritesData {
             }
         });
 
-
         return new FavoriteProperty(String.valueOf(position), "Address " + position, makeDetails(position), "imgUrl");
     }
 
+    private static void createNewPropertyObjects(List<FavoriteProperty> myNewFavPropertyList) {
 
+        Arrays.stream(new List[]{myNewFavPropertyList}).distinct()
+                .collect(Collectors.toList());
 
+        Log.e("myNewFavPropertyList", String.valueOf((myNewFavPropertyList)));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
     private static String makeDetails(int position) {
@@ -150,7 +142,7 @@ public class FavoritesData {
             this.id = id;
             this.content = content; //address
             this.details = details;//info
-            this.imgUrl = details;//imgUrl
+            this.imgUrl = imgUrl;//imgUrl
         }
 
         @Override

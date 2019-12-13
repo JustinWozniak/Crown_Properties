@@ -216,6 +216,11 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                             startActivity(intent);
                             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                             connectedPeople.child("wants Connection").child("connectCustomer").setValue("yes");
+
+                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("agentsAvailable").child(userId);
+                            ref.removeValue();
+
                         }
                     });
                     declineChatButton.setOnClickListener(new View.OnClickListener() {

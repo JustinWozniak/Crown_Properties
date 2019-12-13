@@ -102,7 +102,6 @@ public class FindAgentsActivity extends AppCompatActivity {
                             }, delay);
 
 
-
                             geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                                 @Override
                                 public void onKeyEntered(String key, GeoLocation location) {
@@ -118,7 +117,7 @@ public class FindAgentsActivity extends AppCompatActivity {
                                     loadingBar.setTitle("Agent found!!!!!");
                                     loadingBar.setMessage("Please wait, we are contacting your agent!...");
                                     connectedPeople.child("customerFound").updateChildren(customersId);
-
+                                    geoQuery.removeAllListeners();
                                     wantsConnection.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -130,6 +129,7 @@ public class FindAgentsActivity extends AppCompatActivity {
                                                         Intent intent = new Intent(FindAgentsActivity.this, ChatMainActivity.class);
                                                         startActivity(intent);
                                                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                                                        geoQuery.removeAllListeners();
                                                     }
 
                                                     @Override
@@ -137,9 +137,6 @@ public class FindAgentsActivity extends AppCompatActivity {
 
                                                     }
                                                 });
-                                                if (childSnapshot.getValue() == "yes") {
-
-                                                }
                                             }
                                         }
 
@@ -151,6 +148,7 @@ public class FindAgentsActivity extends AppCompatActivity {
 
 
                                 }
+
                                 @Override
                                 public void onKeyExited(String key) {
 
@@ -170,6 +168,7 @@ public class FindAgentsActivity extends AppCompatActivity {
                                 public void onGeoQueryError(DatabaseError error) {
                                     loadingBar.setTitle("No Agents Online!!!!!");
                                     loadingBar.setMessage("Please Try Again Later...");
+                                    geoQuery.removeAllListeners();
                                 }
                             });
                         }
@@ -185,4 +184,5 @@ public class FindAgentsActivity extends AppCompatActivity {
         });
 
 
-    }}
+    }
+}
