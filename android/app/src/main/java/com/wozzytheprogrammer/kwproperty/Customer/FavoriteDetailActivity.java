@@ -34,6 +34,7 @@ public class FavoriteDetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(FavoriteDetailActivity.this, FindAgentsActivity.class);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+
             }
         });
 

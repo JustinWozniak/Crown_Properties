@@ -47,43 +47,39 @@ public class FavoritesData {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DataSnapshot favPropIdKey;
-                String userFavPropIdKey = "";
+                String userFavPropIdKey = null;
                 DataSnapshot propertyList;
-                String propertyListIdKey = "";
+                String propertyListIdKey = null;
+                String content = null;
+                String details = null;
+                String imgUrl = null;
 
-
-                Log.e("gfgf", String.valueOf(dataSnapshot));
                 favPropIdKey = dataSnapshot.child("Users").child("Customers").child(uid).child("favoriteProperties");
-                Log.e("favPropIdKey", String.valueOf(favPropIdKey));
                 for (DataSnapshot childSnapshot : favPropIdKey.getChildren()) {
                     userFavPropIdKey = childSnapshot.getKey();
-                    Log.e("userFavPropIdKey", String.valueOf(userFavPropIdKey));
-
 
                     propertyList = dataSnapshot.child("Properties").child("Id");
-                    Log.e("propertyList", String.valueOf(propertyList));
 
                     for (DataSnapshot childSnapshot2 : propertyList.getChildren()) {
                         propertyListIdKey = childSnapshot.getKey();
-                        Log.e("propertyListIdKey", String.valueOf(propertyListIdKey));
-                        String content = String.valueOf(childSnapshot2.child("Address").getValue());
-                        String details = String.valueOf(childSnapshot2.child("Information").getValue());
-                        String imgUrl = String.valueOf(childSnapshot2.child("ImgUrl").getValue());
+                        content = String.valueOf(childSnapshot2.child("Address").getValue());
+                        details = String.valueOf(childSnapshot2.child("Information").getValue());
+                        imgUrl = String.valueOf(childSnapshot2.child("ImgUrl").getValue());
 
-                        Log.e("contdfent",(content));
-                        Log.e("detagfgils",(details));
-                        Log.e("imgUrgfgl",(imgUrl));
 
-                        if (userFavPropIdKey == propertyListIdKey) {
-                            FavoriteProperty propertyToDisplay = new FavoriteProperty(userFavPropIdKey, content, details, imgUrl);
-                            myNewFavPropertyList.add(propertyToDisplay);
-                            createNewPropertyObjects(myNewFavPropertyList);
-                            ITEMS.add(propertyToDisplay);
-                            ITEM_MAP.put(propertyToDisplay.id, propertyToDisplay);
-                        }
+
+
+                    }
+                    if (userFavPropIdKey == propertyListIdKey) {
+                        FavoriteProperty propertyToDisplay = new FavoriteProperty(userFavPropIdKey, content, details, imgUrl);
+                        myNewFavPropertyList.add(propertyToDisplay);
+                        ITEMS.add(propertyToDisplay);
+                        ITEM_MAP.put(propertyToDisplay.id, propertyToDisplay);
+
 
                     }
                 }
+
             }
 
             @Override
@@ -99,15 +95,6 @@ public class FavoritesData {
         ITEM_MAP.put(item.id, item);
     }
 
-
-    private static void createNewPropertyObjects(List<FavoriteProperty> myNewFavPropertyList) {
-
-        Arrays.stream(new List[]{myNewFavPropertyList}).distinct()
-                .collect(Collectors.toList());
-
-        Log.e("myNewFavPropertyList", String.valueOf((myNewFavPropertyList)));
-
-    }
 
 
     private static String makeDetails(int position) {
