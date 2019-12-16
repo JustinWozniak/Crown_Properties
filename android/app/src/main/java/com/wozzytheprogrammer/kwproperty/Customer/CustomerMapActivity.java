@@ -195,7 +195,7 @@ public class CustomerMapActivity extends AppCompatActivity
         mFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ListView = new Intent(CustomerMapActivity.this, FavoriteListActivity.class);
+                Intent ListView = new Intent(CustomerMapActivity.this, CustomerFavoritesListView.class);
                 startActivity(ListView);
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 

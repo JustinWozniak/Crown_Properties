@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -53,9 +54,11 @@ public class FavoritesData {
                 String content = null;
                 String details = null;
                 String imgUrl = null;
+                int propertCount = 0;
 
                 favPropIdKey = dataSnapshot.child("Users").child("Customers").child(uid).child("favoriteProperties");
                 for (DataSnapshot childSnapshot : favPropIdKey.getChildren()) {
+                    propertCount++;
                     userFavPropIdKey = childSnapshot.getKey();
 
                     propertyList = dataSnapshot.child("Properties").child("Id");
@@ -66,18 +69,19 @@ public class FavoritesData {
                         details = String.valueOf(childSnapshot2.child("Information").getValue());
                         imgUrl = String.valueOf(childSnapshot2.child("ImgUrl").getValue());
 
+                        if (userFavPropIdKey == propertyListIdKey ) {
+                            FavoriteProperty propertyToDisplay = new FavoriteProperty(userFavPropIdKey, content, details, imgUrl);
+                            myNewFavPropertyList.add(propertyToDisplay);
+                            ITEMS.add(propertyToDisplay);
+                            ITEM_MAP.put(propertyToDisplay.id, propertyToDisplay);
 
+
+
+                        }
 
 
                     }
-                    if (userFavPropIdKey == propertyListIdKey) {
-                        FavoriteProperty propertyToDisplay = new FavoriteProperty(userFavPropIdKey, content, details, imgUrl);
-                        myNewFavPropertyList.add(propertyToDisplay);
-                        ITEMS.add(propertyToDisplay);
-                        ITEM_MAP.put(propertyToDisplay.id, propertyToDisplay);
 
-
-                    }
                 }
 
             }
