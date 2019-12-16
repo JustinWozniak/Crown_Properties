@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -79,12 +78,9 @@ public class FindAgentsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Log.e("datasnap", String.valueOf(dataSnapshot));
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         Double customersLat = (Double) dataSnapshot.child("Lat:").getValue();
                         Double customersLong = (Double) dataSnapshot.child("Long:").getValue();
-                        Log.e("customersLat", String.valueOf(customersLat));
-                        Log.e("customersLong", String.valueOf(customersLong));
                         if (customersLat != null) {
                             GeoFire geoFire = new GeoFire(agentLocation);
                             GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(customersLat, customersLong), MAX_SEARCH_DISTANCE);
@@ -106,7 +102,6 @@ public class FindAgentsActivity extends AppCompatActivity {
                             }, delay);
 
 
-
                             geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
                                 @Override
                                 public void onKeyEntered(String key, GeoLocation location) {
@@ -116,22 +111,16 @@ public class FindAgentsActivity extends AppCompatActivity {
                                     DatabaseReference connectedPeople = FirebaseDatabase.getInstance().getReference().child("connected").child(key);
                                     DatabaseReference wantsConnection = FirebaseDatabase.getInstance().getReference().child("connected").child(key).child("wants Connection");
                                     DatabaseReference connectionsAGo = FirebaseDatabase.getInstance().getReference().child("connected").child(key).child("wants Connection").child("connectCustomer");
-                                    Log.e("key", String.valueOf(key));
-                                    Log.e("location", String.valueOf(location));
                                     agentFound = true;
                                     customersId.put("conectedCustomersId", String.valueOf(uid));
                                     agentsId.put("connectedagentsid", foundAgent);
                                     loadingBar.setTitle("Agent found!!!!!");
                                     loadingBar.setMessage("Please wait, we are contacting your agent!...");
                                     connectedPeople.child("customerFound").updateChildren(customersId);
-                                    Log.e("data", String.valueOf(dataSnapshot));
-
+                                    geoQuery.removeAllListeners();
                                     wantsConnection.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                            Log.e("NEW DATASNAP", String.valueOf(dataSnapshot));
-                                            Log.e("getval", String.valueOf(dataSnapshot.getValue()));
 
                                             for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
                                                 connectionsAGo.addValueEventListener(new ValueEventListener() {
@@ -140,6 +129,7 @@ public class FindAgentsActivity extends AppCompatActivity {
                                                         Intent intent = new Intent(FindAgentsActivity.this, ChatMainActivity.class);
                                                         startActivity(intent);
                                                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                                                        geoQuery.removeAllListeners();
                                                     }
 
                                                     @Override
@@ -147,11 +137,6 @@ public class FindAgentsActivity extends AppCompatActivity {
 
                                                     }
                                                 });
-                                                Log.e("childSnapshot", String.valueOf(childSnapshot.getValue()));
-                                                Log.e("getchildren", String.valueOf(dataSnapshot.getChildren()));
-                                                if (childSnapshot.getValue() == "yes") {
-
-                                                }
                                             }
                                         }
 
@@ -163,6 +148,7 @@ public class FindAgentsActivity extends AppCompatActivity {
 
 
                                 }
+
                                 @Override
                                 public void onKeyExited(String key) {
 
@@ -180,9 +166,9 @@ public class FindAgentsActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onGeoQueryError(DatabaseError error) {
-                                    Log.e("key", String.valueOf(error));
                                     loadingBar.setTitle("No Agents Online!!!!!");
                                     loadingBar.setMessage("Please Try Again Later...");
+                                    geoQuery.removeAllListeners();
                                 }
                             });
                         }
@@ -198,4 +184,5 @@ public class FindAgentsActivity extends AppCompatActivity {
         });
 
 
-    }}
+    }
+}

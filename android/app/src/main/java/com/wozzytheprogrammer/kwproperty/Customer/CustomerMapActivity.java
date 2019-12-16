@@ -85,7 +85,6 @@ import com.wozzytheprogrammer.kwproperty.Objects.LocationObject;
 import com.wozzytheprogrammer.kwproperty.Objects.RideObject;
 import com.wozzytheprogrammer.kwproperty.R;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -196,9 +195,9 @@ public class CustomerMapActivity extends AppCompatActivity
         mFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent ListView = new Intent(CustomerMapActivity.this, FavoritePropertyListActivity.class);
-//                startActivity(ListView);
-//                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                Intent ListView = new Intent(CustomerMapActivity.this, FavoriteListActivity.class);
+                startActivity(ListView);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
             }
         });
@@ -1096,11 +1095,11 @@ public class CustomerMapActivity extends AppCompatActivity
             startActivity(intent);
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
-//        if (id == R.id.myFavorites) {
-//            Intent intent = new Intent(CustomerMapActivity.this, MainFavoritesActivity.class);
-//            startActivity(intent);
-//            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-//        }
+        if (id == R.id.myFavorites) {
+            Intent intent = new Intent(CustomerMapActivity.this, FavoriteListActivity.class);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        }
         if (id == R.id.find_agent) {
             Intent intent = new Intent(CustomerMapActivity.this, FindAgentsActivity.class);
             startActivity(intent);
