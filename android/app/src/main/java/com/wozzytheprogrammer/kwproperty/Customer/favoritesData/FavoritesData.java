@@ -12,11 +12,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -30,7 +28,7 @@ public class FavoritesData {
      * An array of sample (dummy) items.
      */
     public static final List<FavoriteProperty> ITEMS = new ArrayList<FavoriteProperty>();
-
+    public static final ArrayList<FavoriteProperty> newblah = new ArrayList<FavoriteProperty>();
     //this will hold our new fav properties
     static final List<FavoriteProperty> myNewFavPropertyList = new ArrayList<FavoriteProperty>();
     /**
@@ -65,6 +63,9 @@ public class FavoritesData {
                 String userFavPropIdKey = "";
                 DataSnapshot propertyList;
                 String propertyListIdKey = "";
+                String content ="";
+                String details ="";
+                String imgUrl = "";
 
 
                 Log.e("gfgf", String.valueOf(dataSnapshot));
@@ -77,28 +78,30 @@ public class FavoritesData {
 
                     propertyList = dataSnapshot.child("Properties").child("Id");
                     Log.e("propertyList", String.valueOf(propertyList));
+                    Log.e("favPropIdKey.getChildren()", String.valueOf(favPropIdKey.getChildren()));
 
                     for (DataSnapshot childSnapshot2 : propertyList.getChildren()) {
                         propertyListIdKey = childSnapshot.getKey();
                         Log.e("propertyListIdKey", String.valueOf(propertyListIdKey));
-                        String content = String.valueOf(childSnapshot2.child("Address").getValue());
-                        String details = String.valueOf(childSnapshot2.child("Information").getValue());
-                        String imgUrl = String.valueOf(childSnapshot2.child("ImgUrl").getValue());
+                        content = String.valueOf(childSnapshot2.child("Address").getValue());
+                        details = String.valueOf(childSnapshot2.child("Information").getValue());
+                        imgUrl = String.valueOf(childSnapshot2.child("ImgUrl").getValue());
 
                         Log.e("contdfent",(content));
                         Log.e("detagfgils",(details));
                         Log.e("imgUrgfgl",(imgUrl));
 
+                        Iterable<DataSnapshot> children = childSnapshot2.getChildren();
                         if (userFavPropIdKey == propertyListIdKey) {
-                            FavoriteProperty propertyToDisplay = new FavoriteProperty(userFavPropIdKey, content, details, imgUrl);
-                            myNewFavPropertyList.add(propertyToDisplay);
-                            createNewPropertyObjects(myNewFavPropertyList);
-                            ITEMS.add(propertyToDisplay);
-                            ITEM_MAP.put(propertyToDisplay.id, propertyToDisplay);
+
+                            childSnapshot2.getValue(FavoriteProperty.class);
+//                            createNewPropertyObjects(userFavPropIdKey,content,details,imgUrl);
+
                         }
 
                     }
                 }
+
             }
 
             @Override
@@ -110,13 +113,10 @@ public class FavoritesData {
         return new FavoriteProperty(String.valueOf(position), "Address " + position, makeDetails(position), "imgUrl");
     }
 
-    private static void createNewPropertyObjects(List<FavoriteProperty> myNewFavPropertyList) {
-
-        Arrays.stream(new List[]{myNewFavPropertyList}).distinct()
-                .collect(Collectors.toList());
-
-        Log.e("myNewFavPropertyList", String.valueOf((myNewFavPropertyList)));
-
+    private static void createNewPropertyObjects(String userFavPropIdKey,String content,String details,String imgUrl) {
+        FavoriteProperty propertyToDisplay = new FavoriteProperty(userFavPropIdKey, content, details, imgUrl);
+        ITEMS.add(propertyToDisplay);
+        ITEM_MAP.put(propertyToDisplay.id, propertyToDisplay);
     }
 
 
