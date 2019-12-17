@@ -104,8 +104,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
     BottomSheetBehavior mBottomSheetBehavior;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
-    private Button mRideStatus, mMaps, acceptChatButton, declineChatButton;
-    ;
+    private Button mRideStatus, acceptChatButton, declineChatButton;
     private Switch mWorkingSwitch;
     private int status = 0;
     private LinearLayout mCustomerInfo, mBringUpBottomLayout;
@@ -182,16 +181,13 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
     private void watchForConnection() {
         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference connectedPeople = FirebaseDatabase.getInstance().getReference("connected").child(currentuser);
-        DatabaseReference wantsConnection = FirebaseDatabase.getInstance().getReference("connected").child(currentuser).child("wants Connection");
         Log.e("connectedPeople", String.valueOf(connectedPeople));
         String key = connectedPeople.getKey();
         Log.e("key",key);
         connectedPeople.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("dataSnapshot", String.valueOf(dataSnapshot));
                 if (dataSnapshot.exists()) {
-
                     // inflate the layout of the popup window
                     LayoutInflater inflater = (LayoutInflater)
                             getSystemService(LAYOUT_INFLATER_SERVICE);
