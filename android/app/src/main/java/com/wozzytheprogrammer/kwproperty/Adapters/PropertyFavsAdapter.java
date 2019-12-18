@@ -24,7 +24,6 @@ import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,8 +54,6 @@ public class PropertyFavsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public PropertyFavsAdapter(List<Properties> propertiesList) {
         mPropertiesList = propertiesList;
-
-
     }
 
     public void setCallback(PropertyFavsAdapter.Callback callback) {
@@ -81,8 +78,6 @@ public class PropertyFavsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return new PropertyFavsAdapter.ViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.item_empty_view, parent, false));
         }
-
-
     }
 
     @Override
@@ -97,8 +92,6 @@ public class PropertyFavsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-
-
         if (mPropertiesList != null && mPropertiesList.size() > 0) {
             return mPropertiesList.size();
         } else {
@@ -110,7 +103,6 @@ public class PropertyFavsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void addItems(List<Properties> propertiesList) {
         mPropertiesList.addAll(propertiesList);
         notifyDataSetChanged();
-
     }
 
 
@@ -143,10 +135,12 @@ public class PropertyFavsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
-
         }
 
+
+        /**
+         * Function to change size of the heart/phone when clicked in listviews
+         */
         public void scaleView(View v, float startScale, float endScale) {
             Animation anim = new ScaleAnimation(
                     1f, 1f, // Start and end values for the X axis scaling
@@ -195,13 +189,17 @@ public class PropertyFavsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
             callAgent.setOnClickListener(new View.OnClickListener() {
 
+
+                /**
+                 * Starts the chat component of the app
+                 */
                 @Override
                 public void onClick(View view) {
                     scaleView(callAgent, 1, 3);
                     scaleView(callAgent, 2, 1);
 
 
-                    @SuppressLint("RestrictedApi") Toast toast=Toast.makeText(AuthUI.getApplicationContext(),"Finding an agent....",Toast.LENGTH_SHORT);
+                    @SuppressLint("RestrictedApi") Toast toast = Toast.makeText(AuthUI.getApplicationContext(), "Finding an agent....", Toast.LENGTH_SHORT);
                     toast.show();
 
                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -227,7 +225,7 @@ public class PropertyFavsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                                         handler.postDelayed(new Runnable() {
                                             public void run() {
                                                 if (!agentFound) {
-                                                    @SuppressLint("RestrictedApi") Toast toast=Toast.makeText(AuthUI.getApplicationContext(),"No agents online...Try Again Later...",Toast.LENGTH_SHORT);
+                                                    @SuppressLint("RestrictedApi") Toast toast = Toast.makeText(AuthUI.getApplicationContext(), "No agents online...Try Again Later...", Toast.LENGTH_SHORT);
                                                     toast.show();
                                                     geoQuery.removeAllListeners();
 
@@ -250,7 +248,7 @@ public class PropertyFavsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                                                 agentFound = true;
                                                 customersId.put("conectedCustomersId", String.valueOf(uid));
                                                 agentsId.put("connectedagentsid", foundAgent);
-                                                @SuppressLint("RestrictedApi") Toast toast=Toast.makeText(AuthUI.getApplicationContext(),"Agent Found! Connecting!",Toast.LENGTH_SHORT);
+                                                @SuppressLint("RestrictedApi") Toast toast = Toast.makeText(AuthUI.getApplicationContext(), "Agent Found! Connecting!", Toast.LENGTH_SHORT);
                                                 toast.show();
                                                 connectedPeople.child("customerFound").updateChildren(customersId);
                                                 geoQuery.removeAllListeners();
@@ -302,7 +300,7 @@ public class PropertyFavsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                                             @Override
                                             public void onGeoQueryError(DatabaseError error) {
-                                                @SuppressLint("RestrictedApi") Toast toast=Toast.makeText(AuthUI.getApplicationContext(),"Database Error",Toast.LENGTH_SHORT);
+                                                @SuppressLint("RestrictedApi") Toast toast = Toast.makeText(AuthUI.getApplicationContext(), "Database Error", Toast.LENGTH_SHORT);
                                                 toast.show();
                                                 geoQuery.removeAllListeners();
                                             }
@@ -319,7 +317,9 @@ public class PropertyFavsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         }
                     });
 
-
+                    /**
+                     * Opens image url from firebase
+                     */
                     itemView.setOnClickListener(v -> {
 
                         if (mProperties.getImageUrl() != null) {

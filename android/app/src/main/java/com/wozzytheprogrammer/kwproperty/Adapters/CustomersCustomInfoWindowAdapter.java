@@ -36,23 +36,15 @@ public class CustomersCustomInfoWindowAdapter implements GoogleMap.InfoWindowAda
     private TextView informationText;
     private TextView openHouseAddress;
 
-
-
-
-
     public CustomersCustomInfoWindowAdapter(Context context) {
-
-
         mContext = context;
         mWindow = LayoutInflater.from(context).inflate(R.layout.customers_custom_layout_window, null);
-
 
     }
 
     private void renderWindowText(Marker marker, View view) {
         String title = marker.getTitle();
         String snippet = marker.getSnippet();
-
         TextView tvTitle = view.findViewById(R.id.title);
 
         openHouseImage1 = view.findViewById(R.id.customersCustomWindowImage1);

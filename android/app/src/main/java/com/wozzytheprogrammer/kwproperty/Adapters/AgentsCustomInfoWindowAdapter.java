@@ -24,7 +24,6 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
 
     private final View mWindow;
     private Context mContext;
-    private ImageView openHouseImage;
     private ImageView openHouseImage1;
     private TextView informationText;
     private TextView addressText;
@@ -32,8 +31,6 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
     public AgentsCustomInfoWindowAdapter(Context context) {
         mContext = context;
         mWindow = LayoutInflater.from(context).inflate(R.layout.agent_custom_info_window, null);
-
-
     }
 
     private void renderWindowText(Marker marker, View view) {
@@ -45,15 +42,12 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
         addressText.setText(title);
         String snippet = marker.getSnippet();
         informationText.setText(snippet);
-
         String markerId = marker.getTitle();
         loadPropertyImage(markerId);
 
     }
 
     private void loadPropertyImage(String markerId) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
         final long[] numberOfProperties = {0};
 
@@ -72,17 +66,7 @@ public class AgentsCustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
 
                         String id = String.valueOf(child);
-                        Log.e("CHILDREED", id);
-                        Log.e("Datasnap", String.valueOf(dataSnapshot));
-                        DataSnapshot propertyAddress = dataSnapshot.child("");
-                        Log.e("propertyAddress", String.valueOf(propertyAddress));
-
-
                         imageUrlString[snapshotCount] = String.valueOf(dataSnapshot.child(String.valueOf(snapshotCount)).child("ImgUrl").getValue());
-                        Log.e("dsadsadddsdsdds", String.valueOf(dataSnapshot.child(String.valueOf(snapshotCount)).child("ImgUrl").getValue()));
-                        Log.e("BLAHHHH", imageUrlString[snapshotCount]);
-                        //LEFT OFF HERE FRIDAY NOT WORKING
-//                        NEED TO GO THROUGH DATA AND COMPARE TITLE TO DATABASE THEN IF A MATCH< DISPLAY THAT IMAGE
                         Glide.with(mContext.getApplicationContext()).load(imageUrlString[snapshotCount]).into(openHouseImage1);
 
                         snapshotCount++;

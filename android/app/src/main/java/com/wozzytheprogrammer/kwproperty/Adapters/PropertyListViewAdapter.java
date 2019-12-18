@@ -38,9 +38,6 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     private static final String TAG = "PropertyListViewAdapter";
     public static final int VIEW_TYPE_EMPTY = 0;
     public static final int VIEW_TYPE_NORMAL = 1;
-
-    int position = 0;
-
     private static int clickCount = 0;
 
     private Callback mCallback;
@@ -49,8 +46,6 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
     public PropertyListViewAdapter(List<Properties> propertiesList) {
         mPropertiesList = propertiesList;
-
-
     }
 
     public void setCallback(Callback callback) {
@@ -75,8 +70,6 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
                 return new EmptyViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.item_empty_view, parent, false));
         }
-
-
     }
 
     @Override
@@ -91,8 +84,6 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
     @Override
     public int getItemCount() {
-
-
         if (mPropertiesList != null && mPropertiesList.size() > 0) {
             return mPropertiesList.size();
         } else {
@@ -104,7 +95,6 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     public void addItems(List<Properties> propertiesList) {
         mPropertiesList.addAll(propertiesList);
         notifyDataSetChanged();
-
     }
 
 
@@ -136,6 +126,8 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         @BindView(R.id.button_favorite)
         Button buttonFavorite;
 
+
+
         public void scaleView(View v, float startScale, float endScale) {
             Animation anim = new ScaleAnimation(
                     1f, 1f, // Start and end values for the X axis scaling
@@ -151,8 +143,6 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
-
         }
 
         protected void clear() {

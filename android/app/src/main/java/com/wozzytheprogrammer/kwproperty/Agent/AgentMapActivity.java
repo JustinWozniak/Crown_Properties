@@ -128,7 +128,6 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
 
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
-
                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("agentsAvailable");
                     DatabaseReference refWorking = FirebaseDatabase.getInstance().getReference("agentsWorking");
@@ -181,9 +180,8 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
     private void watchForConnection() {
         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference connectedPeople = FirebaseDatabase.getInstance().getReference("connected").child(currentuser);
-        Log.e("connectedPeople", String.valueOf(connectedPeople));
         String key = connectedPeople.getKey();
-        Log.e("key",key);
+
         connectedPeople.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -239,7 +237,6 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
@@ -248,11 +245,8 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
-
         polylines = new ArrayList<>();
-
 
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -262,7 +256,6 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -302,7 +295,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
             switch (status) {
                 case 1:
                     if (mCurrentRide == null) {
-                        endRide();
+
                         return;
                     }
                     status = 2;
@@ -317,7 +310,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
                 case 2:
                     if (mCurrentRide != null)
                         mCurrentRide.recordRide();
-                    endRide();
+
                     break;
             }
         });
@@ -339,7 +332,6 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         });
 
         getUserData();
-        getAssignedCustomer();
 
         ViewTreeObserver vto = mBringUpBottomLayout.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(() -> initializeBottomLayout());
@@ -432,64 +424,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
 
     }
 
-    /**
-     * Is always listening to the ride_info table to see if the current agents's id
-     * pops up in there.
-     * <p>
-     * If it does then it means the agent has been assigned a new job and must complete it.
-     */
-    private void getAssignedCustomer() {
-        String agentId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Query query = FirebaseDatabase.getInstance().getReference().child("ride_info").orderByChild("agentId").equalTo(agentId);
 
-        query.addChildEventListener(new ChildEventListener() {
-
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if (dataSnapshot.exists()) {
-                    status = 1;
-                    mCurrentRide = new RideObject();
-                    mCurrentRide.parseData(dataSnapshot);
-
-                    if (mCurrentRide.getEnded() || mCurrentRide.getCancelled()) {
-                        mCurrentRide = null;
-                        return;
-                    }
-                    destinationMarker = mMap.addMarker(new MarkerOptions().position(mCurrentRide.getDestination().getCoordinates()).title("Destination").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_radio_filled)));
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(mCurrentRide.getPickup().getCoordinates()).title("Pickup").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_radio)));
-
-
-                    mLocation.setText(mCurrentRide.getPickup().getName());
-                    mCustomerName.setText(mCurrentRide.getDestination().getName());
-
-
-                    getAssignedCustomerInfo();
-                    getHasRideEnded();
-                } else {
-                    endRide();
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
 
     /**
      * Get Route from pickup to destination, showing the route to the user
@@ -505,106 +440,6 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         }
     }
 
-    /**
-     * Fetch assigned customer's info and display it in the Bottom sheet
-     */
-    private void getAssignedCustomerInfo() {
-        if (mCurrentRide.getCustomer().getId() == null) {
-            return;
-        }
-        DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(mCurrentRide.getCustomer().getId());
-        mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    return;
-                }
-
-                if (mCurrentRide != null) {
-
-                    mCurrentRide.getCustomer().parseData(dataSnapshot);
-
-                    mCustomerName.setText(mCurrentRide.getCustomer().getName());
-                    if (!mCurrentRide.getCustomer().getProfileImage().equals("default"))
-                        Glide.with(getApplication()).load(mCurrentRide.getCustomer().getProfileImage()).apply(RequestOptions.circleCropTransform()).into(mCustomerProfileImage);
-
-                }
-
-                mCustomerInfo.setVisibility(View.VISIBLE);
-                mBottomSheetBehavior.setHideable(false);
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    private void getHasRideEnded() {
-        if (mCurrentRide == null) {
-            return;
-        }
-        driveHasEndedRef = FirebaseDatabase.getInstance().getReference().child("ride_info").child(mCurrentRide.getId()).child("cancelled");
-        driveHasEndedRefListener = driveHasEndedRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    return;
-                }
-
-                endRide();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    /**
-     * End Ride by removing all of the active listeners,
-     * returning all of the values to the default state
-     * and clearing the map from markers
-     */
-    private void endRide() {
-        if (mCurrentRide == null) {
-            return;
-        }
-
-        mRideStatus.setText(getString(R.string.picked_customer));
-        erasePolylines();
-
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference agentRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Agents").child(userId).child("customerRequest");
-        agentRef.removeValue();
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-        GeoFire geoFire = new GeoFire(ref);
-        geoFire.removeLocation(mCurrentRide.getCustomer().getId(), (key, error) -> {
-        });
-
-        mCurrentRide = null;
-
-        status = 0;
-
-        if (pickupMarker != null) {
-            pickupMarker.remove();
-        }
-        if (destinationMarker != null) {
-            destinationMarker.remove();
-        }
-        if (driveHasEndedRefListener != null)
-            driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
-
-        mBottomSheetBehavior.setHideable(true);
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        mCustomerName.setText("");
-        mLocation.setText("");
-        mCustomerProfileImage.setImageResource(R.mipmap.ic_default_user);
-
-        mMap.clear();
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -645,7 +480,6 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
      * Gathers property information from Firebase to display open houses on our map
      */
     private void getPropertyInformation() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
         final long[] numberOfProperties = {0};

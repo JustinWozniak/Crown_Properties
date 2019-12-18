@@ -89,7 +89,7 @@ public class ChatMainActivity extends AppCompatActivity {
     private StorageReference mChatPhotosRef;
 
     public static final int RC_SIGN_IN = 1;
-    private static final int RC_PHOTO_PICKER =  2;
+    private static final int RC_PHOTO_PICKER = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +149,8 @@ public class ChatMainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
+
+
         mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
 
         // Send button sends a message and clears the EditText
@@ -189,18 +191,20 @@ public class ChatMainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)  {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == RESULT_OK)    {
+        if (requestCode == RESULT_OK) {
             Toast.makeText(this, "YOU ARE SIGNED IN", Toast.LENGTH_SHORT).show();
-        }   else if (requestCode == RESULT_CANCELED)   {
+        } else if (requestCode == RESULT_CANCELED) {
             Toast.makeText(this, "SIGNN IN CANCELLED", Toast.LENGTH_SHORT).show();
             finish();
-        } else if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK)   {
+        } else if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
             Uri selectedImageUri = data.getData();
 
             final StorageReference photoRef = mChatPhotosRef.child(Objects.requireNonNull(selectedImageUri.getLastPathSegment()));
+
+
 
             // Upload file to Firebase Storage
             photoRef.putFile(selectedImageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -242,7 +246,6 @@ public class ChatMainActivity extends AppCompatActivity {
     }
 
 
-
     private void onSignedOutCleanup() {
         mUsername = ANONYMOUS;
         mMessageAdapter.clear();
@@ -271,7 +274,7 @@ public class ChatMainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.sign_out_menu:
                 AuthUI.getInstance().signOut(this);
                 return true;
@@ -283,7 +286,7 @@ public class ChatMainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(mAuthStateListener != null) {
+        if (mAuthStateListener != null) {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
         detachDatabaseReadListener();
@@ -296,8 +299,8 @@ public class ChatMainActivity extends AppCompatActivity {
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
-    private void attachDatabaseReadListener()   {
-        if(mChildEventListener == null) {
+    private void attachDatabaseReadListener() {
+        if (mChildEventListener == null) {
             mChildEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

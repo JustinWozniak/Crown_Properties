@@ -48,7 +48,6 @@ public class AgentProfileActivity extends AppCompatActivity {
 
     private Uri resultUri;
 
-    private SegmentedButtonGroup mRadioGroup;
 
     AgentObject mDriver = new AgentObject();
 

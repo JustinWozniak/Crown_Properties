@@ -2,6 +2,7 @@ package com.wozzytheprogrammer.kwproperty.Customer;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,11 +55,43 @@ public class CustomerFavoritesListView extends AppCompatActivity implements Prop
 
     }
 
+
+    /**
+     * Pulls users fav Id from database...Looks for it in properties database,
+     * then sends data to the adapter to display it.
+     */
     private void prepareContent() {
+        final String[] dataKeys = {""};
+        final Object[] object = {null};
+        final Object[] newProps = {null};
+
+        String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id");
+        DatabaseReference usersFavPropIdNumber = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(currentuser).child("favoriteProperties");
+        usersFavPropIdNumber.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot child: dataSnapshot.getChildren()){
+                    object[0] = child.getKey();
+                    Log.e("dataSnapshot", String.valueOf(dataSnapshot));
+                    dataKeys[0] = dataKeys[0] +child.getKey() + "";
+                    Log.e("object", String.valueOf(object[0]));
+                    String numberToUse = String.valueOf(object[0]);
+                    newProps[0]= propertyReference.child(dataKeys[0].toString());
+                    Log.e(" newProps[0]", String.valueOf(newProps[0]));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         final long[] numberOfProperties = {0};
         ArrayList<Properties> mProperties = new ArrayList<>();
-
+        final String[] key = new String[1];
 
         propertyReference.addValueEventListener(new ValueEventListener() {
 
@@ -73,14 +108,16 @@ public class CustomerFavoritesListView extends AppCompatActivity implements Prop
 
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         propertyCount++;
+                        Log.e("dfsf",String.valueOf(dataSnapshot.child(String.valueOf(propertyCount)).child("Information").getValue()));
                         propertyInformation[propertyCount] = String.valueOf(dataSnapshot.child(String.valueOf(propertyCount)).child("Information").getValue());
-                        String key = child.getKey();
+                        key[0] = child.getKey();
                         addresses[propertyCount] = String.valueOf(dataSnapshot.child(String.valueOf(propertyCount)).child("Address").getValue());
                         imageUrlString[propertyCount] = String.valueOf(dataSnapshot.child(String.valueOf(propertyCount)).child("ImgUrl").getValue());
 
-                        mProperties.add(new Properties(imageUrlString[propertyCount], propertyInformation[propertyCount], "Rental Property", addresses[propertyCount], key));
+
                     }
 
+                    mProperties.add(new Properties(imageUrlString[propertyCount], propertyInformation[propertyCount], "Rental Property", addresses[propertyCount], key[0]));
                     mPropertyAdapter.addItems(mProperties);
                     mRecyclerView.setAdapter(mPropertyAdapter);
                 }
