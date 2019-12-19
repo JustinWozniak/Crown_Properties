@@ -127,7 +127,6 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
         Button buttonFavorite;
 
 
-
         public void scaleView(View v, float startScale, float endScale) {
             Animation anim = new ScaleAnimation(
                     1f, 1f, // Start and end values for the X axis scaling

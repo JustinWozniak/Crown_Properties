@@ -74,10 +74,10 @@ public class CustomerListView extends AppCompatActivity implements PropertyListV
                         String key = child.getKey();
                         addresses[propertyCount] = String.valueOf(dataSnapshot.child(String.valueOf(propertyCount)).child("Address").getValue());
                         imageUrlString[propertyCount] = String.valueOf(dataSnapshot.child(String.valueOf(propertyCount)).child("ImgUrl").getValue());
-
-                        mProperties.add(new Properties(imageUrlString[propertyCount], propertyInformation[propertyCount],"Rental Property", addresses[propertyCount], key));
+                        if (propertyCount > 0) {
+                            mProperties.add(new Properties(imageUrlString[propertyCount], propertyInformation[propertyCount], "Rental Property", addresses[propertyCount], key));
+                        }
                     }
-
                     mPropertyAdapter.addItems(mProperties);
                     mRecyclerView.setAdapter(mPropertyAdapter);
                     }
