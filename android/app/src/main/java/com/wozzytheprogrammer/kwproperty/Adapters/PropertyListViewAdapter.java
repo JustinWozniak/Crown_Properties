@@ -14,10 +14,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -38,7 +40,7 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
     private static final String TAG = "PropertyListViewAdapter";
     public static final int VIEW_TYPE_EMPTY = 0;
     public static final int VIEW_TYPE_NORMAL = 1;
-    private static int clickCount = 0;
+
 
     private Callback mCallback;
     private List<Properties> mPropertiesList;
@@ -182,7 +184,8 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
 
             buttonFavorite.setOnClickListener(new View.OnClickListener() {
-
+                private int clickCount = 0;
+                String key = "";
                 DatabaseReference mUser = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(FirebaseAuth.getInstance().getUid());
 
                 DatabaseReference favoritePropertiesRef = mUser.child("favoriteProperties");
@@ -202,31 +205,41 @@ public class PropertyListViewAdapter extends RecyclerView.Adapter<BaseViewHolder
 
                     String propertyIdString = String.valueOf(idTextView.getText());
 
-                    String linedUpIds = String.valueOf(parseInt(propertyIdString) - 1);
+                    String linedUpIds = String.valueOf(parseInt(propertyIdString));
 
-                    favoritesUpdates.put((String) linedUpIds, titleTextView.getText());
-                    favoritePropertiesRef.updateChildren(favoritesUpdates);
-                    String key = String.valueOf(idTextView.getText());
+                    if(clickCount == 1) {
+                        favoritesUpdates.put((String) linedUpIds, titleTextView.getText());
+                        favoritePropertiesRef.updateChildren(favoritesUpdates);
+                        key = String.valueOf(idTextView.getText());
 
-                    new CountDownTimer(1000, 1000) {
+                        new CountDownTimer(1000, 1000) {
 
-                        public void onTick(long millisUntilFinished) {
+                            public void onTick(long millisUntilFinished) {
 
-                        }
+                            }
 
-                        public void onFinish() {
-                            propertyAddedToFavs.setVisibility(View.GONE);
-                        }
-                    }.start();
+                            public void onFinish() {
+                                propertyAddedToFavs.setVisibility(View.GONE);
+                            }
+                        }.start();
 
+                        Log.e("ffdfdafdfffil", String.valueOf(clickCount));
 
-                    if (clickCount > 1) {
+                    }
+                    if (clickCount == 2) {
+
+                        Log.e("ffdfdail", String.valueOf(clickCount));
                         propertyAddedToFavs.setText(R.string.is_not_a_favorite);
-
-                        favoritesUpdates.remove((String) idTextView.getText(), titleTextView.getText());
-                        Log.e("vifdsew", favoritesUpdates.toString());
-                        favoritePropertiesRef.child(key).removeValue();
                         clickCount = 0;
+                        favoritesUpdates.remove(idTextView.getText(), titleTextView.getText());
+                        favoritePropertiesRef.updateChildren(favoritesUpdates);
+                        favoritePropertiesRef.child(key).removeValue().addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e("fail", String.valueOf(e));
+                            }
+                        });
+
                     }
 
 
