@@ -11,7 +11,8 @@
         <item
             android:visibility="gone"
             android:id="@+id/myFavorites"
-            android:title="@string/favorites" />
+            android:title="@string/favorites"
+            android:visible="false"/>
         <item
             android:id="@+id/find_agent"
             android:title="@string/find_an_agent"

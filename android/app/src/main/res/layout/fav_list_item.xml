@@ -44,6 +44,7 @@
                 android:layout_marginStart="88dp"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:layout_marginBottom="8dp"
+                android:background="@android:drawable/screen_background_dark"
                 android:gravity="center"
                 android:padding="@dimen/_8dp"
                 android:paddingStart="20dp"
@@ -51,8 +52,8 @@
                 android:paddingTop="20dp"
                 android:text="@string/title_placeholder"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="24sp"
+                android:textColor="@color/places_text_white_alpha_87"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -102,12 +103,14 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="105dp"
                 android:layout_marginEnd="27dp"
-                android:background="@drawable/fui_ic_phone_white_24dp"
+                android:background="@android:drawable/screen_background_dark"
                 android:checked="false"
                 android:text="@string/contact_agent"
-                android:textColor="@color/black"
+                android:textColor="@color/quantum_pinkA400"
                 android:textOff="@string/contact_agent"
-                android:textOn="@string/contact_agent" />
+                android:textOn="@string/contact_agent"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/favidTextView"

@@ -20,8 +20,6 @@ import com.wozzytheprogrammer.kwproperty.Objects.Properties;
 import com.wozzytheprogrammer.kwproperty.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,17 +60,8 @@ public class CustomerFavoritesListView extends AppCompatActivity implements Prop
      * then sends data to the adapter to display it.
      */
     private void prepareContent() {
-        ArrayList<Properties> listOfFavProperties = new ArrayList<>();
-        final String[] ImgUrl = {""};
-        final String[] Info = {""};
-        final String[] Address = {""};
-        final String[] Title = {""};
-        final String[] idsToUse = {""};
-        final String[] id = {null};
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference testerRef = database.getReference();
-        Log.e("tester", String.valueOf(testerRef.child("Properties/test")));
 
         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference usersFavPropIdNumber = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(currentuser).child("favoriteProperties");
@@ -81,28 +70,48 @@ public class CustomerFavoritesListView extends AppCompatActivity implements Prop
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    id[0] = child.getKey();
-                    Log.e("objvcvfect[0]", String.valueOf(id[0]));
-                    testerRef.child("Properties/Id").child(String.valueOf(id[0])).addValueEventListener(new ValueEventListener() {
+                    final String id = child.getKey();
+
+                    testerRef.child("Properties/Id").child(String.valueOf(id)).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                            Log.e("dataSnapshot.getChildren()", String.valueOf(dataSnapshot.getValue()));
+                            DatabaseReference propertyReference = FirebaseDatabase.getInstance().getReference().child("Properties").child("Id").child(id);
+                            final long[] numberOfProperties = {0};
+                            ArrayList<Properties> mProperties = new ArrayList<>();
+                            propertyReference.addValueEventListener(new ValueEventListener() {
 
-                            for (DataSnapshot child : children) {
-                                ImgUrl[0] = (String) dataSnapshot.child("ImgUrl").getValue();
-                                Info[0] = (String) dataSnapshot.child("Info").getValue();
-                                Address[0] = (String) dataSnapshot.child("Address").getValue();
-                                Title[0] = (String) dataSnapshot.child("Title").getValue();
-                                idsToUse[0] = dataSnapshot.child("Id").getValue().toString();
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        numberOfProperties[0] = dataSnapshot.getChildrenCount();
+                                        int propertyCount = -1;
+
+                                        String[] addresses = new String[(int) numberOfProperties[0]];
+                                        String[] imageUrlString = new String[(int) numberOfProperties[0]];
+                                        String[] propertyInformation = new String[(int) numberOfProperties[0]];
 
 
-                            }
-                            Properties propertyMadeFromData = new Properties(ImgUrl[0], Info[0], Address[0], Title[0], idsToUse[0]);
+                                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                            propertyCount++;
+                                            propertyInformation[propertyCount] = (String) dataSnapshot.child("Information").getValue();
+                                            String key = child.getKey();
+                                            addresses[propertyCount] = (String) dataSnapshot.child("Address").getValue();
+                                            imageUrlString[propertyCount] = (String) dataSnapshot.child("ImgUrl").getValue();
 
-                            listOfFavProperties.add(propertyMadeFromData);
+                                        }
+                                        mProperties.add(new Properties(imageUrlString[propertyCount], propertyInformation[propertyCount], "Rental Property", addresses[propertyCount], id));
+                                        mPropertyAdapter.addItems(mProperties);
+                                        mRecyclerView.setAdapter(mPropertyAdapter);
+                                    }
+                                }
 
-                            removeDuplicatesFromLooping(listOfFavProperties);
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+
+
+                            });
 
                         }
 
@@ -122,22 +131,7 @@ public class CustomerFavoritesListView extends AppCompatActivity implements Prop
         });
     }
 
-    private void removeDuplicatesFromLooping(ArrayList<Properties> passedListOfFavProperties) {
-        {
-            // ArrayList with duplicate elements
-            ArrayList<Properties> numbersList = passedListOfFavProperties;
 
-            System.out.println(numbersList);
-
-            List<Properties> listWithoutDuplicates = numbersList.stream().distinct().collect(Collectors.toList());
-
-            System.out.println(listWithoutDuplicates);
-
-
-            mPropertyAdapter.addItems(listWithoutDuplicates);
-            mRecyclerView.setAdapter(mPropertyAdapter);
-        }
-    }
 
 
     @Override
