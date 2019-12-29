@@ -97,8 +97,6 @@ import java.util.Random;
 public class CustomerMapActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, DirectionCallback, RoutingListener {
 
-    int MAX_SEARCH_DISTANCE = 20;
-
     private GoogleMap mMap;
 
     LocationRequest mLocationRequest;
@@ -107,28 +105,22 @@ public class CustomerMapActivity extends AppCompatActivity
 
     private Button mFavorites, listView;
 
+
     private LocationObject currentLocation;
 
     private Boolean requestBol = false, pickupIsCurrent = false;
 
     private SupportMapFragment mapFragment;
 
-    private DatabaseReference mCustomerDatabase;
-
-    private String userID;
-
-
 
     private LinearLayout mAgentInfo,
             mRadioLayout;
 
-    private ImageView mAgentProfileImage, mCurrentLocation;
-
-    private TextView mAgentName,
-            mAgentCar;
+    private ImageView mCurrentLocation;
 
     View favoritesView;
 
+    private Button findAgentButton;
 
     DrawerLayout drawer;
 
@@ -146,6 +138,8 @@ public class CustomerMapActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_customer);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        findAgentButton = findViewById(R.id.find_agent);
+
         favoritesView = findViewById(R.id.myFavorites);
         setSupportActionBar(toolbar);
 
@@ -168,11 +162,6 @@ public class CustomerMapActivity extends AppCompatActivity
 
         mAgentInfo = findViewById(R.id.agentInfo);
         mRadioLayout = findViewById(R.id.radioLayout);
-
-        mAgentProfileImage = findViewById(R.id.agentProfileImage);
-
-        mAgentName = findViewById(R.id.agentName);
-        mAgentCar = findViewById(R.id.agentCar);
 
         mCurrentLocation = findViewById(R.id.current_location);
 
@@ -243,10 +232,10 @@ public class CustomerMapActivity extends AppCompatActivity
     }
 
     /**
-     * Initializes the recyclerview that shows the costumer the
-     * available car types
+     * Initializes the recyclerview
      */
     private void initRecyclerView() {
+
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(true);
@@ -706,9 +695,7 @@ public class CustomerMapActivity extends AppCompatActivity
     /**
      * Checks if route where fetched successfully, if yes then
      * add them to the map
-     *
-     * @param direction
-     * @param rawBody   - data of the route
+
      */
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
@@ -783,6 +770,7 @@ public class CustomerMapActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        findAgentButton.setVisibility(View.VISIBLE);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -808,7 +796,7 @@ public class CustomerMapActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        findAgentButton.setVisibility(View.VISIBLE);
         if (id == R.id.profile) {
             Intent intent = new Intent(CustomerMapActivity.this, CustomerProfileActivity.class);
             startActivity(intent);

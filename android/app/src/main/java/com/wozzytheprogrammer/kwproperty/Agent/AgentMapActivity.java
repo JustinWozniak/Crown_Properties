@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -96,7 +97,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
     LocationRequest mLocationRequest;
     DatabaseReference mUser;
     RideObject mCurrentRide;
-    Marker pickupMarker, destinationMarker;
+    TextView findAgentButton;
     AgentObject mAgent = new AgentObject();
     TextView mUsername;
     ImageView mProfileImage;
@@ -272,6 +273,7 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
 
 
         mCustomerName = findViewById(R.id.name);
+
         mUsername = navigationView.getHeaderView(0).findViewById(R.id.usernameDrawer);
         mProfileImage = navigationView.getHeaderView(0).findViewById(R.id.imageViewDrawer);
 
@@ -626,6 +628,8 @@ public class AgentMapActivity extends AppCompatActivity implements NavigationVie
         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
 
         mMap.setMyLocationEnabled(true);
+
+
 
 
     }

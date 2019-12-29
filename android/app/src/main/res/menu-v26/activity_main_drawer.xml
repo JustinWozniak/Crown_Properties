@@ -16,7 +16,8 @@
         <item
             android:id="@+id/find_agent"
             android:title="@string/find_an_agent"
-            android:tooltipText="App Settings"/>
+            android:tooltipText="App Settings"
+            android:visible="false"/>
         <item
             android:id="@+id/logout"
             android:title="@string/logout" />
